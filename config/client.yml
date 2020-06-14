@@ -1,0 +1,5 @@
+production:
+  url: <%= ENV["CLIENT_URL"] %>
+
+development:
+  url: "http://localhost:3000"

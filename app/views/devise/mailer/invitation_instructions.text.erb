@@ -1,0 +1,11 @@
+<%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %>
+
+<%= t("devise.mailer.invitation_instructions.someone_invited_you", url: Rails.configuration.client['url']) %>
+
+<%= link_to "Accept invitation", "#{Rails.configuration.client['url']}/users/invitation/accept?invitation_token=#{@token}" %>
+
+<% if @resource.invitation_due_at %>
+  This invitation will expire on <%= @resource.invitation_due_at %>.
+<% end %>
+
+<%= strip_tags t("devise.mailer.invitation_instructions.ignore") %>
