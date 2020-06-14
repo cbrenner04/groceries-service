@@ -39,7 +39,7 @@ Rails.application.configure do
   end
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'groceries-app.com'
+      origins 'https://groceries-app.com', 'https://staging.groceries-app.com', 'https://www.groceries-app.com'
       resource '*',
         headers: :any,
         expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
