@@ -1,5 +1,31 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: music_list_items
+#
+#  id            :bigint           not null, primary key
+#  album         :string
+#  archived_at   :datetime
+#  artist        :string
+#  category      :string
+#  purchased     :boolean          default(FALSE), not null
+#  title         :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  music_list_id :bigint           not null
+#  user_id       :bigint           not null
+#
+# Indexes
+#
+#  index_music_list_items_on_music_list_id  (music_list_id)
+#  index_music_list_items_on_user_id        (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (music_list_id => lists.id)
+#  fk_rails_...  (user_id => users.id)
+#
 FactoryBot.define do
   factory :music_list_item do
     user
