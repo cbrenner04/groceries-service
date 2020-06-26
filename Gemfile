@@ -15,7 +15,7 @@ gem "newrelic_rpm", "~> 6.11", ">= 6.11.0.365"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 4.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 6.0.3", ">= 6.0.3.1"
+gem "rails", "~> 6.0.3", ">= 6.0.3.2"
 gem "sentry-raven", "~> 3.0"
 gem "sprockets", "~> 3.7", ">= 3.7.2"
 
