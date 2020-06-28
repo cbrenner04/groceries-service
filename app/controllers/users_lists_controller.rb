@@ -36,6 +36,12 @@ class UsersListsController < ProtectedRouteController
     end
   end
 
+  def destroy
+    @users_list = UsersList.find(params[:id])
+    @users_list.destroy
+    head :no_content
+  end
+
   private
 
   def users_list_params
