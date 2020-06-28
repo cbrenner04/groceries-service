@@ -38,6 +38,7 @@
 #                             POST   /lists/:list_id/users_lists(.:format)                 users_lists#create
 #             list_users_list PATCH  /lists/:list_id/users_lists/:id(.:format)             users_lists#update
 #                             PUT    /lists/:list_id/users_lists/:id(.:format)             users_lists#update
+#                             DELETE /lists/:list_id/users_lists/:id(.:format)             users_lists#destroy
 #                       lists GET    /lists(.:format)                                      lists#index
 #                             POST   /lists(.:format)                                      lists#create
 #                   edit_list GET    /lists/:id/edit(.:format)                             lists#edit
@@ -62,7 +63,7 @@ Rails.application.routes.draw do
     resources :grocery_list_items, only: [:create, :edit, :update, :destroy]
     resources :music_list_items, only: [:create, :edit, :update, :destroy]
     resources :to_do_list_items, only: [:create, :edit, :update, :destroy]
-    resources :users_lists, only: [:index, :create, :update]
+    resources :users_lists, only: [:index, :create, :update, :destroy]
   end
   resources :completed_lists, only: :index
   root to: "lists#index"

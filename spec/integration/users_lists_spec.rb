@@ -227,4 +227,14 @@ describe "/lists/:list_id/users_lists", type: :request do
       end
     end
   end
+
+  describe "DELETE /:id" do
+    it "deletes the list" do
+      delete list_users_list_path(list.id, users_list.id), headers: auth_params
+
+      expect {
+        UsersList.find(users_list.id)
+      }.to raise_error ActiveRecord::RecordNotFound
+    end
+  end
 end

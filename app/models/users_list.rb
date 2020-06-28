@@ -21,7 +21,6 @@
 #  fk_rails_...  (list_id => lists.id)
 #  fk_rails_...  (user_id => users.id)
 #
-# Join model for Users and Lists
 class UsersList < ApplicationRecord
   belongs_to :user
   belongs_to :list
