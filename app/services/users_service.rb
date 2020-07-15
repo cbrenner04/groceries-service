@@ -24,6 +24,23 @@ module UsersService
     SQL
   end
 
+  def write_lists_query(_user_id)
+    <<-SQL
+      SELECT "active_lists"."id", "active_lists"."name",
+             "active_lists"."completed", "active_lists"."type",
+             "active_lists"."refreshed", "active_lists"."owner_id",
+             "active_lists"."has_accepted", "active_lists"."user_id",
+             "active_lists"."users_list_id", "active_lists"."created_at"
+      FROM "active_lists"
+      INNER JOIN "users_lists"
+              ON "active_lists"."users_list_id" = "users_lists"."id"
+      WHERE "active_lists"."user_id" = 1
+      AND "active_lists"."has_accepted" = true
+      AND "users_lists"."permissions" = 'write'
+      AND "active_lists"."completed" = false
+    SQL
+  end
+
   # Find users where they have been shared on the same lists as current user
   # Filter out users that are already shared on the supplied list
   def related_users_query(user_id, list_id)
