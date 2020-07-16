@@ -16,7 +16,7 @@ class BookListItemsBulkUpdateController < ListItemsController
   private
 
   def items
-    @items ||= BookListItem.where(params[:item_ids].split(","))
+    @items ||= BookListItem.where(id: params[:item_ids].split(","))
   end
 
   def list

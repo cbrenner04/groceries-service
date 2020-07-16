@@ -16,7 +16,7 @@ class MusicListItemsBulkUpdateController < ListItemsController
   private
 
   def items
-    @items ||= MusicListItem.find(params[:item_ids].split(","))
+    @items ||= MusicListItem.where(id: params[:item_ids].split(","))
   end
 
   def list

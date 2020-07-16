@@ -16,7 +16,7 @@ class GroceryListItemsBulkUpdateController < ListItemsController
   private
 
   def items
-    @items ||= GroceryListItem.find(params[:item_ids].split(","))
+    @items ||= GroceryListItem.where(id: params[:item_ids].split(","))
   end
 
   def list
