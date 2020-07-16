@@ -37,7 +37,7 @@ class ToDoListItemsBulkUpdateController < ListItemsController
   end
 
   def lists
-    @lists ||= current_user.write_lists.filter do |list|
+    current_user.write_lists.filter do |list|
       list.type == "ToDoList" && list.id != params[:list_id].to_i
     end
   end

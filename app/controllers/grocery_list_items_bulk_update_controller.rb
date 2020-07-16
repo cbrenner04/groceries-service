@@ -3,19 +3,29 @@
 # bulk update grocery list items
 class GroceryListItemsBulkUpdateController < ListItemsController
   def show
-    items = GroceryListItem.find(params[:item_ids].split(","))
-    list = GroceryList.find(params[:list_id])
-    categories = list.categories
-    lists = current_user.write_lists.filter do |list|
-      list.type == "GroceryList" && list.id != params[:list_id].to_i
-    end
     render json: {
       items: items,
       list: list,
       lists: lists,
-      categories: categories
+      categories: list.categories
     }
   end
 
   def update; end
+
+  private
+
+  def items
+    @items ||= GroceryListItem.find(params[:item_ids].split(","))
+  end
+
+  def list
+    @list ||= GroceryList.find(params[:list_id])
+  end
+
+  def lists
+    current_user.write_lists.filter do |list|
+      list.type == "GroceryList" && list.id != params[:list_id].to_i
+    end
+  end
 end
