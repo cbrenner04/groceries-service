@@ -105,14 +105,8 @@ class MusicListItemsBulkUpdateController < ListItemsController
   end
 
   def create_new_items
-    puts "====================================================================="
-    puts item_params
-    puts "====================================================================="
     list_id = item_params[:existing_list_id] || create_new_list
     items.each do |item|
-      puts "==================================================================="
-      puts item.inspect
-      puts "==================================================================="
       MusicListItem.create!(user: current_user, music_list_id: list_id,
                             title: item[:title], artist: artist(item),
                             album: album(item), category: category(item))
