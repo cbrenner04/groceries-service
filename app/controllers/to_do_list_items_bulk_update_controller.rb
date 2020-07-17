@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: needs a service object
 # bulk update to do list items
 class ToDoListItemsBulkUpdateController < ListItemsController
   include UsersListsService
@@ -22,11 +23,12 @@ class ToDoListItemsBulkUpdateController < ListItemsController
   private
 
   def item_params
-    params
-      .require(:to_do_list_items)
-      .permit(:assignee_id, :clear_assignee, :due_by, :clear_due_by, :category,
-              :clear_category, :copy, :move, :existing_list_id, :new_list_name,
-              :update_current_items)
+    @item_params ||= params
+                     .require(:to_do_list_items)
+                     .permit(:assignee_id, :clear_assignee, :due_by,
+                             :clear_due_by, :category, :clear_category, :copy,
+                             :move, :existing_list_id, :new_list_name,
+                             :update_current_items)
   end
 
   def items
@@ -56,59 +58,51 @@ class ToDoListItemsBulkUpdateController < ListItemsController
     @update_category ||= item_params[:category] && !item_params[:clear_category]
   end
 
+  def update_current_assignee_params
+    return {} unless item_params[:assignee_id] || item_params[:clear_assignee]
+
+    { assignee_id: update_assignee ? item_params[:assignee_id] : nil }
+  end
+
+  def update_current_due_by_params
+    return {} unless item_params[:due_by] || item_params[:clear_due_by]
+
+    { due_by: update_due_by ? item_params[:due_by] : nil }
+  end
+
+  def update_current_category_params
+    return {} unless item_params[:category] || item_params[:clear_category]
+
+    { category: update_category ? item_params[:category] : nil }
+  end
+
   def update_current_items
     return unless item_params[:update_current_items]
 
-    # TODO: this doesn't work. At least due by is being incorrectly cleared
-    update_params = {}.tap do |hash|
-      hash[:assignee_id] = if update_assignee
-                             item_params[:assignee_id]
-                           elsif item_params[:clear_assignee]
-                             nil
-                           end
-      hash[:due_by] = if update_due_by
-                        item_params[:due_by]
-                      elsif item_params[:clear_due_by]
-                        nil
-                      end
-      hash[:category] = if update_category
-                          item_params[:category]
-                        elsif item_params[:clear_category]
-                          nil
-                        end
-    end
-
+    update_params = {}.merge(update_current_assignee_params,
+                             update_current_due_by_params,
+                             update_current_category_params)
     items.update_all(update_params)
   end
 
   def assignee_id(item)
-    if update_assignee
-      item_params[:assignee_id]
-    elsif item_params[:clear_assignee]
-      nil
-    else
-      item[:assignee_id]
-    end
+    return item[:assignee_id] unless item_params[:assignee_id] ||
+                                     item_params[:clear_assignee]
+
+    update_assignee ? item_params[:assignee_id] : nil
   end
 
   def due_by(item)
-    if update_due_by
-      item_params[:due_by]
-    elsif item_params[:clear_due_by]
-      nil
-    else
-      item[:due_by]
-    end
+    return item[:due_by] unless item_params[:due_by] || item[:clear_due_by]
+
+    update_due_by ? item_params[:due_by] : nil
   end
 
   def category(item)
-    if update_category
-      item_params[:category]
-    elsif item_params[:clear_category]
-      nil
-    else
-      item[:category]
-    end
+    return item[:category] unless item_params[:category] ||
+                                  item_params[:clear_category]
+
+    update_category ? item_params[:category] : nil
   end
 
   def create_new_items
