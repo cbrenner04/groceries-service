@@ -14,7 +14,14 @@ class BulkUpdateService
   end
 
   def items
-    @items ||= item_class.where(id: @params[:item_ids].split(","))
+    return @items if @items
+
+    item_ids = @params[:item_ids].split(",")
+    items = item_class.where(id: item_ids)
+
+    raise ActiveRecord::RecordNotFound unless item_ids.count == items.count
+
+    @items = items
   end
 
   def update_current_items
@@ -37,18 +44,13 @@ class BulkUpdateService
 
   def list_class
     {
-      book: BookList,
-      grocery: GroceryList,
-      music: MusicList,
-      to_do: ToDoList
+      book: BookList, grocery: GroceryList, music: MusicList, to_do: ToDoList
     }[@list_type.to_sym]
   end
 
   def item_class
     {
-      book: BookListItem,
-      grocery: GroceryListItem,
-      music: MusicListItem,
+      book: BookListItem, grocery: GroceryListItem, music: MusicListItem,
       to_do: ToDoListItem
     }[@list_type.to_sym]
   end
@@ -59,12 +61,13 @@ class BulkUpdateService
 
   def lists
     @current_user.write_lists.filter do |list|
-      list.type == "BookList" && list.id != @params[:list_id].to_i
+      list.type == list_class.to_s && list.id != @params[:list_id].to_i
     end
   end
 
   def update_item_attributes
     list_attrs = [%i[category clear_category]]
+
     if @list_type == "book"
       list_attrs.push(%i[author clear_author])
     elsif @list_type == "grocery"
@@ -72,7 +75,7 @@ class BulkUpdateService
     elsif @list_type == "music"
       list_attrs.push(%i[artist clear_artist], %i[album clear_album])
     elsif @list_type == "to_do"
-      list_attrs.push(%i[assignee clear_assignee_id], %i[due_by clear_due_by])
+      list_attrs.push(%i[assignee_id clear_assignee], %i[due_by clear_due_by])
     end
   end
 
@@ -102,8 +105,6 @@ class BulkUpdateService
   end
 
   def create_new_list
-    return unless @item_params[:new_list_name]
-
     new_list = list_class.create!(name: @item_params[:new_list_name],
                                   owner: @current_user)
     UsersList.create!(user: @current_user, list: new_list, has_accepted: true)
@@ -121,5 +122,7 @@ class BulkUpdateService
       item_attrs =
         item_attrs.merge(attr => new_attr_value(item, attr, clear_attr))
     end
+
+    item_attrs
   end
 end
