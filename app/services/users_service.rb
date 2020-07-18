@@ -24,7 +24,7 @@ module UsersService
     SQL
   end
 
-  def write_lists_query(_user_id)
+  def write_lists_query(user_id)
     <<-SQL
       SELECT "active_lists"."id", "active_lists"."name",
              "active_lists"."completed", "active_lists"."type",
@@ -34,7 +34,7 @@ module UsersService
       FROM "active_lists"
       INNER JOIN "users_lists"
               ON "active_lists"."users_list_id" = "users_lists"."id"
-      WHERE "active_lists"."user_id" = 1
+      WHERE "active_lists"."user_id" = #{user_id}
       AND "active_lists"."has_accepted" = true
       AND "users_lists"."permissions" = 'write'
       AND "active_lists"."completed" = false
