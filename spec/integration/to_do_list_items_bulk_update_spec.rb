@@ -10,6 +10,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
   let(:item) { create :to_do_list_item, to_do_list: list }
   let(:other_item) { create :to_do_list_item, to_do_list: list }
   let(:other_user) { create :user }
+  let(:item_ids) { [item.id, other_item.id].join(",") }
 
   before { login user }
 
@@ -19,7 +20,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
 
       it "responds with forbidden" do
         get "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-          [item.id, other_item.id].join(',')
+          item_ids
         }", headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -45,7 +46,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
           other_users_list = create :users_list, user: user, list: other_list
 
           get "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-            [item.id, other_item.id].join(',')
+            item_ids
           }", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
@@ -128,7 +129,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
 
       it "responds with forbidden" do
         put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-          [item.id, other_item.id].join(',')
+          item_ids
         }", headers: auth_params, params: {
           to_do_list_items: {
             assignee_id: other_user.id,
@@ -190,7 +191,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
               expect(other_item.category).to eq(initial_other_category)
 
               put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                [item.id, other_item.id].join(',')
+                item_ids
               }", headers: auth_params, params: {
                 to_do_list_items: {
                   assignee_id: other_user.id,
@@ -234,7 +235,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
               expect(other_item.category).to eq(other_item.category)
 
               put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                [item.id, other_item.id].join(',')
+                item_ids
               }", headers: auth_params, params: {
                 to_do_list_items: {
                   assignee_id: other_user.id,
@@ -271,7 +272,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
                 expect(List.find_by(name: "new to_do list")).to be_nil
 
                 put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   to_do_list_items: {
                     assignee_id: other_user.id,
@@ -313,7 +314,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
 
                 put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   to_do_list_items: {
                     assignee_id: other_user.id,
@@ -351,7 +352,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
                 expect(List.find_by(name: "new to_do list")).to be_nil
 
                 put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   to_do_list_items: {
                     assignee_id: other_user.id,
@@ -391,7 +392,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
 
                 put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   to_do_list_items: {
                     assignee_id: other_user.id,
@@ -428,7 +429,7 @@ describe "/lists/:list_id/to_do_list_items/bulk_update", type: :request do
             create :users_list, user: user, list: other_list
 
             put "#{list_to_do_list_items_bulk_update_path(list.id)}?item_ids=#{
-              [item.id, other_item.id].join(',')
+              item_ids
             }", headers: auth_params, params: {
               to_do_list_items: {
                 assignee_id: other_user.id,

@@ -9,6 +9,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
   let(:users_list) { create :users_list, user: user, list: list }
   let(:item) { create :music_list_item, music_list: list }
   let(:other_item) { create :music_list_item, music_list: list }
+  let(:item_ids) { [item.id, other_item.id].join(",") }
 
   before { login user }
 
@@ -18,7 +19,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
 
       it "responds with forbidden" do
         get "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-          [item.id, other_item.id].join(',')
+          item_ids
         }", headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -44,7 +45,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
           other_users_list = create :users_list, user: user, list: other_list
 
           get "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-            [item.id, other_item.id].join(',')
+            item_ids
           }", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
@@ -113,7 +114,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
 
       it "responds with forbidden" do
         put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-          [item.id, other_item.id].join(',')
+          item_ids
         }", headers: auth_params, params: {
           music_list_items: {
             artist: "foo",
@@ -175,7 +176,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
               expect(other_item.category).to eq(initial_other_category)
 
               put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                [item.id, other_item.id].join(',')
+                item_ids
               }", headers: auth_params, params: {
                 music_list_items: {
                   artist: "update artist",
@@ -219,7 +220,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
               expect(other_item.category).to eq(other_item.category)
 
               put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                [item.id, other_item.id].join(',')
+                item_ids
               }", headers: auth_params, params: {
                 music_list_items: {
                   artist: "update artist",
@@ -256,7 +257,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
                 expect(List.find_by(name: "new music list")).to be_nil
 
                 put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   music_list_items: {
                     artist: "update artist",
@@ -298,7 +299,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
 
                 put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   music_list_items: {
                     artist: "update artist",
@@ -336,7 +337,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
                 expect(List.find_by(name: "new music list")).to be_nil
 
                 put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   music_list_items: {
                     artist: "update artist",
@@ -376,7 +377,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
 
                 put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  [item.id, other_item.id].join(',')
+                  item_ids
                 }", headers: auth_params, params: {
                   music_list_items: {
                     artist: "update artist",
@@ -413,7 +414,7 @@ describe "/lists/:list_id/music_list_items/bulk_update", type: :request do
             create :users_list, user: user, list: other_list
 
             put "#{list_music_list_items_bulk_update_path(list.id)}?item_ids=#{
-              [item.id, other_item.id].join(',')
+              item_ids
             }", headers: auth_params, params: {
               music_list_items: {
                 artist: "update artist",
