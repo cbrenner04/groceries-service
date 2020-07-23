@@ -96,4 +96,8 @@ class User < ApplicationRecord
   def pending_lists
     List.find_by_sql(pending_lists_query(id))
   end
+
+  def write_lists
+    List.find_by_sql(write_lists_query(id))
+  end
 end

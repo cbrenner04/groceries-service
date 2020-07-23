@@ -86,6 +86,8 @@ describe "/lists/:list_id/book_list_items", type: :request do
     describe "with write access" do
       before { users_list.update!(permissions: "write") }
 
+      # TODO: when item does not exist
+
       describe "with valid params" do
         it "creates a new item" do
           expect do
