@@ -79,7 +79,7 @@ def create_grocery_list_items
     t.references :user, foreign_key: true, null: false
     t.references :grocery_list, foreign_key: { to_table: :lists }, null: false
     t.string :product, null: false
-    t.string :quantity
+    t.string :quantity, default: "1", null: false
     t.boolean :purchased, default: false, null: false
     t.datetime :archived_at
     t.boolean :refreshed, default: false, null: false
