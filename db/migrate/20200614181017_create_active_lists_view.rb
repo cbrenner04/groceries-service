@@ -1,6 +1,7 @@
 class CreateActiveListsView < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
+      DROP VIEW IF EXISTS active_lists;
       CREATE VIEW active_lists AS
         SELECT lists.id, lists.name, lists.created_at, lists.completed,
               lists.type, lists.refreshed, lists.owner_id,
@@ -16,7 +17,7 @@ class CreateActiveListsView < ActiveRecord::Migration[6.0]
 
   def down
     execute <<-SQL
-      DROP VIEW active_lists
+      DROP VIEW active_lists;
     SQL
   end
 end
