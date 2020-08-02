@@ -14,9 +14,6 @@
 #                                     PUT    /auth/invitation(.:format)                               users/invitations#update
 #                                     POST   /auth/invitation(.:format)                               users/invitations#create
 #                   list_refresh_list POST   /lists/:list_id/refresh_list(.:format)                   refresh_lists#create
-#                   bulk_update_lists GET    /lists/bulk_update(.:format)                             bulk_updates#show {:contoller=>"bulk_update_lists"}
-#                                     PATCH  /lists/bulk_update(.:format)                             bulk_updates#update {:contoller=>"bulk_update_lists"}
-#                                     PUT    /lists/bulk_update(.:format)                             bulk_updates#update {:contoller=>"bulk_update_lists"}
 #    list_book_list_items_bulk_update GET    /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#show
 #                                     PATCH  /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#update
 #                                     PUT    /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#update
@@ -74,12 +71,6 @@ Rails.application.routes.draw do
   end
   resources :lists, only: [:index, :show, :create, :edit, :update, :destroy] do
     resource :refresh_list, only: [:create]
-    collection do
-      resource :bulk_update,
-               only: [:show, :update],
-               contoller: 'bulk_update_lists',
-               as: :bulk_update_lists
-    end
     resources :book_list_items, only: [:create, :edit, :update, :destroy] do
       collection do
         resource :bulk_update,
