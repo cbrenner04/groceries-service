@@ -87,6 +87,19 @@ module ListsService
     end
   end
 
+  def create_new_items_from_multiple_lists(lists, new_list, list_type)
+    case list_type
+    when "ToDoList"
+      lists.each { |old_list| create_to_do_list_items(old_list, new_list) }
+    when "BookList"
+      lists.each { |old_list| create_book_list_items(old_list, new_list) }
+    when "MusicList"
+      lists.each { |old_list| create_music_list_items(old_list, new_list) }
+    else
+      lists.each { |old_list| create_grocery_list_items(old_list, new_list) }
+    end
+  end
+
   def set_items
     set_ordered_items
     set_not_purchased_items

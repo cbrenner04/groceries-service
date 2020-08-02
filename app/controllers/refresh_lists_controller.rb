@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# /refresh_list
+# /lists/:list_id/refresh_list
 class RefreshListsController < ProtectedRouteController
   include ListsService
 
