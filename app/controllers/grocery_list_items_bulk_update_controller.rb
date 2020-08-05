@@ -30,7 +30,7 @@ class GroceryListItemsBulkUpdateController < ListItemsController
   def item_params
     params
       .require(:grocery_list_items)
-      .permit(:quantity, :clear_quantity, :category, :clear_category, :copy,
-              :move, :existing_list_id, :new_list_name, :update_current_items)
+      .permit(:quantity, :clear_quantity, :category, :clear_category, :copy, :move, :existing_list_id, :new_list_name,
+              :update_current_items)
   end
 end

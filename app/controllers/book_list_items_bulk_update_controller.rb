@@ -29,7 +29,7 @@ class BookListItemsBulkUpdateController < ListItemsController
   def item_params
     params
       .require(:book_list_items)
-      .permit(:author, :clear_author, :category, :clear_category, :copy, :move,
-              :existing_list_id, :new_list_name, :update_current_items)
+      .permit(:author, :clear_author, :category, :clear_category, :copy, :move, :existing_list_id, :new_list_name,
+              :update_current_items)
   end
 end

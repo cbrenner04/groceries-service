@@ -13,6 +13,9 @@ AllCops:
 Rails:
   Enabled: true
 
+Layout/LineLength:
+  Max: 120
+
 Style/Documentation:
   Exclude:
     - "spec/**/*"

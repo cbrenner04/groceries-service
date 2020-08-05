@@ -6,11 +6,7 @@ module InvitableMethods
 
   # this is needed for the create method in users/invitations_controller.rb
   def resource_class(map = nil)
-    mapping = if map
-                Devise.mappings[map]
-              else
-                Devise.mappings[resource_name] || Devise.mappings.values.first
-              end
+    mapping = map ? Devise.mappings[map] : Devise.mappings[resource_name] || Devise.mappings.values.first
     mapping.to
   end
 end

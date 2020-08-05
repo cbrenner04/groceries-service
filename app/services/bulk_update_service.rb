@@ -29,8 +29,7 @@ class BulkUpdateService
 
     update_params = {}
     update_item_attributes.each do |attr, clear_attr|
-      update_params =
-        update_params.merge(update_current_attr_params(attr, clear_attr))
+      update_params.merge!(update_current_attr_params(attr, clear_attr))
     end
     items.update_all(update_params)
   end
@@ -43,16 +42,11 @@ class BulkUpdateService
   private
 
   def list_class
-    {
-      book: BookList, grocery: GroceryList, music: MusicList, to_do: ToDoList
-    }[@list_type.to_sym]
+    { book: BookList, grocery: GroceryList, music: MusicList, to_do: ToDoList }[@list_type.to_sym]
   end
 
   def item_class
-    {
-      book: BookListItem, grocery: GroceryListItem, music: MusicListItem,
-      to_do: ToDoListItem
-    }[@list_type.to_sym]
+    { book: BookListItem, grocery: GroceryListItem, music: MusicListItem, to_do: ToDoListItem }[@list_type.to_sym]
   end
 
   def list
@@ -80,12 +74,7 @@ class BulkUpdateService
   end
 
   def new_item_attributes
-    {
-      book: %i[title number_in_series],
-      grocery: %i[product],
-      music: %i[title],
-      to_do: %i[task]
-    }[@list_type.to_sym]
+    { book: %i[title number_in_series], grocery: %i[product], music: %i[title], to_do: %i[task] }[@list_type.to_sym]
   end
 
   def should_update_attr(attr, clear_attr)
@@ -105,8 +94,7 @@ class BulkUpdateService
   end
 
   def create_new_list
-    new_list = list_class.create!(name: @item_params[:new_list_name],
-                                  owner: @current_user)
+    new_list = list_class.create!(name: @item_params[:new_list_name], owner: @current_user)
     UsersList.create!(user: @current_user, list: new_list, has_accepted: true)
     new_list.id
   end
@@ -115,12 +103,11 @@ class BulkUpdateService
     item_attrs = { user: @current_user, "#{@list_type}_list_id": list_id }
 
     new_item_attributes.each do |attr|
-      item_attrs = item_attrs.merge(attr => item[attr])
+      item_attrs.merge!(attr => item[attr])
     end
 
     update_item_attributes.each do |attr, clear_attr|
-      item_attrs =
-        item_attrs.merge(attr => new_attr_value(item, attr, clear_attr))
+      item_attrs.merge!(attr => new_attr_value(item, attr, clear_attr))
     end
 
     item_attrs

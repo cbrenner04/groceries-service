@@ -55,11 +55,7 @@ describe "/lists/:list_id/users_lists", type: :request do
       context "when users_list exists" do
         it "accepts list" do
           patch list_users_list_path(list.id, users_list.id),
-                params: {
-                  users_list: {
-                    has_accepted: true
-                  }
-                },
+                params: { users_list: { has_accepted: true } },
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
@@ -68,11 +64,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
         it "rejects list" do
           patch list_users_list_path(list.id, users_list.id),
-                params: {
-                  users_list: {
-                    has_accepted: false
-                  }
-                },
+                params: { users_list: { has_accepted: false } },
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
@@ -83,11 +75,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           context "with good data" do
             it "updates permissions" do
               patch list_users_list_path(list.id, users_list.id),
-                    params: {
-                      users_list: {
-                        permissions: "read"
-                      }
-                    },
+                    params: { users_list: { permissions: "read" } },
                     headers: auth_params
 
               users_list = JSON.parse(response.body)
@@ -98,11 +86,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           context "with bad data" do
             it "returns 422" do
               patch list_users_list_path(list.id, users_list.id),
-                    params: {
-                      users_list: {
-                        permissions: "foo"
-                      }
-                    },
+                    params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
               expect(response.status).to eq 422
@@ -118,11 +102,7 @@ describe "/lists/:list_id/users_lists", type: :request do
       context "when users_list exists" do
         it "accepts list" do
           patch list_users_list_path(list.id, users_list.id),
-                params: {
-                  users_list: {
-                    has_accepted: true
-                  }
-                },
+                params: { users_list: { has_accepted: true } },
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
@@ -131,11 +111,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
         it "rejects list" do
           patch list_users_list_path(list.id, users_list.id),
-                params: {
-                  users_list: {
-                    has_accepted: false
-                  }
-                },
+                params: { users_list: { has_accepted: false } },
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
@@ -146,11 +122,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           context "with good data" do
             it "updates permissions" do
               patch list_users_list_path(list.id, users_list.id),
-                    params: {
-                      users_list: {
-                        permissions: "read"
-                      }
-                    },
+                    params: { users_list: { permissions: "read" } },
                     headers: auth_params
 
               users_list = JSON.parse(response.body)
@@ -161,11 +133,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           context "with bad data" do
             it "returns 422" do
               patch list_users_list_path(list.id, users_list.id),
-                    params: {
-                      users_list: {
-                        permissions: "foo"
-                      }
-                    },
+                    params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
               expect(response.status).to eq 422
@@ -182,12 +150,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
       it "responds with forbidden" do
         post list_users_lists_path(list.id),
-             params: {
-               users_list: {
-                 user_id: other_user.id,
-                 list_id: list.id
-               }
-             },
+             params: { users_list: { user_id: other_user.id, list_id: list.id } },
              headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -201,12 +164,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         it "creates a new users list" do
           expect do
             post list_users_lists_path(list.id),
-                 params: {
-                   users_list: {
-                     user_id: other_user.id,
-                     list_id: list.id
-                   }
-                 },
+                 params: { users_list: { user_id: other_user.id, list_id: list.id } },
                  headers: auth_params
           end.to change(UsersList, :count).by 1
         end
@@ -214,13 +172,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
       describe "with invalid params" do
         it "re-renders the 'new' template" do
-          post list_users_lists_path(list.id),
-               params: {
-                 users_list: {
-                   user_id: nil
-                 }
-               },
-               headers: auth_params
+          post list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
           expect(response.status).to eq 422
         end

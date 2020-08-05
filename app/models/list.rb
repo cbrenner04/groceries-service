@@ -19,8 +19,6 @@
 #  index_lists_on_owner_id  (owner_id)
 #
 class List < ApplicationRecord
-  include ListsService
-
   has_many :users_lists, dependent: :destroy
   has_many :users, through: :users_lists, source: :user, dependent: :destroy
   belongs_to :owner, class_name: "User", inverse_of: :lists

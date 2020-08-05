@@ -29,8 +29,7 @@ class MusicListItemsBulkUpdateController < ListItemsController
   def item_params
     params
       .require(:music_list_items)
-      .permit(:artist, :clear_artist, :album, :clear_album, :category,
-              :clear_category, :copy, :move, :existing_list_id, :new_list_name,
-              :update_current_items)
+      .permit(:artist, :clear_artist, :album, :clear_album, :category, :clear_category, :copy, :move, :existing_list_id,
+              :new_list_name, :update_current_items)
   end
 end
