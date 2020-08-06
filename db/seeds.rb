@@ -24,8 +24,6 @@ lists.each do |foos, bars, completed|
   UsersList.create!( user: foo, list: completed, has_accepted: true)
 end
 
-UsersList.find_by(user: foo, list: lists[3][1]).update!(permissions: "read")
-
 item_names = %w(apples bananas oranges chocolate beer)
 
 item_names.each do |item|
