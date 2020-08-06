@@ -66,21 +66,14 @@ class UsersListsController < ProtectedRouteController
     head :forbidden
   end
 
-  # rubocop:disable Metrics/MethodLength
   def index_response
     user_is_owner = list.owner == current_user
     invitable_users = current_user.users_that_list_can_be_shared_with(list)
     {
-      list: list,
-      invitable_users: invitable_users,
-      accepted: accepted_lists,
-      pending: pending_lists,
-      refused: refused_lists,
-      current_user_id: current_user.id,
-      user_is_owner: user_is_owner
+      list: list, invitable_users: invitable_users, accepted: accepted_lists, pending: pending_lists,
+      refused: refused_lists, current_user_id: current_user.id, user_is_owner: user_is_owner
     }
   end
-  # rubocop:enable Metrics/MethodLength
 
   def accepted_lists
     UsersListsService.list_users_by_status(params[:list_id], "accepted")
