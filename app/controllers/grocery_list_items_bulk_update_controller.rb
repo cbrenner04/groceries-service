@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# bulk update grocery list items
+# /lists/:list_id/grocery_list_items/bulk_update
 class GroceryListItemsBulkUpdateController < ListItemsController
+  # GET /
   def show
     service = BulkUpdateService.new("grocery", params, {}, current_user)
     render json: service.show_body
@@ -9,10 +10,10 @@ class GroceryListItemsBulkUpdateController < ListItemsController
     render json: "One or more items were not found", status: :not_found
   end
 
+  # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
-    service =
-      BulkUpdateService.new("grocery", params, item_params, current_user)
+    service = BulkUpdateService.new("grocery", params, item_params, current_user)
     service.update_current_items
     service.create_new_items if item_params[:move] || item_params[:copy]
     service.items.each(&:archive) if item_params[:move]

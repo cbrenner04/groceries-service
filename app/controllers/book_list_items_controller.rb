@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/book_list_items
 class BookListItemsController < ListItemsController
+  # POST /
   def create
     new_item = BookListItem.create(item_params.merge!(book_list_id: params[:list_id]))
     if new_item.save
@@ -11,12 +12,14 @@ class BookListItemsController < ListItemsController
     end
   end
 
+  # GET /:id/edit
   def edit
     list = BookList.find(item.book_list_id)
     categories = list.categories
     render json: { item: item, list: list, categories: categories }
   end
 
+  # PUT /:id
   def update
     if item.update(item_params)
       render json: @item
@@ -25,6 +28,7 @@ class BookListItemsController < ListItemsController
     end
   end
 
+  # DELETE /:id
   def destroy
     item.archive
     head :no_content

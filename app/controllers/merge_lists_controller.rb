@@ -2,6 +2,7 @@
 
 # /lists/merge_lists
 class MergeListsController < ProtectedRouteController
+  # POST /
   def create
     new_list = create_new_list
     users_list = UsersListsService.create_users_list(current_user, new_list)

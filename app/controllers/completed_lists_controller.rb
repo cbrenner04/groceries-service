@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# Controller for completed lists
+# /completed_lists
 class CompletedListsController < ProtectedRouteController
+  # GET /
   def index
     render json: {
       completed_lists: current_user.all_completed_lists,

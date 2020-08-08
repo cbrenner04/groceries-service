@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-# TODO: memoize list in `set_list`
 # /lists
 class ListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[show]
   before_action :require_list_owner, only: %i[edit update destroy]
 
+  # GET /
   def index
     render json: ListsService.index_response(current_user)
   end
 
+  # POST /
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
     if new_list.save
@@ -20,14 +21,17 @@ class ListsController < ProtectedRouteController
     end
   end
 
+  # GET /:id
   def show
     render json: ListsService.show_response(list, current_user)
   end
 
+  # GET /:id/edit
   def edit
     render json: list
   end
 
+  # PUT /:id
   def update
     if list.update(list_params)
       render json: list
@@ -36,6 +40,7 @@ class ListsController < ProtectedRouteController
     end
   end
 
+  # DELETE /:id
   def destroy
     list.archive
     head :no_content

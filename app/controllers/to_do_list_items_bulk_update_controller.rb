@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# bulk update to do list items
+# /lists/:list_id/to_do_list_items/bulk_update
 class ToDoListItemsBulkUpdateController < ListItemsController
+  # GET /
   def show
     service = BulkUpdateService.new("to_do", params, {}, current_user)
     render json: service.show_body.merge(list_users: UsersListsService.list_users(params[:list_id]))
@@ -9,6 +10,7 @@ class ToDoListItemsBulkUpdateController < ListItemsController
     render json: "One or more items were not found", status: :not_found
   end
 
+  # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
     service = BulkUpdateService.new("to_do", params, item_params, current_user)

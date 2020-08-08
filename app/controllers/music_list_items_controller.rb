@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/music_list_items
 class MusicListItemsController < ListItemsController
+  # POST /
   def create
     new_item = MusicListItem.create(item_params.merge!(music_list_id: params[:list_id]))
 
@@ -12,12 +13,14 @@ class MusicListItemsController < ListItemsController
     end
   end
 
+  # GET /:id/edit
   def edit
     list = MusicList.find(item.music_list_id)
     categories = list.categories
     render json: { item: item, list: list, categories: categories }
   end
 
+  # PUT /:id
   def update
     if item.update(item_params)
       render json: item
@@ -26,6 +29,7 @@ class MusicListItemsController < ListItemsController
     end
   end
 
+  # DELETE /:id
   def destroy
     item.archive
     head :no_content

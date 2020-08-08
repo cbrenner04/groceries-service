@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/to_do_list_items
 class ToDoListItemsController < ListItemsController
+  # POST /
   def create
     new_item = ToDoListItem.create(item_params.merge!(to_do_list_id: params[:list_id]))
 
@@ -12,6 +13,7 @@ class ToDoListItemsController < ListItemsController
     end
   end
 
+  # GET /:id/edit
   def edit
     list = ToDoList.find(item.to_do_list_id)
     categories = list.categories
@@ -19,6 +21,7 @@ class ToDoListItemsController < ListItemsController
     render json: { item: item, list: list, categories: categories, list_users: list_users }
   end
 
+  # PUT /:id
   def update
     if item.update(item_params)
       render json: item
@@ -27,6 +30,7 @@ class ToDoListItemsController < ListItemsController
     end
   end
 
+  # DELETE /:id
   def destroy
     item.archive
     head :no_content

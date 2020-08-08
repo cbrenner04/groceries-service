@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/grocery_list_items
 class GroceryListItemsController < ListItemsController
+  # POST /
   def create
     new_item = GroceryListItem.create(item_params.merge!(grocery_list_id: params[:list_id]))
 
@@ -12,12 +13,14 @@ class GroceryListItemsController < ListItemsController
     end
   end
 
+  # GET /:id/edit
   def edit
     list = GroceryList.find(item.grocery_list_id)
     categories = list.categories
     render json: { item: item, list: list, categories: categories }
   end
 
+  # PUT /:id
   def update
     if item.update(item_params)
       render json: item
@@ -26,6 +29,7 @@ class GroceryListItemsController < ListItemsController
     end
   end
 
+  # DELETE /:id
   def destroy
     item.archive
     head :no_content

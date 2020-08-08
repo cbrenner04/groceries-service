@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# bulk update music list items
+# /lists/:list_id/music_list_items/bulk_update
 class MusicListItemsBulkUpdateController < ListItemsController
+  # GET /
   def show
     service = BulkUpdateService.new("music", params, {}, current_user)
     render json: service.show_body
@@ -9,6 +10,7 @@ class MusicListItemsBulkUpdateController < ListItemsController
     render json: "One or more items were not found", status: :not_found
   end
 
+  # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
     service = BulkUpdateService.new("music", params, item_params, current_user)

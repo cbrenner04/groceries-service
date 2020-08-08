@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/users_lists
 class UsersListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[index update]
   before_action :require_write_access, only: %i[create]
 
+  # GET /
   def index
     render json: index_response
   end
 
+  # POST /
   def create
     new_users_list = UsersList.create(users_list_params)
 
@@ -20,6 +22,7 @@ class UsersListsController < ProtectedRouteController
     end
   end
 
+  # PUT /:id
   def update
     # the rescue here is in case a bad value is sent for `permissions`
     # `permissions` accepts `read` and `write` only
@@ -29,6 +32,7 @@ class UsersListsController < ProtectedRouteController
     render json: e, status: :unprocessable_entity
   end
 
+  # DELETE /:id
   def destroy
     users_list.destroy
     head :no_content
