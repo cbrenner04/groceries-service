@@ -20,8 +20,6 @@ class ListsService
     end
 
     def list_response(list, users_list, user)
-      # return object needs to be updated to include the users_list as this is
-      # what the client expects, similar to the index_response > accepted_lists
       list.attributes.merge!(has_accepted: true, user_id: user.id, users_list_id: users_list.id).to_json
     end
 
