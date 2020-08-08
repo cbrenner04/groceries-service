@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-# bulk update book list items
+# /lists/:list_id/book_list_items/bulk_update
 class BookListItemsBulkUpdateController < ListItemsController
+  # GET /
   def show
     service = BulkUpdateService.new("book", params, {}, current_user)
     render json: service.show_body
@@ -9,6 +10,7 @@ class BookListItemsBulkUpdateController < ListItemsController
     render json: "One or more items were not found", status: :not_found
   end
 
+  # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
     service = BulkUpdateService.new("book", params, item_params, current_user)
@@ -29,7 +31,7 @@ class BookListItemsBulkUpdateController < ListItemsController
   def item_params
     params
       .require(:book_list_items)
-      .permit(:author, :clear_author, :category, :clear_category, :copy, :move,
-              :existing_list_id, :new_list_name, :update_current_items)
+      .permit(:author, :clear_author, :category, :clear_category, :copy, :move, :existing_list_id, :new_list_name,
+              :update_current_items)
   end
 end

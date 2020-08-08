@@ -18,9 +18,7 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-          item_ids
-        }", headers: auth_params
+        get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -31,9 +29,8 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
 
       context "when one item does not exist" do
         it "response with not found" do
-          get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-            [item.id, 'bogus_id'].join(',')
-          }", headers: auth_params
+          get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'bogus_id'].join(',')}",
+              headers: auth_params
 
           expect(response).to have_http_status :not_found
         end
@@ -44,9 +41,7 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
           other_list = create :book_list, owner: user
           other_users_list = create :users_list, user: user, list: other_list
 
-          get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-            item_ids
-          }", headers: auth_params
+          get "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
 
@@ -115,19 +110,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-          item_ids
-        }", headers: auth_params, params: {
-          book_list_items: {
-            author: "foo",
-            clear_author: false,
-            category: "foo",
-            clear_category: false,
-            copy: true,
-            new_list_name: "sweet new list",
-            update_current_items: true
-          }
-        }, as: :json
+        put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+            headers: auth_params,
+            params: {
+              book_list_items: {
+                author: "foo",
+                clear_author: false,
+                category: "foo",
+                clear_category: false,
+                copy: true,
+                new_list_name: "sweet new list",
+                update_current_items: true
+              }
+            },
+            as: :json
 
         expect(response).to have_http_status :forbidden
       end
@@ -138,19 +134,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
 
       context "when one of the items does not exist" do
         it "responds with not found" do
-          put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-            [item.id, 'bogus_id'].join(',')
-          }", headers: auth_params, params: {
-            book_list_items: {
-              author: "foo",
-              clear_author: false,
-              category: "foo",
-              clear_category: false,
-              copy: true,
-              new_list_name: "sweet new list",
-              update_current_items: true
-            }
-          }, as: :json
+          put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'bogus_id'].join(',')}",
+              headers: auth_params,
+              params: {
+                book_list_items: {
+                  author: "foo",
+                  clear_author: false,
+                  category: "foo",
+                  clear_category: false,
+                  copy: true,
+                  new_list_name: "sweet new list",
+                  update_current_items: true
+                }
+              },
+              as: :json
 
           expect(response).to have_http_status :not_found
           expect(response.body).to eq "One or more items were not found"
@@ -171,17 +168,18 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
               expect(other_item.author).to eq(initial_other_author)
               expect(other_item.category).to eq(initial_other_category)
 
-              put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                item_ids
-              }", headers: auth_params, params: {
-                book_list_items: {
-                  author: "update author",
-                  clear_author: false,
-                  category: "update category",
-                  clear_category: true,
-                  update_current_items: true
-                }
-              }, as: :json
+              put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                  headers: auth_params,
+                  params: {
+                    book_list_items: {
+                      author: "update author",
+                      clear_author: false,
+                      category: "update category",
+                      clear_category: true,
+                      update_current_items: true
+                    }
+                  },
+                  as: :json
               item.reload
               other_item.reload
 
@@ -209,17 +207,18 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
               expect(other_item.author).to eq(other_item.author)
               expect(other_item.category).to eq(other_item.category)
 
-              put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                item_ids
-              }", headers: auth_params, params: {
-                book_list_items: {
-                  author: "update author",
-                  clear_author: false,
-                  category: "update category",
-                  clear_category: true,
-                  update_current_items: false
-                }
-              }, as: :json
+              put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                  headers: auth_params,
+                  params: {
+                    book_list_items: {
+                      author: "update author",
+                      clear_author: false,
+                      category: "update category",
+                      clear_category: true,
+                      update_current_items: false
+                    }
+                  },
+                  as: :json
               item.reload
               other_item.reload
 
@@ -242,19 +241,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
                 expect(List.find_by(name: "new book list")).to be_nil
 
-                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  item_ids
-                }", headers: auth_params, params: {
-                  book_list_items: {
-                    author: "update author",
-                    clear_author: false,
-                    category: "update category",
-                    clear_category: true,
-                    update_current_items: false,
-                    move: true,
-                    new_list_name: "bulk update book list"
-                  }
-                }, as: :json
+                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                    headers: auth_params,
+                    params: {
+                      book_list_items: {
+                        author: "update author",
+                        clear_author: false,
+                        category: "update category",
+                        clear_category: true,
+                        update_current_items: false,
+                        move: true,
+                        new_list_name: "bulk update book list"
+                      }
+                    },
+                    as: :json
                 item.reload
                 other_item.reload
                 new_list = List.find_by(name: "bulk update book list")
@@ -282,19 +282,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
 
-                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  item_ids
-                }", headers: auth_params, params: {
-                  book_list_items: {
-                    author: "update author",
-                    clear_author: false,
-                    category: "update category",
-                    clear_category: true,
-                    update_current_items: false,
-                    move: true,
-                    existing_list_id: other_list.id
-                  }
-                }, as: :json
+                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                    headers: auth_params,
+                    params: {
+                      book_list_items: {
+                        author: "update author",
+                        clear_author: false,
+                        category: "update category",
+                        clear_category: true,
+                        update_current_items: false,
+                        move: true,
+                        existing_list_id: other_list.id
+                      }
+                    },
+                    as: :json
                 item.reload
                 other_item.reload
                 new_items = BookListItem.where(book_list_id: other_list.id)
@@ -320,19 +321,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
                 expect(other_item.archived_at).to be_nil
                 expect(List.find_by(name: "new book list")).to be_nil
 
-                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  item_ids
-                }", headers: auth_params, params: {
-                  book_list_items: {
-                    author: "update author",
-                    clear_author: false,
-                    category: "update category",
-                    clear_category: true,
-                    update_current_items: false,
-                    copy: true,
-                    new_list_name: "bulk update book list"
-                  }
-                }, as: :json
+                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                    headers: auth_params,
+                    params: {
+                      book_list_items: {
+                        author: "update author",
+                        clear_author: false,
+                        category: "update category",
+                        clear_category: true,
+                        update_current_items: false,
+                        copy: true,
+                        new_list_name: "bulk update book list"
+                      }
+                    },
+                    as: :json
                 item.reload
                 other_item.reload
                 new_list = List.find_by(name: "bulk update book list")
@@ -360,19 +362,20 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
 
-                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-                  item_ids
-                }", headers: auth_params, params: {
-                  book_list_items: {
-                    author: "update author",
-                    clear_author: false,
-                    category: "update category",
-                    clear_category: true,
-                    update_current_items: false,
-                    copy: true,
-                    existing_list_id: other_list.id
-                  }
-                }, as: :json
+                put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                    headers: auth_params,
+                    params: {
+                      book_list_items: {
+                        author: "update author",
+                        clear_author: false,
+                        category: "update category",
+                        clear_category: true,
+                        update_current_items: false,
+                        copy: true,
+                        existing_list_id: other_list.id
+                      }
+                    },
+                    as: :json
                 item.reload
                 other_item.reload
                 new_items = BookListItem.where(book_list_id: other_list.id)
@@ -397,18 +400,19 @@ describe "/lists/:list_id/book_list_items/bulk_update", type: :request do
             other_list = create :book_list, owner: user
             create :users_list, user: user, list: other_list
 
-            put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{
-              item_ids
-            }", headers: auth_params, params: {
-              book_list_items: {
-                author: "update author",
-                clear_author: false,
-                category: "update category",
-                clear_category: true,
-                update_current_items: false,
-                copy: true
-              }
-            }, as: :json
+            put "#{list_book_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                headers: auth_params,
+                params: {
+                  book_list_items: {
+                    author: "update author",
+                    clear_author: false,
+                    category: "update category",
+                    clear_category: true,
+                    update_current_items: false,
+                    copy: true
+                  }
+                },
+                as: :json
 
             expect(response).to have_http_status :unprocessable_entity
           end

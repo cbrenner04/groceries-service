@@ -1,5 +1,5 @@
 user_emails = %w(foo@ex.co bar@ex.co baz@ex.co)
-user_emails.each do |email|
+foo, bar, baz = user_emails.map do |email|
   User.create!(
     email: email,
     password: 'asdfasdf',
@@ -8,45 +8,28 @@ user_emails.each do |email|
   )
 end
 
-GroceryList.create!(name: 'foobar', owner: User.find_by(email: 'foo@ex.co'))
-GroceryList.create!(name: 'foobaz', owner: User.find_by(email: 'bar@ex.co'))
+lists = %w(BookList GroceryList MusicList ToDoList).map do |list_type|
+  foos = List.create!(name: "foo - #{list_type}", owner: foo, type: list_type)
+  bars = List.create!(name: "bar - #{list_type}", owner: bar, type: list_type)
+  completed = List.create!( name: "completed - #{list_type}", owner: foo, type: list_type, completed: true)
+  [foos, bars, completed]
+end
 
-UsersList.create!(
-  user: User.find_by(email: 'foo@ex.co'),
-  list: List.find_by(name: 'foobar'),
-  has_accepted: true
-)
-
-UsersList.create!(
-  user: User.find_by(email: 'bar@ex.co'),
-  list: List.find_by(name: 'foobar'),
-  has_accepted: true
-)
-
-UsersList.create!(
-  user: User.find_by(email: 'baz@ex.co'),
-  list: List.find_by(name: 'foobar'),
-  has_accepted: true
-)
-
-UsersList.create!(
-  user: User.find_by(email: 'foo@ex.co'),
-  list: List.find_by(name: 'foobaz'),
-  has_accepted: true
-)
-
-UsersList.create!(
-  user: User.find_by(email: 'bar@ex.co'),
-  list: List.find_by(name: 'foobaz'),
-  has_accepted: true
-)
+lists.each do |foos, bars, completed|
+  UsersList.create!( user: foo, list: foos, has_accepted: true)
+  UsersList.create!( user: bar, list: foos, has_accepted: true)
+  UsersList.create!( user: baz, list: foos, has_accepted: true)
+  UsersList.create!( user: foo, list: bars, has_accepted: true)
+  UsersList.create!( user: bar, list: bars, has_accepted: true)
+  UsersList.create!( user: foo, list: completed, has_accepted: true)
+end
 
 item_names = %w(apples bananas oranges chocolate beer)
 
 item_names.each do |item|
   GroceryListItem.create!(
-    user: User.find_by(email: 'foo@ex.co'),
-    grocery_list: GroceryList.find_by(name: 'foobar'),
+    user: foo,
+    grocery_list: lists[1][0],
     product: item,
     quantity: "#{(1..10).to_a.sample} #{%w(bag bunch case).sample}"
   )

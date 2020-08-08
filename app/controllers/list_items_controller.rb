@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# no doc
+# wrapper for specific list items controllers
 class ListItemsController < ProtectedRouteController
   before_action :require_write_access
 

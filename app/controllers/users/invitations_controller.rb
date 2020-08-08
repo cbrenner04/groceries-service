@@ -24,11 +24,8 @@ module Users
             user = User.invite!(invite_params, current_user)
             if user.valid?
               users_list = create_users_list(user)
-              render json: {
-                user: user, users_list: {
-                  id: users_list.id, permissions: users_list.permissions
-                }
-              }, status: :created
+              render json: { user: user, users_list: { id: users_list.id, permissions: users_list.permissions } },
+                     status: :created
             else
               render json: user.errors, status: :unprocessable_entity
             end
@@ -52,17 +49,14 @@ module Users
          !accept_invitation_params[:password_confirmation] ||
          accept_invitation_params[:password] !=
          accept_invitation_params[:password_confirmation]
-        render json: {
-          errors: "password and password confirmation must be the same"
-        }, status: :unprocessable_entity
+        render json: { errors: "password and password confirmation must be the same" }, status: :unprocessable_entity
         return
       end
       user = User.accept_invitation!(accept_invitation_params)
       if user.errors.empty?
         render json: { success: ["User updated."] }, status: :accepted
       else
-        render json: { errors: user.errors.full_messages },
-               status: :unprocessable_entity
+        render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -91,13 +85,11 @@ module Users
 
     def share_list(user)
       if existing_users_list(user)
-        render json: { responseText: "List already shared with #{user.email}" },
-               status: :conflict
+        render json: { responseText: "List already shared with #{user.email}" }, status: :conflict
       else
         users_list = create_users_list(user)
-        render json: { user: user, users_list: {
-          id: users_list.id, permissions: users_list.permissions
-        } }, status: :created
+        render json: { user: user, users_list: { id: users_list.id, permissions: users_list.permissions } },
+               status: :created
       end
     end
 

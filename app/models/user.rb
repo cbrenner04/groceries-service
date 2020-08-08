@@ -49,14 +49,8 @@ class User < ApplicationRecord
   include UsersService
 
   has_many :users_lists, dependent: :destroy
-  has_many :lists,
-           through: :users_lists,
-           source: :list,
-           dependent: :restrict_with_exception
-  has_many :invitations,
-           class_name: to_s,
-           as: :invited_by,
-           dependent: :restrict_with_exception
+  has_many :lists, through: :users_lists, source: :list, dependent: :restrict_with_exception
+  has_many :invitations, class_name: to_s, as: :invited_by, dependent: :restrict_with_exception
   has_many :book_list_items, dependent: :restrict_with_exception
   has_many :grocery_list_items, dependent: :restrict_with_exception
   has_many :music_list_items, dependent: :restrict_with_exception
@@ -83,14 +77,9 @@ class User < ApplicationRecord
   end
 
   def accepted_lists
-    not_completed_lists =
-      List.find_by_sql(not_completed_accepted_lists_query(id))
-    completed_lists =
-      List.find_by_sql(limited_completed_accepted_lists_query(id))
-    {
-      not_completed_lists: not_completed_lists,
-      completed_lists: completed_lists
-    }
+    not_completed_lists = List.find_by_sql(not_completed_accepted_lists_query(id))
+    completed_lists = List.find_by_sql(limited_completed_accepted_lists_query(id))
+    { not_completed_lists: not_completed_lists, completed_lists: completed_lists }
   end
 
   def pending_lists

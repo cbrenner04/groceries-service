@@ -15,8 +15,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get edit_list_to_do_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_to_do_list_item_path(list.id, item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -26,8 +25,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
       before { users_list.update!(permissions: "write") }
 
       it "responds with success and correct payload" do
-        get edit_list_to_do_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_to_do_list_item_path(list.id, item.id), headers: auth_params
 
         expect(response).to be_successful
         response_body = JSON.parse(response.body).to_h
@@ -67,14 +65,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
 
       it "responds with forbidden" do
         post list_to_do_list_items_path(list.id),
-             params: {
-               to_do_list_item: {
-                 to_do_list_id: list.id,
-                 user_id: user.id,
-                 task: "foo",
-                 category: "foo"
-               }
-             },
+             params: { to_do_list_item: { to_do_list_id: list.id, user_id: user.id, task: "foo", category: "foo" } },
              headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -104,12 +95,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
       describe "with invalid params" do
         it "returns 422 and error message" do
           post list_to_do_list_items_path(list.id),
-               params: {
-                 to_do_list_item: {
-                   to_do_list_id: list.id,
-                   task: nil
-                 }
-               },
+               params: { to_do_list_item: { to_do_list_id: list.id, task: nil } },
                headers: auth_params
 
           expect(response.status).to eq 422
@@ -126,11 +112,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
       it "responds with forbidden" do
         update_item = create :to_do_list_item, task: "foo", assignee_id: user.id
         put list_to_do_list_item_path(list.id, update_item.id),
-            params: {
-              to_do_list_item: {
-                task: "bar"
-              }
-            },
+            params: { to_do_list_item: { task: "bar" } },
             headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -142,15 +124,9 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
 
       describe "with valid data" do
         it "updates a item" do
-          update_item = create :to_do_list_item,
-                               task: "foo",
-                               assignee_id: user.id
+          update_item = create :to_do_list_item, task: "foo", assignee_id: user.id
           put list_to_do_list_item_path(list.id, update_item.id),
-              params: {
-                to_do_list_item: {
-                  task: "bar"
-                }
-              },
+              params: { to_do_list_item: { task: "bar" } },
               headers: auth_params
           update_item.reload
 
@@ -164,11 +140,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
                                task: "foo",
                                assignee_id: user.id
           put list_to_do_list_item_path(list.id, update_item.id),
-              params: {
-                to_do_list_item: {
-                  task: ""
-                }
-              },
+              params: { to_do_list_item: { task: "" } },
               headers: auth_params
 
           expect(response.status).to eq 422
@@ -184,8 +156,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
 
       it "responds with forbidden" do
         delete_item = create :to_do_list_item, task: "foo", assignee_id: user.id
-        delete list_to_do_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_to_do_list_item_path(list.id, delete_item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -196,8 +167,7 @@ describe "/lists/:list_id/to_do_list_items", type: :request do
 
       it "destroys a item" do
         delete_item = create :to_do_list_item, task: "foo", assignee_id: user.id
-        delete list_to_do_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_to_do_list_item_path(list.id, delete_item.id), headers: auth_params
 
         expect(ToDoListItem.not_archived).not_to include delete_item
       end

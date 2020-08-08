@@ -15,8 +15,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get edit_list_book_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_book_list_item_path(list.id, item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -26,8 +25,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
       before { users_list.update!(permissions: "write") }
 
       it "responds with 200 and correct body" do
-        get edit_list_book_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_book_list_item_path(list.id, item.id), headers: auth_params
 
         response_body = JSON.parse(response.body).to_h
 
@@ -109,15 +107,9 @@ describe "/lists/:list_id/book_list_items", type: :request do
       describe "with invalid params" do
         it "returns 422 and error message" do
           post list_book_list_items_path(list.id),
-               params: {
-                 book_list_item: {
-                   book_list_id: list.id,
-                   author: nil
-                 }
-               },
+               params: { book_list_item: { book_list_id: list.id, author: nil } },
                headers: auth_params
 
-          puts response.body
           expect(response.status).to eq 422
           expect(response.body).not_to be_blank
         end
@@ -132,12 +124,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
       it "responds with forbidden" do
         update_item = create :book_list_item, author: "foo", book_list: list
         put list_book_list_item_path(list.id, update_item.id),
-            params: {
-              id: update_item.id,
-              book_list_item: {
-                author: "bar"
-              }
-            },
+            params: { id: update_item.id, book_list_item: { author: "bar" } },
             headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -151,11 +138,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
         it "updates item" do
           update_item = create :book_list_item, author: "foo", book_list: list
           put list_book_list_item_path(list.id, update_item.id),
-              params: {
-                book_list_item: {
-                  author: "bar"
-                }
-              },
+              params: { book_list_item: { author: "bar" } },
               headers: auth_params
           update_item.reload
 
@@ -167,12 +150,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
         it "return 422 and error message" do
           update_item = create :book_list_item, author: "foo", book_list: list
           put list_book_list_item_path(list.id, update_item.id),
-              params: {
-                book_list_item: {
-                  author: "",
-                  title: ""
-                }
-              },
+              params: { book_list_item: { author: "", title: "" } },
               headers: auth_params
 
           expect(response.status).to eq 422
@@ -188,8 +166,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
 
       it "responds with forbidden" do
         delete_item = create :book_list_item, author: "foo", book_list: list
-        delete list_book_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_book_list_item_path(list.id, delete_item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -200,8 +177,7 @@ describe "/lists/:list_id/book_list_items", type: :request do
 
       it "destroys a item" do
         delete_item = create :book_list_item, author: "foo", book_list: list
-        delete list_book_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_book_list_item_path(list.id, delete_item.id), headers: auth_params
         delete_item.reload
 
         expect(BookListItem.not_archived).not_to include delete_item

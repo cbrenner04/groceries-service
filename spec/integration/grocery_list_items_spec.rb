@@ -15,8 +15,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "redirects to lists_path" do
-        get edit_list_grocery_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_grocery_list_item_path(list.id, item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -26,8 +25,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
       before { users_list.update!(permissions: "write") }
 
       it "responds with success and correct payload" do
-        get edit_list_grocery_list_item_path(list.id, item.id),
-            headers: auth_params
+        get edit_list_grocery_list_item_path(list.id, item.id), headers: auth_params
 
         expect(response).to be_successful
         response_body = JSON.parse(response.body).to_h
@@ -103,12 +101,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
       describe "with invalid params" do
         it "returns 422 and error message" do
           post list_grocery_list_items_path(list.id),
-               params: {
-                 grocery_list_item: {
-                   grocery_list_id: list.id,
-                   product: nil
-                 }
-               },
+               params: { grocery_list_item: { grocery_list_id: list.id, product: nil } },
                headers: auth_params
 
           expect(response.status).to eq 422
@@ -125,11 +118,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
       it "responds with forbidden" do
         update_item = create :grocery_list_item, product: "foo"
         put list_grocery_list_item_path(list.id, update_item.id),
-            params: {
-              grocery_list_item: {
-                product: "bar"
-              }
-            },
+            params: { grocery_list_item: { product: "bar" } },
             headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -143,11 +132,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
         it "updates a item" do
           update_item = create :grocery_list_item, product: "foo"
           put list_grocery_list_item_path(list.id, update_item.id),
-              params: {
-                grocery_list_item: {
-                  product: "bar"
-                }
-              },
+              params: { grocery_list_item: { product: "bar" } },
               headers: auth_params
           update_item.reload
 
@@ -159,11 +144,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
         it "returns 422 and error message" do
           update_item = create :grocery_list_item
           put list_grocery_list_item_path(list.id, update_item.id),
-              params: {
-                grocery_list_item: {
-                  product: nil
-                }
-              },
+              params: { grocery_list_item: { product: nil } },
               headers: auth_params
 
           expect(response.status).to eq 422
@@ -179,8 +160,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
 
       it "responds with forbidden" do
         delete_item = create :grocery_list_item, product: "foo"
-        delete list_grocery_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_grocery_list_item_path(list.id, delete_item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -191,8 +171,7 @@ describe "/lists/:list_id/grocery_list_items", type: :request do
 
       it "destroys a item" do
         delete_item = create :grocery_list_item, product: "foo"
-        delete list_grocery_list_item_path(list.id, delete_item.id),
-               headers: auth_params
+        delete list_grocery_list_item_path(list.id, delete_item.id), headers: auth_params
         delete_item.reload
 
         expect(GroceryListItem.not_archived).not_to include delete_item

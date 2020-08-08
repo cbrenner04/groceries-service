@@ -14,16 +14,10 @@ describe "/auth/invitation", type: :request do
         it "creates a new user" do
           starting_user_count = User.count
           starting_users_list_count = UsersList.count
-          post auth_invitation_path,
-               params: {
-                 email: "foo@bar.com",
-                 list_id: list.id
-               },
-               headers: auth_params
+          post auth_invitation_path, params: { email: "foo@bar.com", list_id: list.id }, headers: auth_params
 
           new_user = User.find_by(email: "foo@bar.com")
-          new_users_list =
-            UsersList.find_by(user_id: new_user.id, list_id: list.id)
+          new_users_list = UsersList.find_by(user_id: new_user.id, list_id: list.id)
           response_body = JSON.parse(response.body).to_h
 
           expect(User.count).to be starting_user_count + 1
@@ -48,12 +42,7 @@ describe "/auth/invitation", type: :request do
 
       context "with invalid params" do
         it "responds with errors" do
-          post auth_invitation_path,
-               params: {
-                 email: nil,
-                 list_id: list.id
-               },
-               headers: auth_params
+          post auth_invitation_path, params: { email: nil, list_id: list.id }, headers: auth_params
 
           expect(response).to have_http_status :unprocessable_entity
           expect(response.body).to eq("{\"email\":[\"can't be blank\"]}")
@@ -66,19 +55,12 @@ describe "/auth/invitation", type: :request do
             other_user = create :user
             create :users_list, user: other_user, list: list
             expect do
-              post auth_invitation_path,
-                   params: {
-                     email: other_user.email,
-                     list_id: list.id
-                   },
-                   headers: auth_params
+              post auth_invitation_path, params: { email: other_user.email, list_id: list.id }, headers: auth_params
             end.not_to change(UsersList, :count)
             response_body = JSON.parse(response.body).to_h
 
             expect(response).to have_http_status :conflict
-            expect(response_body["responseText"]).to eq(
-              "List already shared with #{other_user.email}"
-            )
+            expect(response_body["responseText"]).to eq("List already shared with #{other_user.email}")
           end
         end
 
@@ -87,15 +69,9 @@ describe "/auth/invitation", type: :request do
             other_user = create :user
             starting_user_count = User.count
             starting_users_list_count = UsersList.count
-            post auth_invitation_path,
-                 params: {
-                   email: other_user.email,
-                   list_id: list.id
-                 },
-                 headers: auth_params
+            post auth_invitation_path, params: { email: other_user.email, list_id: list.id }, headers: auth_params
 
-            new_users_list =
-              UsersList.find_by(user_id: other_user.id, list_id: list.id)
+            new_users_list = UsersList.find_by(user_id: other_user.id, list_id: list.id)
             response_body = JSON.parse(response.body).to_h
 
             expect(User.count).to be starting_user_count
@@ -126,15 +102,10 @@ describe "/auth/invitation", type: :request do
           it "creates a new user, does not create a users list" do
             starting_user_count = User.count
             starting_users_list_count = UsersList.count
-            post auth_invitation_path,
-                 params: {
-                   email: "foo@bar.com"
-                 },
-                 headers: auth_params
+            post auth_invitation_path, params: { email: "foo@bar.com" }, headers: auth_params
 
             new_user = User.find_by(email: "foo@bar.com")
-            new_users_list =
-              UsersList.find_by(user_id: new_user.id, list_id: list.id)
+            new_users_list = UsersList.find_by(user_id: new_user.id, list_id: list.id)
             response_body = JSON.parse(response.body).to_h
 
             expect(User.count).to be starting_user_count + 1
@@ -159,11 +130,8 @@ describe "/auth/invitation", type: :request do
           it "responds with ok" do
             user_email = "foo@bar.com"
             User.create!(email: user_email)
-            post auth_invitation_path,
-                 params: {
-                   email: user_email
-                 },
-                 headers: auth_params
+            post auth_invitation_path, params: { email: user_email }, headers: auth_params
+
             expect(response).to have_http_status :ok
           end
         end
@@ -171,11 +139,7 @@ describe "/auth/invitation", type: :request do
 
       context "with invalid params" do
         it "responds with errors" do
-          post auth_invitation_path,
-               params: {
-                 email: nil
-               },
-               headers: auth_params
+          post auth_invitation_path, params: { email: nil }, headers: auth_params
 
           expect(response).to have_http_status :unprocessable_entity
           expect(response.body).to eq("{\"email\":[\"can't be blank\"]}")
@@ -197,9 +161,7 @@ describe "/auth/invitation", type: :request do
             }
 
         expect(response).to have_http_status :unprocessable_entity
-        expect(response.body).to eq(
-          "{\"errors\":[\"Invitation token is invalid\"]}"
-        )
+        expect(response.body).to eq("{\"errors\":[\"Invitation token is invalid\"]}")
       end
     end
 
@@ -228,8 +190,7 @@ describe "/auth/invitation", type: :request do
               }
 
           expect(response).to have_http_status :unprocessable_entity
-          expect(response.body).to eq("{\"errors\":\"password and password " \
-                                      "confirmation must be the same\"}")
+          expect(response.body).to eq("{\"errors\":\"password and password confirmation must be the same\"}")
         end
       end
     end

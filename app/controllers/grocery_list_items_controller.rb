@@ -1,37 +1,37 @@
 # frozen_string_literal: true
 
-# no doc
+# /lists/:list_id/grocery_list_items
 class GroceryListItemsController < ListItemsController
+  # POST /
   def create
-    @item = GroceryListItem
-            .create(item_params.merge!(grocery_list_id: params[:list_id]))
+    new_item = GroceryListItem.create(item_params.merge!(grocery_list_id: params[:list_id]))
 
-    if @item.save
-      render json: @item
+    if new_item.save
+      render json: new_item
     else
-      render json: @item.errors, status: :unprocessable_entity
+      render json: new_item.errors, status: :unprocessable_entity
     end
   end
 
+  # GET /:id/edit
   def edit
-    item = GroceryListItem.find(params[:id])
     list = GroceryList.find(item.grocery_list_id)
     categories = list.categories
     render json: { item: item, list: list, categories: categories }
   end
 
+  # PUT /:id
   def update
-    @item = GroceryListItem.find(params[:id])
-    if @item.update(item_params)
-      render json: @item
+    if item.update(item_params)
+      render json: item
     else
-      render json: @item.errors, status: :unprocessable_entity
+      render json: item.errors, status: :unprocessable_entity
     end
   end
 
+  # DELETE /:id
   def destroy
-    @item = GroceryListItem.find(params[:id])
-    @item.archive
+    item.archive
     head :no_content
   end
 
@@ -40,12 +40,10 @@ class GroceryListItemsController < ListItemsController
   def item_params
     params
       .require(:grocery_list_item)
-      .permit(:user_id,
-              :product,
-              :list_id,
-              :quantity,
-              :purchased,
-              :refreshed,
-              :category)
+      .permit(:user_id, :product, :list_id, :quantity, :purchased, :refreshed, :category)
+  end
+
+  def item
+    @item ||= GroceryListItem.find(params[:id])
   end
 end

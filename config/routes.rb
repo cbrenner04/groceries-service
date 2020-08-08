@@ -14,6 +14,7 @@
 #                                     PUT    /auth/invitation(.:format)                               users/invitations#update
 #                                     POST   /auth/invitation(.:format)                               users/invitations#create
 #                   list_refresh_list POST   /lists/:list_id/refresh_list(.:format)                   refresh_lists#create
+#                         merge_lists POST   /lists/merge_lists(.:format)                             merge_lists#create
 #    list_book_list_items_bulk_update GET    /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#show
 #                                     PATCH  /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#update
 #                                     PUT    /lists/:list_id/book_list_items/bulk_update(.:format)    book_list_items_bulk_update#update
@@ -71,6 +72,9 @@ Rails.application.routes.draw do
   end
   resources :lists, only: [:index, :show, :create, :edit, :update, :destroy] do
     resource :refresh_list, only: [:create]
+    collection do
+      resource :merge_lists, only: [:create]
+    end
     resources :book_list_items, only: [:create, :edit, :update, :destroy] do
       collection do
         resource :bulk_update,

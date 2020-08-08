@@ -35,12 +35,9 @@ class MusicListItem < ApplicationRecord
   scope :not_archived, (-> { where(archived_at: nil) })
 
   validates :user, :music_list, presence: true
-  validates :title, presence: true,
-                    if: proc { |item| item.artist.blank? && item.album.blank? }
-  validates :artist, presence: true,
-                     if: proc { |item| item.title.blank? && item.album.blank? }
-  validates :album, presence: true,
-                    if: proc { |item| item.artist.blank? && item.title.blank? }
+  validates :title, presence: true, if: proc { |item| item.artist.blank? && item.album.blank? }
+  validates :artist, presence: true, if: proc { |item| item.title.blank? && item.album.blank? }
+  validates :album, presence: true, if: proc { |item| item.artist.blank? && item.title.blank? }
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
