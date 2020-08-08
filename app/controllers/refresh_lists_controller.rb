@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: memoize list
 # /lists/:list_id/refresh_list
 class RefreshListsController < ProtectedRouteController
   before_action :require_list_owner, only: %i[create]
