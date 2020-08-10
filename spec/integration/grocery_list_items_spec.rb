@@ -5,7 +5,7 @@ require "rails_helper"
 describe "/lists/:list_id/grocery_list_items", type: :request do
   let(:user) { create :user }
   let(:list) { create :grocery_list, owner: user }
-  let!(:users_list) { create :users_list, user: user, list: list }
+  let(:users_list) { create :users_list, user: user, list: list }
   let(:item) { create :grocery_list_item, grocery_list: list }
 
   required_attrs = %w[product]

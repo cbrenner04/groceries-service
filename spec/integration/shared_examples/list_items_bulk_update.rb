@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, update_attrs|
   list_item_class = {
     book_list: BookListItem,

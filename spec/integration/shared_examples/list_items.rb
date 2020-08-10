@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
   list_item_class = {
     book_list: BookListItem,
