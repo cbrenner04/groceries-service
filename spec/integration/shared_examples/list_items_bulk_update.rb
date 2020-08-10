@@ -47,13 +47,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
           expect(response).to have_http_status :success
           expect(response_body["items"].count).to eq 2
           item_attrs.each do |item_attr|
-            if item_attr == "due_by"
-              expect(response_body["items"][0][item_attr]).to eq item[item_attr.to_sym].iso8601(3)
-              expect(response_body["items"][1][item_attr]).to eq other_item[item_attr.to_sym].iso8601(3)
-            else
-              expect(response_body["items"][0][item_attr]).to eq item[item_attr.to_sym]
-              expect(response_body["items"][1][item_attr]).to eq other_item[item_attr.to_sym]
-            end
+            value = item_attr == "due_by" ? item[item_attr.to_sym].iso8601(3) : item[item_attr.to_sym]
+            other_value = item_attr == "due_by" ? other_item[item_attr.to_sym].iso8601(3) : other_item[item_attr.to_sym]
+            expect(response_body["items"][0][item_attr]).to eq value
+            expect(response_body["items"][1][item_attr]).to eq other_value
           end
           expect(response_body["list"]).to eq(
             "id" => list[:id],
@@ -172,16 +169,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_attrs.each do |attr|
                 expect(item[attr.to_sym]).not_to eq(initial_item_values[attr.to_sym])
                 expect(other_item[attr.to_sym]).not_to eq(initial_other_item_values[attr.to_sym])
-                if attr == "assignee_id"
-                  expect(item[attr.to_sym]).to eq other_user.id
-                  expect(other_item[attr.to_sym]).to eq other_user.id
-                elsif attr == "due_by"
-                  expect(item[attr.to_sym]).to eq due_by_date.iso8601(3)
-                  expect(other_item[attr.to_sym]).to eq due_by_date.iso8601(3)
-                else
-                  expect(item[attr.to_sym]).to eq "updated #{attr}"
-                  expect(other_item[attr.to_sym]).to eq "updated #{attr}"
-                end
+                value = if attr == "assignee_id"
+                          other_user.id
+                        elsif attr == "due_by"
+                          due_by_date.iso8601(3)
+                        else
+                          "updated #{attr}"
+                        end
+                expect(item[attr.to_sym]).to eq value
+                expect(other_item[attr.to_sym]).to eq value
               end
               expect(item.category).not_to eq(initial_item_values[:category])
               expect(other_item.category).not_to eq(initial_other_item_values[:category])
@@ -217,16 +213,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_attrs.each do |attr|
                 expect(item[attr.to_sym]).to eq(initial_item_values[attr.to_sym])
                 expect(other_item[attr.to_sym]).to eq(initial_other_item_values[attr.to_sym])
-                if attr == "assignee_id"
-                  expect(item[attr.to_sym]).not_to eq other_user.id
-                  expect(other_item[attr.to_sym]).not_to eq other_user.id
-                elsif attr == "due_by"
-                  expect(item[attr.to_sym]).not_to eq due_by_date.iso8601(3)
-                  expect(other_item[attr.to_sym]).not_to eq due_by_date.iso8601(3)
-                else
-                  expect(item[attr.to_sym]).not_to eq "updated #{attr}"
-                  expect(other_item[attr.to_sym]).not_to eq "updated #{attr}"
-                end
+                value = if attr == "assignee_id"
+                          other_user.id
+                        elsif attr == "due_by"
+                          due_by_date.iso8601(3)
+                        else
+                          "updated #{attr}"
+                        end
+                expect(item[attr.to_sym]).not_to eq value
+                expect(other_item[attr.to_sym]).not_to eq value
               end
               expect(item.category).to eq(initial_item_values[:category])
               expect(other_item.category).to eq(initial_other_item_values[:category])
@@ -266,16 +261,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  if attr == "assignee_id"
-                    expect(new_items[0][attr.to_sym]).to eq other_user.id
-                    expect(new_items[1][attr.to_sym]).to eq other_user.id
-                  elsif attr == "due_by"
-                    expect(new_items[0][attr.to_sym]).to eq due_by_date.iso8601(3)
-                    expect(new_items[1][attr.to_sym]).to eq due_by_date.iso8601(3)
-                  else
-                    expect(new_items[0][attr.to_sym]).to eq "updated #{attr}"
-                    expect(new_items[1][attr.to_sym]).to eq "updated #{attr}"
-                  end
+                  value = if attr == "assignee_id"
+                            other_user.id
+                          elsif attr == "due_by"
+                            due_by_date.iso8601(3)
+                          else
+                            "updated #{attr}"
+                          end
+                  expect(new_items[0][attr.to_sym]).to eq value
+                  expect(new_items[1][attr.to_sym]).to eq value
                 end
                 expect(new_items[0].category).to eq nil
                 expect(new_items[1].category).to eq nil
@@ -310,16 +304,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  if attr == "assignee_id"
-                    expect(new_items[0][attr.to_sym]).to eq other_user.id
-                    expect(new_items[1][attr.to_sym]).to eq other_user.id
-                  elsif attr == "due_by"
-                    expect(new_items[0][attr.to_sym]).to eq due_by_date.iso8601(3)
-                    expect(new_items[1][attr.to_sym]).to eq due_by_date.iso8601(3)
-                  else
-                    expect(new_items[0][attr.to_sym]).to eq "updated #{attr}"
-                    expect(new_items[1][attr.to_sym]).to eq "updated #{attr}"
-                  end
+                  value = if attr == "assignee_id"
+                            other_user.id
+                          elsif attr == "due_by"
+                            due_by_date.iso8601(3)
+                          else
+                            "updated #{attr}"
+                          end
+                  expect(new_items[0][attr.to_sym]).to eq value
+                  expect(new_items[1][attr.to_sym]).to eq value
                 end
                 expect(new_items[0].category).to eq nil
                 expect(new_items[1].category).to eq nil
@@ -358,16 +351,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  if attr == "assignee_id"
-                    expect(new_items[0][attr.to_sym]).to eq other_user.id
-                    expect(new_items[1][attr.to_sym]).to eq other_user.id
-                  elsif attr == "due_by"
-                    expect(new_items[0][attr.to_sym]).to eq due_by_date.iso8601(3)
-                    expect(new_items[1][attr.to_sym]).to eq due_by_date.iso8601(3)
-                  else
-                    expect(new_items[0][attr.to_sym]).to eq "updated #{attr}"
-                    expect(new_items[1][attr.to_sym]).to eq "updated #{attr}"
-                  end
+                  value = if attr == "assignee_id"
+                            other_user.id
+                          elsif attr == "due_by"
+                            due_by_date.iso8601(3)
+                          else
+                            "updated #{attr}"
+                          end
+                  expect(new_items[0][attr.to_sym]).to eq value
+                  expect(new_items[1][attr.to_sym]).to eq value
                 end
                 expect(new_items[0].category).to eq nil
                 expect(new_items[1].category).to eq nil
@@ -402,16 +394,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  if attr == "assignee_id"
-                    expect(new_items[0][attr.to_sym]).to eq other_user.id
-                    expect(new_items[1][attr.to_sym]).to eq other_user.id
-                  elsif attr == "due_by"
-                    expect(new_items[0][attr.to_sym]).to eq due_by_date.iso8601(3)
-                    expect(new_items[1][attr.to_sym]).to eq due_by_date.iso8601(3)
-                  else
-                    expect(new_items[0][attr.to_sym]).to eq "updated #{attr}"
-                    expect(new_items[1][attr.to_sym]).to eq "updated #{attr}"
-                  end
+                  value = if attr == "assignee_id"
+                            other_user.id
+                          elsif attr == "due_by"
+                            due_by_date.iso8601(3)
+                          else
+                            "updated #{attr}"
+                          end
+                  expect(new_items[0][attr.to_sym]).to eq value
+                  expect(new_items[1][attr.to_sym]).to eq value
                 end
                 expect(new_items[0].category).to eq nil
                 expect(new_items[1].category).to eq nil

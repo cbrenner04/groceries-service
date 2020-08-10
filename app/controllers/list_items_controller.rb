@@ -12,5 +12,7 @@ class ListItemsController < ProtectedRouteController
     return if users_list&.permissions == "write"
 
     head :forbidden
+  rescue ActiveRecord::RecordNotFound
+    head :forbidden
   end
 end
