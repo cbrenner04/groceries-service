@@ -19,6 +19,8 @@ class ToDoListItemsController < ListItemsController
     categories = list.categories
     list_users = UsersListsService.list_users(params[:list_id])
     render json: { item: item, list: list, categories: categories, list_users: list_users }
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # PUT /:id
@@ -28,12 +30,16 @@ class ToDoListItemsController < ListItemsController
     else
       render json: item.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # DELETE /:id
   def destroy
     item.archive
     head :no_content
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   private

@@ -18,6 +18,8 @@ class MusicListItemsController < ListItemsController
     list = MusicList.find(item.music_list_id)
     categories = list.categories
     render json: { item: item, list: list, categories: categories }
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # PUT /:id
@@ -27,12 +29,16 @@ class MusicListItemsController < ListItemsController
     else
       render json: item.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # DELETE /:id
   def destroy
     item.archive
     head :no_content
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   private
