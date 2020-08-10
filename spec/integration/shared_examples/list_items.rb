@@ -1,0 +1,179 @@
+RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
+  list_item_class = {
+    book_list: BookListItem,
+    grocery_list: GroceryListItem,
+    music_list: MusicListItem,
+    to_do_list: ToDoListItem
+  }[list_type.to_sym]
+
+  before { login user }
+
+  describe "GET /:id/edit" do
+    describe "with read access" do
+      before { users_list.update!(permissions: "read") }
+
+      it "responds with forbidden" do
+        get send("edit_list_#{list_type}_item_path", list.id, item.id), headers: auth_params
+
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
+    describe "with write access" do
+      before { users_list.update!(permissions: "write") }
+
+      it "responds with 200 and correct body" do
+        get send("edit_list_#{list_type}_item_path", list.id, item.id), headers: auth_params
+
+        response_body = JSON.parse(response.body).to_h
+
+        expect(response).to have_http_status :success
+        item_attrs.each do |item_attr|
+          if item_attr == "due_by"
+            expect(response_body["item"][item_attr]).to eq item[item_attr.to_sym].iso8601(3)
+          else
+            expect(response_body["item"][item_attr]).to eq item[item_attr.to_sym]
+          end
+        end
+        expect(response_body["list"]).to eq(
+          "id" => list[:id],
+          "name" => list[:name],
+          "archived_at" => list[:archived_at],
+          "completed" => list[:completed],
+          "refreshed" => list[:refreshed],
+          "type" => list[:type],
+          "owner_id" => list[:owner_id],
+          "created_at" => list[:created_at].iso8601(3),
+          "updated_at" => list[:updated_at].iso8601(3)
+        )
+        expect(response_body["categories"]).to eq(list.categories)
+      end
+    end
+  end
+
+  describe "POST /" do
+    describe "with read access" do
+      before { users_list.update!(permissions: "read") }
+
+      it "responds with forbidden" do
+        post send("list_#{list_type}_items_path", list.id),
+             params: {
+               "#{list_type}_item": {
+                 "#{list_type}_id": list.id,
+                 user_id: user.id,
+                 required_attrs[0].to_sym => "foo",
+                 category: "foo"
+               }
+             },
+             headers: auth_params
+
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
+    describe "with write access" do
+      before { users_list.update!(permissions: "write") }
+
+      # TODO: when item does not exist
+
+      describe "with valid params" do
+        it "creates a new item" do
+          expect do
+            post send("list_#{list_type}_items_path", list.id),
+                 params: {
+                   "#{list_type}_item": {
+                     "#{list_type}_id": list.id,
+                     user_id: user.id,
+                     required_attrs[0].to_sym => "foo",
+                     category: "foo"
+                   }
+                 },
+                 headers: auth_params
+          end.to change(list_item_class, :count).by 1
+        end
+      end
+
+      describe "with invalid params" do
+        it "returns 422 and error message" do
+          post send("list_#{list_type}_items_path", list.id),
+               params: { "#{list_type}_item": { "#{list_type}_id": list.id, required_attrs[0].to_sym => nil } },
+               headers: auth_params
+
+          expect(response.status).to eq 422
+          expect(response.body).not_to be_blank
+        end
+      end
+    end
+  end
+
+  describe "PUT /:id" do
+    describe "with read access" do
+      before { users_list.update!(permissions: "read") }
+
+      it "responds with forbidden" do
+        update_item = create "#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list_type.to_sym => list
+        put send("list_#{list_type}_item_path", list.id, update_item.id),
+            params: { id: update_item.id, "#{list_type}_item": { required_attrs[0].to_sym => "bar" } },
+            headers: auth_params
+
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
+    describe "with write access" do
+      before { users_list.update!(permissions: "write") }
+
+      describe "with valid data" do
+        it "updates item" do
+          update_item = create "#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list_type.to_sym => list
+          put send("list_#{list_type}_item_path", list.id, update_item.id),
+              params: { "#{list_type}_item": { required_attrs[0].to_sym => "bar" } },
+              headers: auth_params
+          update_item.reload
+
+          expect(update_item[required_attrs[0].to_sym]).to eq "bar"
+        end
+      end
+
+      describe "with invalid data" do
+        it "return 422 and error message" do
+          params = {}
+          required_attrs.each { |attr| params[attr.to_sym] = "" }
+          update_item = create "#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list_type.to_sym => list
+          put send("list_#{list_type}_item_path", list.id, update_item.id),
+              params: { "#{list_type}_item": params },
+              headers: auth_params
+
+          expect(response.status).to eq 422
+          expect(response.body).not_to be_blank
+        end
+      end
+    end
+  end
+
+  describe "DELETE /:id" do
+    describe "with read access" do
+      before { users_list.update!(permissions: "read") }
+
+      it "responds with forbidden" do
+        delete_item = create "#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list_type.to_sym => list
+        delete send("list_#{list_type}_item_path", list.id, delete_item.id), headers: auth_params
+
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
+    describe "with write access" do
+      before { users_list.update!(permissions: "write") }
+
+      it "destroys a item" do
+        delete_item = create "#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list_type.to_sym => list
+        delete send("list_#{list_type}_item_path", list.id, delete_item.id), headers: auth_params
+        delete_item.reload
+
+        expect(list_item_class.not_archived).not_to include delete_item
+        expect(delete_item.archived_at).not_to be_nil
+      end
+    end
+  end
+end
