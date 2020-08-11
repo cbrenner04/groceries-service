@@ -1,0 +1,39 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2 
+jobs:
+  test:
+    docker:
+      - image: circleci/ruby:2.6.3
+      - image: circleci/postgres:9.5-alpine 
+        environment:
+          POSTGRES_USER: groceries-service
+          POSTGRES_DB: groceries_service_test
+          POSTGRES_PASSWORD: ""
+    executor: ruby/default
+    environment:
+      PGHOST: 127.0.0.1
+      PGUSER: groceries-service
+      PGPASSWORD: ""
+      RAILS_ENV: test
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/bundle-install
+      - run:
+          name: wait for db
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: setup db
+          command: bundle exec rails db:drop db:create db:migrate
+      - run:
+          name: bundle audit
+          command: bundle exec bundle audit check --update
+      - run:
+          name: rubocop
+          command: bundle exec rubocop
+      - run:
+          name: test
+          command: bundle exec rspec
