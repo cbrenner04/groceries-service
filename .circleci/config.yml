@@ -29,6 +29,9 @@ jobs:
           name: setup db
           command: RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
       - run:
+          name: add postgres to path
+          command: echo '/usr/lib/postgresql/9.5/bin/:$PATH' >> $BASH_ENV
+      - run:
           name: create view
           command: sh db/add-view.sh
       - run:

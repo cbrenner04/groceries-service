@@ -4,7 +4,7 @@
 # I often need to rerun the view creation
 # this is especially true in CI
 
-psql -U $PGUSER -d groceries_service_test -c "DROP VIEW IF EXISTS active_lists;\
+psql -h localhost -p 5432 -U $PGUSER -d groceries_service_test -c "DROP VIEW IF EXISTS active_lists;\
 CREATE VIEW active_lists AS\
   SELECT lists.id, lists.name, lists.created_at, lists.completed,\
         lists.type, lists.refreshed, lists.owner_id,\
