@@ -10,6 +10,7 @@ jobs:
           POSTGRES_USER: groceries-service
           POSTGRES_DB: groceries_service_test
           POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
     executor: ruby/default
     environment:
       PGHOST: 127.0.0.1
