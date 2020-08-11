@@ -7,14 +7,14 @@ jobs:
       - image: circleci/ruby:2.6.3
       - image: circleci/postgres:12.3
         environment:
-          POSTGRES_USER: groceries-service
+          POSTGRES_USER: groceries
           POSTGRES_DB: groceries_service_test
           POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
     executor: ruby/default
     environment:
       PGHOST: 127.0.0.1
-      PGUSER: groceries-service
+      PGUSER: groceries
       PGPASSWORD: ""
       RAILS_ENV: test
     steps:
@@ -31,7 +31,7 @@ jobs:
           command: RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
       - run:
           name: add postgres client
-          command: sudo apt-get update && sudo apt-get install postgresql-client
+          command: sudo apt-get update && sudo apt-get install postgresql-client-12
       - run:
           name: create view
           command: sh db/add-view.sh
