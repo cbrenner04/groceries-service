@@ -19,8 +19,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
+          name: update bundler
+          command: gem install bundler:2.1.2
       - ruby/bundle-install
       - run:
           name: wait for db
