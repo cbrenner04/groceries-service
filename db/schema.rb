@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_30_134427) do
+ActiveRecord::Schema.define(version: 2020_08_11_015522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,4 +144,21 @@ ActiveRecord::Schema.define(version: 2020_07_30_134427) do
   add_foreign_key "to_do_list_items", "users"
   add_foreign_key "users_lists", "lists"
   add_foreign_key "users_lists", "users"
+
+  create_view "active_lists", sql_definition: <<-SQL
+      SELECT lists.id,
+      lists.name,
+      lists.created_at,
+      lists.completed,
+      lists.type,
+      lists.refreshed,
+      lists.owner_id,
+      users_lists.id AS users_list_id,
+      users_lists.user_id,
+      users_lists.has_accepted
+     FROM (lists
+       JOIN users_lists ON ((lists.id = users_lists.list_id)))
+    WHERE (lists.archived_at IS NULL)
+    ORDER BY lists.created_at DESC;
+  SQL
 end

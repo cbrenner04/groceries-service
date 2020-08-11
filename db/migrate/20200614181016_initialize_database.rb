@@ -1,6 +1,5 @@
-# TODO: could use `if_not_exists: true`, but the `create_table` method will
-#       still try to create the indexes even if the table exist
-#       this is supposedly fixed with Rails 6.1
+# could use `if_not_exists: true`, but the `create_table` method will still try to create the indexes even if the table
+# exists. this is supposedly fixed with Rails 6.1
 def create_users
   return if table_exists?("users")
 
