@@ -36,14 +36,14 @@ jobs:
           name: create view
           command: sh db/add-view.sh
       - run:
+          name: test
+          command: bundle exec rspec
+      - run:
           name: bundle audit
           command: bundle exec bundle audit check --update
       - run:
           name: rubocop
           command: bundle exec rubocop
-      - run:
-          name: test
-          command: bundle exec rspec
 workflows:
   version: 2
   test:
