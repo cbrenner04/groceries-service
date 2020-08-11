@@ -5,7 +5,7 @@ jobs:
   test:
     docker:
       - image: circleci/ruby:2.6.3
-      - image: circleci/postgres:9.5-alpine
+      - image: circleci/postgres:12.3-alpine
         environment:
           POSTGRES_USER: groceries-service
           POSTGRES_DB: groceries_service_test
@@ -29,8 +29,8 @@ jobs:
           name: setup db
           command: RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
       - run:
-          name: add postgres to path
-          command: echo '/usr/lib/postgresql/9.5/bin/:$PATH' >> $BASH_ENV
+          name: add postgres client
+          command: sudo apt-get update && sudo apt-get install postgresql-client-12.3
       - run:
           name: create view
           command: sh db/add-view.sh
