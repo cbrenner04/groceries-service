@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2 
+  ruby: circleci/ruby@0.1.2
 jobs:
   test:
     docker:
       - image: circleci/ruby:2.6.3
-      - image: circleci/postgres:9.5-alpine 
+      - image: circleci/postgres:9.5-alpine
         environment:
           POSTGRES_USER: groceries-service
           POSTGRES_DB: groceries_service_test
@@ -37,3 +37,8 @@ jobs:
       - run:
           name: test
           command: bundle exec rspec
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
