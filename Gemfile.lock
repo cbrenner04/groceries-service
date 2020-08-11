@@ -221,6 +221,9 @@ GEM
     rubocop-rspec (1.41.0)
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
+    scenic (1.5.2)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
     sentry-raven (3.0.0)
       faraday (>= 1.0)
     simplecov (0.18.5)
@@ -277,6 +280,7 @@ DEPENDENCIES
   rubocop (~> 0.85.1)
   rubocop-rails (~> 2.6)
   rubocop-rspec (~> 1.40)
+  scenic (~> 1.5, >= 1.5.2)
   sentry-raven (~> 3.0)
   simplecov (~> 0.18.5)
   spring

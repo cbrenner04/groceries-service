@@ -16,6 +16,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 4.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.0.3", ">= 6.0.3.2"
+gem "scenic", "~> 1.5", ">= 1.5.2"
 gem "sentry-raven", "~> 3.0"
 gem "sprockets", "~> 3.7", ">= 3.7.2"
 
