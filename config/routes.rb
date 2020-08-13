@@ -39,6 +39,14 @@
 #                list_music_list_item PATCH  /lists/:list_id/music_list_items/:id(.:format)           music_list_items#update
 #                                     PUT    /lists/:list_id/music_list_items/:id(.:format)           music_list_items#update
 #                                     DELETE /lists/:list_id/music_list_items/:id(.:format)           music_list_items#destroy
+#  list_simple_list_items_bulk_update GET    /lists/:list_id/simple_list_items/bulk_update(.:format)  simple_list_items_bulk_update#show
+#                                     PATCH  /lists/:list_id/simple_list_items/bulk_update(.:format)  simple_list_items_bulk_update#update
+#                                     PUT    /lists/:list_id/simple_list_items/bulk_update(.:format)  simple_list_items_bulk_update#update
+#              list_simple_list_items POST   /lists/:list_id/simple_list_items(.:format)              simple_list_items#create
+#          edit_list_simple_list_item GET    /lists/:list_id/simple_list_items/:id/edit(.:format)     simple_list_items#edit
+#               list_simple_list_item PATCH  /lists/:list_id/simple_list_items/:id(.:format)          simple_list_items#update
+#                                     PUT    /lists/:list_id/simple_list_items/:id(.:format)          simple_list_items#update
+#                                     DELETE /lists/:list_id/simple_list_items/:id(.:format)          simple_list_items#destroy
 #   list_to_do_list_items_bulk_update GET    /lists/:list_id/to_do_list_items/bulk_update(.:format)   to_do_list_items_bulk_update#show
 #                                     PATCH  /lists/:list_id/to_do_list_items/bulk_update(.:format)   to_do_list_items_bulk_update#update
 #                                     PUT    /lists/:list_id/to_do_list_items/bulk_update(.:format)   to_do_list_items_bulk_update#update
@@ -97,6 +105,14 @@ Rails.application.routes.draw do
                  controller: 'music_list_items_bulk_update',
                  only: [:show, :update],
                  as: :music_list_items_bulk_update
+      end
+    end
+    resources :simple_list_items, only: [:create, :edit, :update, :destroy] do
+      collection do
+        resource :bulk_update,
+                 controller: 'simple_list_items_bulk_update',
+                 only: [:show, :update],
+                 as: :simple_list_items_bulk_update
       end
     end
     resources :to_do_list_items, only: [:create, :edit, :update, :destroy] do

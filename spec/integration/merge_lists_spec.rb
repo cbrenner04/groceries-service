@@ -54,6 +54,22 @@ describe "/lists/merge_lists", type: :request do
       end
     end
 
+    describe "when type is SimpleList" do
+      it "creates a new list, users_list, and adds new items to the list" do
+        first_list = SimpleList.create!(name: "FirstSimpleList", owner: user, completed: true)
+        second_list = SimpleList.create!(name: "SecondSimpleList", owner: user, completed: true)
+        SimpleListItem.create!(user: user, simple_list: first_list, content: "foo", category: "foo")
+        SimpleListItem.create!(user: user, simple_list: second_list, content: "bar", category: "bar")
+        expect do
+          post merge_lists_path,
+               params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
+               headers: auth_params
+        end.to change(SimpleList, :count).by(1)
+                                         .and change(SimpleListItem, :count).by(2)
+                                                                            .and change(UsersList, :count).by(1)
+      end
+    end
+
     describe "when type is ToDoList" do
       it "creates a new list, users_list, and adds new items to the list" do
         first_list = ToDoList.create!(name: "FirstToDoList", owner: user, completed: true)

@@ -42,11 +42,13 @@ class BulkUpdateService
   private
 
   def list_class
-    { book: BookList, grocery: GroceryList, music: MusicList, to_do: ToDoList }[@list_type.to_sym]
+    { book: BookList, grocery: GroceryList, music: MusicList, simple: SimpleList, to_do: ToDoList }[@list_type.to_sym]
   end
 
   def item_class
-    { book: BookListItem, grocery: GroceryListItem, music: MusicListItem, to_do: ToDoListItem }[@list_type.to_sym]
+    {
+      book: BookListItem, grocery: GroceryListItem, music: MusicListItem, simple: SimpleListItem, to_do: ToDoListItem
+    }[@list_type.to_sym]
   end
 
   def list
@@ -59,6 +61,7 @@ class BulkUpdateService
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def update_item_attributes
     list_attrs = [%i[category clear_category]]
 
@@ -68,13 +71,18 @@ class BulkUpdateService
       list_attrs.push(%i[quantity clear_quantity])
     elsif @list_type == "music"
       list_attrs.push(%i[artist clear_artist], %i[album clear_album])
+    elsif @list_type == "simple"
+      list_attrs
     elsif @list_type == "to_do"
       list_attrs.push(%i[assignee_id clear_assignee], %i[due_by clear_due_by])
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def new_item_attributes
-    { book: %i[title number_in_series], grocery: %i[product], music: %i[title], to_do: %i[task] }[@list_type.to_sym]
+    {
+      book: %i[title number_in_series], grocery: %i[product], music: %i[title], simple: %i[content], to_do: %i[task]
+    }[@list_type.to_sym]
   end
 
   def should_update_attr(attr, clear_attr)
