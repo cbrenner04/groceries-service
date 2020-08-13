@@ -5,6 +5,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
     book_list: BookListItem,
     grocery_list: GroceryListItem,
     music_list: MusicListItem,
+    simple_list: SimpleListItem,
     to_do_list: ToDoListItem
   }[list_type.to_sym]
 
@@ -142,7 +143,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
       context "when all items exist" do
         describe "with valid params" do
-          context "when update current items is requsted" do
+          context "when update current items is requested" do
             it "updates current items" do
               initial_item_values = {
                 category: item.category
@@ -164,6 +165,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   as: :json
               item.reload
               other_item.reload
+
+             p response.body
 
               expect(response).to have_http_status :no_content
               update_attrs.each do |attr|

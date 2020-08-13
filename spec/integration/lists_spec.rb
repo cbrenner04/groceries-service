@@ -146,6 +146,37 @@ describe "/lists", type: :request do
           end
         end
 
+        describe "when SimpleList" do
+          let(:list) { SimpleList.create!(name: "foo", owner: user) }
+
+          it "responds with success and correct payload" do
+            SimpleListItem.create!(
+              user_id: user.id,
+              simple_list_id: list.id,
+              content: "foo",
+              completed: false,
+              category: "foo"
+            )
+            SimpleListItem.create!(
+              user_id: user.id,
+              simple_list_id: list.id,
+              content: "foobar",
+              completed: true
+            )
+            get list_path(list.id), headers: auth_params
+
+            response_body = JSON.parse(response.body)
+            expect(response).to be_successful
+            expect(response_body["current_user_id"]).to eq user.id
+            expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
+            expect(response_body["not_purchased_items"].first["id"])
+              .to eq(SimpleListItem.where(simple_list: list).not_archived.ordered.not_completed.first.id)
+            expect(response_body["purchased_items"].first["id"])
+              .to eq(SimpleListItem.where(simple_list: list).not_archived.ordered.completed.first.id)
+            expect(response_body["categories"]).to include "foo"
+          end
+        end
+
         describe "when ToDoList" do
           let(:list) { ToDoList.create!(name: "foo", owner: user) }
 
@@ -258,6 +289,17 @@ describe "/lists", type: :request do
                  headers: auth_params
           end.to change(GroceryList, :count).by 1
           expect(GroceryList.last.owner).to eq user
+        end
+      end
+
+      describe "when type is SimpleList" do
+        it "creates a new list" do
+          expect do
+            post lists_path,
+                 params: { list: { user_id: user.id, name: "foo", type: "SimpleList" } },
+                 headers: auth_params
+          end.to change(SimpleList, :count).by 1
+          expect(SimpleList.last.owner).to eq user
         end
       end
 

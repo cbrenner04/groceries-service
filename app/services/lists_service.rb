@@ -44,7 +44,7 @@ class ListsService
 
     def filtered_list(list)
       list_items(list).reject do |item|
-        item_is_not_active = if list.type == "GroceryList" || list.type == "ToDoList"
+        item_is_not_active = if %w[GroceryList ToDoList SimpleList].include?(list.type)
                                item.refreshed || item.archived_at.present?
                              else
                                item.archived_at.present?
@@ -57,7 +57,7 @@ class ListsService
     def new_item_attributes(list_type)
       {
         BookList: %i[author title number_in_series], GroceryList: %i[product quantity],
-        MusicList: %i[title artist album], ToDoList: %i[task assignee_id due_by]
+        MusicList: %i[title artist album], SimpleList: %i[content], ToDoList: %i[task assignee_id due_by]
       }[list_type.to_sym]
     end
 
@@ -85,13 +85,17 @@ class ListsService
     end
 
     def not_purchased_items(list)
-      list.type == "ToDoList" ? ordered_items(list).not_completed : ordered_items(list).not_purchased
+      if %w[ToDoList SimpleList].include?(list.type)
+        ordered_items(list).not_completed
+      else
+        ordered_items(list).not_purchased
+      end
     end
 
     def purchased_items(list)
       if list.type == "GroceryList"
         ordered_items(list).purchased.not_refreshed
-      elsif list.type == "ToDoList"
+      elsif %w[ToDoList SimpleList].include?(list.type)
         ordered_items(list).completed.not_refreshed
       else
         ordered_items(list).purchased

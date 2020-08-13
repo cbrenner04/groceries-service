@@ -60,6 +60,20 @@ describe "/lists/:list_id/refresh_list", type: :request do
         end
       end
 
+      describe "when old list is a SimpleList" do
+        it "creates new list and items" do
+          list = SimpleList.create!(name: "NewSimpleList", owner: user, completed: true)
+          SimpleListItem.create!(user: user, simple_list: list, content: "foo", category: "foo")
+
+          expect do
+            post list_refresh_list_path(list.id), headers: auth_params
+          end.to change(List, :count).by(1).and change(SimpleListItem, :count).by(1)
+          new_list_item = SimpleListItem.last
+          expect(new_list_item[:content]).to eq "foo"
+          expect(new_list_item[:category]).to eq "foo"
+        end
+      end
+
       describe "when old list is a ToDoList" do
         it "creates new list and items" do
           list = ToDoList.create!(name: "NewToDoList", owner: user, completed: true)

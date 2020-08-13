@@ -5,6 +5,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
     book_list: BookListItem,
     grocery_list: GroceryListItem,
     music_list: MusicListItem,
+    simple_list: SimpleListItem,
     to_do_list: ToDoListItem
   }[list_type.to_sym]
 
