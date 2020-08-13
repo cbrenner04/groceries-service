@@ -1,6 +1,7 @@
 language: ruby
 addons:
   postgresql: 12.3
+cache: bundler
 services:
   - postgresql
 before_script:
