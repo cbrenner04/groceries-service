@@ -166,8 +166,6 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               item.reload
               other_item.reload
 
-             p response.body
-
               expect(response).to have_http_status :no_content
               update_attrs.each do |attr|
                 expect(item[attr.to_sym]).not_to eq(initial_item_values[attr.to_sym])
