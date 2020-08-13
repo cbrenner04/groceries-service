@@ -1,4 +1,4 @@
-user_emails = %w(foo@ex.co bar@ex.co baz@ex.co)
+user_emails = %w(foo@example.com bar@example.com baz@example.com)
 foo, bar, baz = user_emails.map do |email|
   User.create!(
     email: email,
@@ -19,7 +19,7 @@ lists.each do |foos, bars, completed|
   UsersList.create!( user: foo, list: foos, has_accepted: true)
   UsersList.create!( user: bar, list: foos, has_accepted: true)
   UsersList.create!( user: baz, list: foos, has_accepted: true)
-  UsersList.create!( user: foo, list: bars, has_accepted: true)
+  UsersList.create!( user: foo, list: bars, has_accepted: nil)
   UsersList.create!( user: bar, list: bars, has_accepted: true)
   UsersList.create!( user: foo, list: completed, has_accepted: true)
 end
