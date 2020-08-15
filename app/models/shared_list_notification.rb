@@ -11,6 +11,6 @@ class SharedListNotification
   end
 
   def self.logger
-    Logger.new(STDOUT)
+    Logger.new($stdout)
   end
 end

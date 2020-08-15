@@ -66,9 +66,9 @@ class ListsService
       list_type_key = list_type.to_s.tableize.singularize
       item_attrs = { user: user, list_type_key => new_list }
       filtered_list(old_list).each do |item|
-        item_attrs.merge!(category: item[:category])
+        item_attrs[:category] = item[:category]
         new_item_attributes(list_type).each do |attr|
-          item_attrs.merge!(attr => item[attr])
+          item_attrs[attr] = item[attr]
         end
         "#{list_type}Item".constantize.create!(item_attrs)
       end
