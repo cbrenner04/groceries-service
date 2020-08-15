@@ -17,6 +17,7 @@ gem "puma", "~> 4.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.0.3", ">= 6.0.3.2"
 gem "scenic", "~> 1.5", ">= 1.5.2"
+gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-raven", "~> 3.0"
 gem "sprockets", "~> 3.7", ">= 3.7.2"
 
@@ -26,6 +27,7 @@ group :production do
 end
 
 group :development, :test do
+  gem "brakeman", "~> 4.9"
   gem "bundler-audit", "~> 0.7.0.1"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 1.8", ">= 1.8.5"

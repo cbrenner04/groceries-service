@@ -26,8 +26,7 @@ describe "/completed_lists", type: :request do
         "completed" => true,
         "refreshed" => completed_list[:refreshed],
         "owner_id" => completed_list[:owner_id],
-        "users_list_id" =>
-          UsersList.find_by(user_id: user.id, list_id: completed_list.id).id,
+        "users_list_id" => UsersList.find_by(user_id: user.id, list_id: completed_list.id).id,
         "user_id" => user.id,
         "has_accepted" => true,
         "type" => completed_list[:type]
