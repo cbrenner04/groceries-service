@@ -2,8 +2,11 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
-steps:
-  - name: OWASP ZAP Full Scan
-    uses: zaproxy/action-full-scan@v0.1.0
-    with:
-      target: "https://staging.groceries-app.com"
+jobs:
+  zap_scan:
+    name: Scans staging
+    steps:
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.1.0
+        with:
+          target: "https://staging.groceries-app.com"
