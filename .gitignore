@@ -24,3 +24,6 @@ spec/examples.txt
 
 # test coverage
 /coverage
+
+# don't commit the brakeman log
+brakeman-report.json

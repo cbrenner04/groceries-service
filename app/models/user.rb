@@ -42,8 +42,7 @@
 #  index_users_on_uid_and_provider                   (uid,provider) UNIQUE
 #
 class User < ApplicationRecord
-  devise :invitable, :database_authenticatable, :recoverable,
-         :rememberable, :trackable, :invitable, invite_for: 1.week
+  devise :invitable, :database_authenticatable, :recoverable, :rememberable, :trackable, invite_for: 1.week
   include DeviseTokenAuth::Concerns::User
 
   include UsersService

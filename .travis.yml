@@ -8,5 +8,6 @@ before_script:
 script:
   - bundle exec bundle audit check --update
   - bundle exec rubocop
+  - bundle exec brakeman -o brakeman-report.json
   - RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
   - bundle exec rspec
