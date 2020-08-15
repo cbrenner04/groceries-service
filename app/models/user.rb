@@ -50,7 +50,7 @@ class User < ApplicationRecord
 
   has_many :users_lists, dependent: :destroy
   has_many :lists, through: :users_lists, source: :list, dependent: :restrict_with_exception
-  has_many :invitations, class_name: to_s, as: :invited_by, dependent: :restrict_with_exception
+  has_many :invitations, class_name: "User", as: :invited_by, dependent: :restrict_with_exception
   has_many :book_list_items, dependent: :restrict_with_exception
   has_many :grocery_list_items, dependent: :restrict_with_exception
   has_many :music_list_items, dependent: :restrict_with_exception

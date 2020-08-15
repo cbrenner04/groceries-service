@@ -31,7 +31,7 @@ class BulkUpdateService
     update_item_attributes.each do |attr, clear_attr|
       update_params.merge!(update_current_attr_params(attr, clear_attr))
     end
-    items.update_all(update_params)
+    items.each { |item| item.update!(update_params) }
   end
 
   def create_new_items
@@ -65,15 +65,16 @@ class BulkUpdateService
   def update_item_attributes
     list_attrs = [%i[category clear_category]]
 
-    if @list_type == "book"
+    case @list_type
+    when "book"
       list_attrs.push(%i[author clear_author])
-    elsif @list_type == "grocery"
+    when "grocery"
       list_attrs.push(%i[quantity clear_quantity])
-    elsif @list_type == "music"
+    when "music"
       list_attrs.push(%i[artist clear_artist], %i[album clear_album])
-    elsif @list_type == "simple"
+    when "simple"
       list_attrs
-    elsif @list_type == "to_do"
+    when "to_do"
       list_attrs.push(%i[assignee_id clear_assignee], %i[due_by clear_due_by])
     end
   end

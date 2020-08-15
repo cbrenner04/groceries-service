@@ -95,9 +95,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
         }
       }
       update_attrs.each do |attr|
-        update_params["#{list_type}_items".to_sym][attr.to_sym] = if attr == "assignee_id"
+        update_params["#{list_type}_items".to_sym][attr.to_sym] = case attr
+                                                                  when "assignee_id"
                                                                     other_user.id
-                                                                  elsif attr == "due_by"
+                                                                  when "due_by"
                                                                     due_by_date
                                                                   else
                                                                     "updated #{attr}"
@@ -170,9 +171,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_attrs.each do |attr|
                 expect(item[attr.to_sym]).not_to eq(initial_item_values[attr.to_sym])
                 expect(other_item[attr.to_sym]).not_to eq(initial_other_item_values[attr.to_sym])
-                value = if attr == "assignee_id"
+                value = case attr
+                        when "assignee_id"
                           other_user.id
-                        elsif attr == "due_by"
+                        when "due_by"
                           due_by_date.iso8601(3)
                         else
                           "updated #{attr}"
@@ -214,9 +216,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_attrs.each do |attr|
                 expect(item[attr.to_sym]).to eq(initial_item_values[attr.to_sym])
                 expect(other_item[attr.to_sym]).to eq(initial_other_item_values[attr.to_sym])
-                value = if attr == "assignee_id"
+                value = case attr
+                        when "assignee_id"
                           other_user.id
-                        elsif attr == "due_by"
+                        when "due_by"
                           due_by_date.iso8601(3)
                         else
                           "updated #{attr}"
@@ -262,9 +265,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  value = if attr == "assignee_id"
+                  value = case attr
+                          when "assignee_id"
                             other_user.id
-                          elsif attr == "due_by"
+                          when "due_by"
                             due_by_date.iso8601(3)
                           else
                             "updated #{attr}"
@@ -305,9 +309,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  value = if attr == "assignee_id"
+                  value = case attr
+                          when "assignee_id"
                             other_user.id
-                          elsif attr == "due_by"
+                          when "due_by"
                             due_by_date.iso8601(3)
                           else
                             "updated #{attr}"
@@ -352,9 +357,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  value = if attr == "assignee_id"
+                  value = case attr
+                          when "assignee_id"
                             other_user.id
-                          elsif attr == "due_by"
+                          when "due_by"
                             due_by_date.iso8601(3)
                           else
                             "updated #{attr}"
@@ -395,9 +401,10 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[1][item_attr.to_sym]).to eq other_item[item_attr.to_sym]
                 end
                 update_attrs.each do |attr|
-                  value = if attr == "assignee_id"
+                  value = case attr
+                          when "assignee_id"
                             other_user.id
-                          elsif attr == "due_by"
+                          when "due_by"
                             due_by_date.iso8601(3)
                           else
                             "updated #{attr}"

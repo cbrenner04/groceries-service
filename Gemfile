@@ -9,7 +9,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.7", ">= 4.7.2"
 gem "devise_invitable", "~> 2.0", ">= 2.0.2"
 gem "devise_token_auth", "~> 1.1", ">= 1.1.4"
-gem "libv8", "~> 7.3", ">= 7.3.492.27.1"
+gem "libv8", "~> 8.4", ">= 8.4.255.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 6.11", ">= 6.11.0.365"
 gem "pg", ">= 0.18", "< 2.0"
@@ -29,11 +29,12 @@ group :development, :test do
   gem "bundler-audit", "~> 0.7.0.1"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 1.8", ">= 1.8.5"
-  gem "factory_bot_rails", "~> 5.2"
+  gem "factory_bot_rails", "~> 6.1"
   gem "rspec-rails", "~> 4.0", ">= 4.0.1"
-  gem "rubocop", "~> 0.85.1"
-  gem "rubocop-rails", "~> 2.6"
-  gem "rubocop-rspec", "~> 1.40"
+  gem "rubocop", "~> 0.89.1"
+  gem "rubocop-performance", "~> 1.7", ">= 1.7.1"
+  gem "rubocop-rails", "~> 2.7", ">= 2.7.1"
+  gem "rubocop-rspec", "~> 1.42"
   gem "simplecov", "~> 0.18.5"
 end
 
@@ -45,4 +46,4 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "tzinfo", "~> 2.0", ">= 2.0.2", platforms: %i[mingw mswin x64_mingw jruby]
