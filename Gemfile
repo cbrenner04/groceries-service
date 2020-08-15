@@ -29,7 +29,7 @@ group :development, :test do
   gem "bundler-audit", "~> 0.7.0.1"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 1.8", ">= 1.8.5"
-  gem "factory_bot_rails", "~> 5.2"
+  gem "factory_bot_rails", "~> 6.0"
   gem "rspec-rails", "~> 4.0", ">= 4.0.1"
   gem "rubocop", "~> 0.85.1"
   gem "rubocop-rails", "~> 2.6"
