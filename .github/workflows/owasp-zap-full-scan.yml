@@ -4,6 +4,7 @@ on:
 
 jobs:
   zap_scan:
+    runs-on: ubuntu-latest
     name: Scans staging
     steps:
       - name: OWASP ZAP Full Scan
