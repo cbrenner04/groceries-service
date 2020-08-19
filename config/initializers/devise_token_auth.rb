@@ -9,6 +9,8 @@ DeviseTokenAuth.setup do |config|
 
   # By default, users will need to re-authenticate after 2 weeks. This setting
   # determines how long tokens will remain valid after they are issued.
+  # **NOTE TO SELF**: updating this only took effect in prod, staging did not catch issues
+  # **NOTE TO SELF**: 1.days fucks shit up
   config.token_lifespan = 2.days
 
   # Limiting the token_cost to just 4 in testing will increase the performance of
