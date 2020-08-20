@@ -12,6 +12,6 @@ class ApplicationController < ActionController::Base
   private
 
   def reject_methods
-    raise ActionController::MethodNotAllowed.new('Method not allowed') if ['TRACE','TRACK'].include?(request.method)
+    raise ActionController::MethodNotAllowed if %w[TRACK TRACE].include?(request.method)
   end
 end
