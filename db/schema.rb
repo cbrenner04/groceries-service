@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_13_172349) do
+ActiveRecord::Schema.define(version: 2020_08_21_185833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "book_list_items", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "book_list_id", null: false
+    t.bigint "list_id", null: false
     t.string "author"
     t.string "title"
     t.boolean "purchased", default: false, null: false
@@ -27,13 +27,13 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["book_list_id"], name: "index_book_list_items_on_book_list_id"
+    t.index ["list_id"], name: "index_book_list_items_on_list_id"
     t.index ["user_id"], name: "index_book_list_items_on_user_id"
   end
 
   create_table "grocery_list_items", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "grocery_list_id", null: false
+    t.bigint "list_id", null: false
     t.string "product", null: false
     t.string "quantity"
     t.boolean "purchased", default: false, null: false
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["grocery_list_id"], name: "index_grocery_list_items_on_grocery_list_id"
+    t.index ["list_id"], name: "index_grocery_list_items_on_list_id"
     t.index ["user_id"], name: "index_grocery_list_items_on_user_id"
   end
 
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
 
   create_table "music_list_items", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "music_list_id", null: false
+    t.bigint "list_id", null: false
     t.string "title"
     t.string "artist"
     t.string "album"
@@ -69,13 +69,13 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["music_list_id"], name: "index_music_list_items_on_music_list_id"
+    t.index ["list_id"], name: "index_music_list_items_on_list_id"
     t.index ["user_id"], name: "index_music_list_items_on_user_id"
   end
 
   create_table "simple_list_items", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "simple_list_id", null: false
+    t.bigint "list_id", null: false
     t.string "content", null: false
     t.boolean "completed", default: false, null: false
     t.boolean "refreshed", default: false, null: false
@@ -83,13 +83,13 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["simple_list_id"], name: "index_simple_list_items_on_simple_list_id"
+    t.index ["list_id"], name: "index_simple_list_items_on_list_id"
     t.index ["user_id"], name: "index_simple_list_items_on_user_id"
   end
 
   create_table "to_do_list_items", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "to_do_list_id", null: false
+    t.bigint "list_id", null: false
     t.string "task", null: false
     t.integer "assignee_id"
     t.datetime "due_by"
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.string "category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["to_do_list_id"], name: "index_to_do_list_items_on_to_do_list_id"
+    t.index ["list_id"], name: "index_to_do_list_items_on_list_id"
     t.index ["user_id"], name: "index_to_do_list_items_on_user_id"
   end
 
@@ -148,15 +148,15 @@ ActiveRecord::Schema.define(version: 2020_08_13_172349) do
     t.index ["user_id"], name: "index_users_lists_on_user_id"
   end
 
-  add_foreign_key "book_list_items", "lists", column: "book_list_id"
+  add_foreign_key "book_list_items", "lists"
   add_foreign_key "book_list_items", "users"
-  add_foreign_key "grocery_list_items", "lists", column: "grocery_list_id"
+  add_foreign_key "grocery_list_items", "lists"
   add_foreign_key "grocery_list_items", "users"
-  add_foreign_key "music_list_items", "lists", column: "music_list_id"
+  add_foreign_key "music_list_items", "lists"
   add_foreign_key "music_list_items", "users"
-  add_foreign_key "simple_list_items", "lists", column: "simple_list_id"
+  add_foreign_key "simple_list_items", "lists"
   add_foreign_key "simple_list_items", "users"
-  add_foreign_key "to_do_list_items", "lists", column: "to_do_list_id"
+  add_foreign_key "to_do_list_items", "lists"
   add_foreign_key "to_do_list_items", "users"
   add_foreign_key "users_lists", "lists"
   add_foreign_key "users_lists", "users"

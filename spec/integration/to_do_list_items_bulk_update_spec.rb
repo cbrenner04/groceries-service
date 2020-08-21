@@ -8,8 +8,8 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
     let(:user) { create :user }
     let(:list) { create :to_do_list, owner: user }
     let(:users_list) { create :users_list, user: user, list: list }
-    let(:item) { create :to_do_list_item, to_do_list: list }
-    let(:other_item) { create :to_do_list_item, to_do_list: list }
+    let(:item) { create :to_do_list_item, list: list }
+    let(:other_item) { create :to_do_list_item, list: list }
     let(:other_user) { create :user }
     let(:item_ids) { [item.id, other_item.id].join(",") }
 

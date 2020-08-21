@@ -52,13 +52,13 @@ describe "/lists", type: :request do
 
           it "responds with success and correct payload" do
             BookListItem.create!(
-              user_id: user.id,
-              book_list_id: list.id,
+              user: user,
+              list: list,
               title: "foo",
               purchased: false,
               category: "foo"
             )
-            BookListItem.create!(user_id: user.id, book_list_id: list.id, title: "foobar", purchased: true)
+            BookListItem.create!(user: user, list: list, title: "foobar", purchased: true)
             get list_path(list.id), headers: auth_params
 
             response_body = JSON.parse(response.body)
@@ -66,9 +66,9 @@ describe "/lists", type: :request do
             expect(response_body["current_user_id"]).to eq user.id
             expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
             expect(response_body["not_purchased_items"].first["id"])
-              .to eq(BookListItem.where(book_list: list).not_archived.ordered.not_purchased.first.id)
+              .to eq(BookListItem.where(list: list).not_archived.ordered.not_purchased.first.id)
             expect(response_body["purchased_items"].first["id"])
-              .to eq(BookListItem.where(book_list: list).not_archived.ordered.purchased.first.id)
+              .to eq(BookListItem.where(list: list).not_archived.ordered.purchased.first.id)
             expect(response_body["categories"]).to include "foo"
           end
         end
@@ -78,24 +78,24 @@ describe "/lists", type: :request do
 
           it "responds with success and correct payload" do
             GroceryListItem.create!(
-              user_id: user.id,
-              grocery_list_id: list.id,
+              user: user,
+              list: list,
               product: "foo",
               quantity: 1,
               purchased: false,
               category: "foo"
             )
             GroceryListItem.create!(
-              user_id: user.id,
-              grocery_list_id: list.id,
+              user: user,
+              list: list,
               product: "foobar",
               quantity: 1,
               purchased: true,
               refreshed: false
             )
             GroceryListItem.create!(
-              user_id: user.id,
-              grocery_list_id: list.id,
+              user: user,
+              list: list,
               product: "foobar",
               quantity: 1,
               purchased: true,
@@ -108,9 +108,9 @@ describe "/lists", type: :request do
             expect(response_body["current_user_id"]).to eq user.id
             expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
             expect(response_body["not_purchased_items"].first["id"])
-              .to eq(GroceryListItem.where(grocery_list: list).not_archived.ordered.not_purchased.first.id)
+              .to eq(GroceryListItem.where(list: list).not_archived.ordered.not_purchased.first.id)
             expect(response_body["purchased_items"].first["id"])
-              .to eq(GroceryListItem.where(grocery_list: list).not_archived.ordered.purchased.not_refreshed.first.id)
+              .to eq(GroceryListItem.where(list: list).not_archived.ordered.purchased.not_refreshed.first.id)
             expect(response_body["categories"]).to include "foo"
           end
         end
@@ -120,15 +120,15 @@ describe "/lists", type: :request do
 
           it "responds with success and correct payload" do
             MusicListItem.create!(
-              user_id: user.id,
-              music_list_id: list.id,
+              user: user,
+              list: list,
               title: "foo",
               purchased: false,
               category: "foo"
             )
             MusicListItem.create!(
-              user_id: user.id,
-              music_list_id: list.id,
+              user: user,
+              list: list,
               title: "foobar",
               purchased: true
             )
@@ -139,9 +139,9 @@ describe "/lists", type: :request do
             expect(response_body["current_user_id"]).to eq user.id
             expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
             expect(response_body["not_purchased_items"].first["id"])
-              .to eq(MusicListItem.where(music_list: list).not_archived.ordered.not_purchased.first.id)
+              .to eq(MusicListItem.where(list: list).not_archived.ordered.not_purchased.first.id)
             expect(response_body["purchased_items"].first["id"])
-              .to eq(MusicListItem.where(music_list: list).not_archived.ordered.purchased.first.id)
+              .to eq(MusicListItem.where(list: list).not_archived.ordered.purchased.first.id)
             expect(response_body["categories"]).to include "foo"
           end
         end
@@ -151,15 +151,15 @@ describe "/lists", type: :request do
 
           it "responds with success and correct payload" do
             SimpleListItem.create!(
-              user_id: user.id,
-              simple_list_id: list.id,
+              user: user,
+              list: list,
               content: "foo",
               completed: false,
               category: "foo"
             )
             SimpleListItem.create!(
-              user_id: user.id,
-              simple_list_id: list.id,
+              user: user,
+              list: list,
               content: "foobar",
               completed: true
             )
@@ -170,9 +170,9 @@ describe "/lists", type: :request do
             expect(response_body["current_user_id"]).to eq user.id
             expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
             expect(response_body["not_purchased_items"].first["id"])
-              .to eq(SimpleListItem.where(simple_list: list).not_archived.ordered.not_completed.first.id)
+              .to eq(SimpleListItem.where(list: list).not_archived.ordered.not_completed.first.id)
             expect(response_body["purchased_items"].first["id"])
-              .to eq(SimpleListItem.where(simple_list: list).not_archived.ordered.completed.first.id)
+              .to eq(SimpleListItem.where(list: list).not_archived.ordered.completed.first.id)
             expect(response_body["categories"]).to include "foo"
           end
         end
@@ -182,22 +182,22 @@ describe "/lists", type: :request do
 
           it "responds with success and correct payload" do
             ToDoListItem.create!(
-              user_id: user.id,
-              to_do_list_id: list.id,
+              user: user,
+              list: list,
               task: "foo",
               completed: false,
               category: "foo"
             )
             ToDoListItem.create!(
-              user_id: user.id,
-              to_do_list_id: list.id,
+              user: user,
+              list: list,
               task: "foobar",
               completed: true,
               refreshed: false
             )
             ToDoListItem.create!(
-              user_id: user.id,
-              to_do_list_id: list.id,
+              user: user,
+              list: list,
               task: "foobar",
               completed: true,
               refreshed: true
@@ -209,9 +209,9 @@ describe "/lists", type: :request do
             expect(response_body["current_user_id"]).to eq user.id
             expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
             expect(response_body["not_purchased_items"].first["id"])
-              .to eq(ToDoListItem.where(to_do_list: list).not_archived.ordered.not_completed.first.id)
+              .to eq(ToDoListItem.where(list: list).not_archived.ordered.not_completed.first.id)
             expect(response_body["purchased_items"].first["id"])
-              .to eq(ToDoListItem.where(to_do_list: list).not_archived.ordered.completed.not_refreshed.first.id)
+              .to eq(ToDoListItem.where(list: list).not_archived.ordered.completed.not_refreshed.first.id)
             expect(response_body["categories"]).to include "foo"
           end
         end

@@ -51,7 +51,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
           response_body = JSON.parse(response.body).to_h
           complete_attr = list_type == "to_do_list" ? "completed" : "purchased"
-          item_attrs = new_item_attrs.concat(["id", "#{list_type}_id", complete_attr, "user_id", "category"])
+          item_attrs = new_item_attrs.concat(["id", "list_id", complete_attr, "user_id", "category"])
 
           expect(response).to have_http_status :success
           expect(response_body["items"].count).to eq 2
@@ -261,12 +261,12 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 item.reload
                 other_item.reload
                 new_list = List.find_by(name: "bulk update list")
-                new_items = list_item_class.where("#{list_type}_id": new_list.id)
+                new_items = list_item_class.where(list_id: new_list.id)
 
                 expect(item.archived_at).to be_truthy
                 expect(other_item.archived_at).to be_truthy
                 expect(new_list).to be_truthy
-                attrs_to_skip = ["id", "user_id", "#{list_type}_id", "category"]
+                attrs_to_skip = %w[id user_id list_id category]
                 new_item_attrs.each do |item_attr|
                   next if update_attrs.include?(item_attr) || attrs_to_skip.include?(item_attr)
 
@@ -306,11 +306,11 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                     as: :json
                 item.reload
                 other_item.reload
-                new_items = list_item_class.where("#{list_type}_id": other_list.id)
+                new_items = list_item_class.where(list_id: other_list.id)
 
                 expect(item.archived_at).to be_truthy
                 expect(other_item.archived_at).to be_truthy
-                attrs_to_skip = ["id", "user_id", "#{list_type}_id", "category"]
+                attrs_to_skip = %w[id user_id list_id category]
                 new_item_attrs.each do |item_attr|
                   next if update_attrs.include?(item_attr) || attrs_to_skip.include?(item_attr)
 
@@ -353,12 +353,12 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 item.reload
                 other_item.reload
                 new_list = List.find_by(name: "bulk update list")
-                new_items = list_item_class.where("#{list_type}_id": new_list.id)
+                new_items = list_item_class.where(list_id: new_list.id)
 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
                 expect(new_list).to be_truthy
-                attrs_to_skip = ["id", "user_id", "#{list_type}_id", "category"]
+                attrs_to_skip = %w[id user_id list_id category]
                 new_item_attrs.each do |item_attr|
                   next if update_attrs.include?(item_attr) || attrs_to_skip.include?(item_attr)
 
@@ -398,11 +398,11 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                     as: :json
                 item.reload
                 other_item.reload
-                new_items = list_item_class.where("#{list_type}_id": other_list.id)
+                new_items = list_item_class.where(list_id: other_list.id)
 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
-                attrs_to_skip = ["id", "user_id", "#{list_type}_id", "category"]
+                attrs_to_skip = %w[id user_id list_id category]
                 new_item_attrs.each do |item_attr|
                   next if update_attrs.include?(item_attr) || attrs_to_skip.include?(item_attr)
 

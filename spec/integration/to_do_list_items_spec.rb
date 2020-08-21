@@ -7,7 +7,7 @@ describe "/lists/:list_id/list_items", type: :request do
     let(:user) { create :user }
     let(:list) { create :to_do_list, owner: user }
     let(:users_list) { create :users_list, user: user, list: list }
-    let(:item) { create :to_do_list_item, to_do_list: list, assignee_id: user.id }
+    let(:item) { create :to_do_list_item, list: list, assignee_id: user.id }
 
     required_attrs = %w[task]
     item_attrs = %w[task due_by assignee_id]

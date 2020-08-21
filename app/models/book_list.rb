@@ -19,7 +19,8 @@
 #  index_lists_on_owner_id  (owner_id)
 #
 class BookList < List
-  has_many :book_list_items, dependent: :destroy
+  has_many :book_list_items, foreign_key: "list_id", class_name: "BookListItem", inverse_of: :list,
+                             dependent: :destroy
 
   def categories
     book_list_items.map(&:category).concat(

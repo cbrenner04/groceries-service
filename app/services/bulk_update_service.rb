@@ -109,7 +109,7 @@ class BulkUpdateService
   end
 
   def item_attributes(item, list_id)
-    item_attrs = { user: @current_user, "#{list_type.underscore}_id": list_id }
+    item_attrs = { user: @current_user, list_id: list_id }
 
     new_item_attributes.each do |attr|
       item_attrs.merge!(attr => item[attr])

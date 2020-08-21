@@ -19,7 +19,8 @@
 #  index_lists_on_owner_id  (owner_id)
 #
 class MusicList < List
-  has_many :music_list_items, dependent: :destroy
+  has_many :music_list_items, foreign_key: "list_id", class_name: "MusicListItem", inverse_of: :list,
+                              dependent: :destroy
 
   def categories
     music_list_items
