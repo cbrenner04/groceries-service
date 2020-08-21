@@ -16,7 +16,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}", headers: auth_params
+        get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
+
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
+    describe "when list does not exist" do
+      it "responds with 403" do
+        get "#{list_list_items_bulk_update_path('fake_id')}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -27,7 +35,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
       context "when one item does not exist" do
         it "response with not found" do
-          get "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params
 
           expect(response).to have_http_status :not_found
@@ -39,7 +47,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
           other_list = create list_type.to_sym, owner: user
           other_users_list = create :users_list, user: user, list: other_list
 
-          get "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}", headers: auth_params
+          get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
           complete_attr = list_type == "to_do_list" ? "completed" : "purchased"
@@ -47,6 +55,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
           expect(response).to have_http_status :success
           expect(response_body["items"].count).to eq 2
+          # TODO: need to have list_users checked for ToDoListItems
           item_attrs.each do |item_attr|
             value = item_attr == "due_by" ? item[item_attr.to_sym].iso8601(3) : item[item_attr.to_sym]
             other_value = item_attr == "due_by" ? other_item[item_attr.to_sym].iso8601(3) : other_item[item_attr.to_sym]
@@ -89,32 +98,32 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
     before do
       update_params = {
-        "#{list_type}_items": {
+        list_items: {
           category: "updated category",
           clear_category: true
         }
       }
       update_attrs.each do |attr|
-        update_params["#{list_type}_items".to_sym][attr.to_sym] = case attr
-                                                                  when "assignee_id"
-                                                                    other_user.id
-                                                                  when "due_by"
-                                                                    due_by_date
-                                                                  else
-                                                                    "updated #{attr}"
-                                                                  end
-        update_params["#{list_type}_items".to_sym]["clear_#{attr}".to_sym] = false
+        update_params[:list_items][attr.to_sym] = case attr
+                                                  when "assignee_id"
+                                                    other_user.id
+                                                  when "due_by"
+                                                    due_by_date
+                                                  else
+                                                    "updated #{attr}"
+                                                  end
+        update_params[:list_items]["clear_#{attr}".to_sym] = false
       end
     end
 
     describe "with read access" do
       before do
         users_list.update!(permissions: "read")
-        update_params["#{list_type}_items".to_sym][:copy] = true
+        update_params[:list_items][:copy] = true
       end
 
       it "responds with forbidden" do
-        put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+        put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
             headers: auth_params,
             params: update_params,
             as: :json
@@ -128,9 +137,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
       context "when one of the items does not exist" do
         it "responds with not found" do
-          update_params["#{list_type}_items".to_sym][:copy] = true
-          update_params["#{list_type}_items".to_sym][:new_list_name] = "bulk update list"
-          put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          update_params[:list_items][:copy] = true
+          update_params[:list_items][:new_list_name] = "bulk update list"
+          put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params,
               params: update_params,
               as: :json
@@ -156,11 +165,11 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 initial_item_values[attr.to_sym] = item[attr.to_sym]
                 initial_other_item_values[attr.to_sym] = other_item[attr.to_sym]
               end
-              update_params["#{list_type}_items".to_sym][:copy] = true
-              update_params["#{list_type}_items".to_sym][:update_current_items] = true
-              update_params["#{list_type}_items".to_sym][:new_list_name] = "bulk update list"
+              update_params[:list_items][:copy] = true
+              update_params[:list_items][:update_current_items] = true
+              update_params[:list_items][:new_list_name] = "bulk update list"
 
-              put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+              put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -201,11 +210,11 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 initial_item_values[attr.to_sym] = item[attr.to_sym]
                 initial_other_item_values[attr.to_sym] = other_item[attr.to_sym]
               end
-              update_params["#{list_type}_items".to_sym][:copy] = true
-              update_params["#{list_type}_items".to_sym][:update_current_items] = false
-              update_params["#{list_type}_items".to_sym][:new_list_name] = "bulk update list"
+              update_params[:list_items][:copy] = true
+              update_params[:list_items][:update_current_items] = false
+              update_params[:list_items][:new_list_name] = "bulk update list"
 
-              put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+              put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -235,17 +244,17 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
           end
 
           describe "when move is requested" do
-            before { update_params["#{list_type}_items".to_sym][:move] = true }
+            before { update_params[:list_items][:move] = true }
 
             describe "when new list is requested" do
               it "creates new list, new items, and archives current items" do
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
 
-                update_params["#{list_type}_items".to_sym][:new_list_name] = "bulk update list"
-                update_params["#{list_type}_items".to_sym][:update_current_items] = false
+                update_params[:list_items][:new_list_name] = "bulk update list"
+                update_params[:list_items][:update_current_items] = false
 
-                put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+                put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -289,9 +298,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
 
-                update_params["#{list_type}_items".to_sym][:existing_list_id] = other_list.id
+                update_params[:list_items][:existing_list_id] = other_list.id
 
-                put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+                put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -327,7 +336,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
           end
 
           describe "when copy is requested" do
-            before { update_params["#{list_type}_items".to_sym][:copy] = true }
+            before { update_params[:list_items][:copy] = true }
 
             describe "when new list is requested" do
               it "does not archive items, creates new list and items" do
@@ -335,9 +344,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 expect(other_item.archived_at).to be_nil
                 expect(List.find_by(name: "new list")).to be_nil
 
-                update_params["#{list_type}_items".to_sym][:new_list_name] = "bulk update list"
+                update_params[:list_items][:new_list_name] = "bulk update list"
 
-                put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+                put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -381,9 +390,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
 
-                update_params["#{list_type}_items".to_sym][:existing_list_id] = other_list.id
+                update_params[:list_items][:existing_list_id] = other_list.id
 
-                put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+                put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -424,9 +433,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
             other_list = create list_type.to_sym, owner: user
             create :users_list, user: user, list: other_list
 
-            update_params["#{list_type}_items".to_sym][:copy] = true
+            update_params[:list_items][:copy] = true
 
-            put "#{send("list_#{list_type}_items_bulk_update_path", list.id)}?item_ids=#{item_ids}",
+            put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                 headers: auth_params,
                 params: update_params,
                 as: :json
