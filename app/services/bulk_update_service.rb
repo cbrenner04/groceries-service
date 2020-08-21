@@ -2,15 +2,16 @@
 
 # service object for builk update controllers
 class BulkUpdateService
-  def initialize(list_type, params, item_params, current_user)
-    @list_type = list_type
+  def initialize(params, item_params, current_user)
     @params = params
     @item_params = item_params
     @current_user = current_user
   end
 
   def show_body
-    { items: items, list: list, lists: lists, categories: list.categories }
+    body = { items: items, list: list, lists: lists, categories: list.categories }
+    body[:list_users] = UsersListsService.list_users(list.id) if list_type == "ToDoList"
+    body
   end
 
   def items
@@ -41,23 +42,21 @@ class BulkUpdateService
 
   private
 
-  def list_class
-    { book: BookList, grocery: GroceryList, music: MusicList, simple: SimpleList, to_do: ToDoList }[@list_type.to_sym]
+  def list
+    @list ||= List.find(@params[:list_id])
+  end
+
+  def list_type
+    @list_type ||= list.type
   end
 
   def item_class
-    {
-      book: BookListItem, grocery: GroceryListItem, music: MusicListItem, simple: SimpleListItem, to_do: ToDoListItem
-    }[@list_type.to_sym]
-  end
-
-  def list
-    @list ||= list_class.find(@params[:list_id])
+    @item_class ||= "#{list_type}Item".constantize
   end
 
   def lists
     @current_user.write_lists.filter do |list|
-      list.type == list_class.to_s && list.id != @params[:list_id].to_i
+      list.type == list_type && list.id != @params[:list_id].to_i
     end
   end
 
@@ -65,16 +64,16 @@ class BulkUpdateService
   def update_item_attributes
     list_attrs = [%i[category clear_category]]
 
-    case @list_type
-    when "book"
+    case list_type
+    when "BookList"
       list_attrs.push(%i[author clear_author])
-    when "grocery"
+    when "GroceryList"
       list_attrs.push(%i[quantity clear_quantity])
-    when "music"
+    when "MusicList"
       list_attrs.push(%i[artist clear_artist], %i[album clear_album])
-    when "simple"
+    when "SimpleList"
       list_attrs
-    when "to_do"
+    when "ToDoList"
       list_attrs.push(%i[assignee_id clear_assignee], %i[due_by clear_due_by])
     end
   end
@@ -82,8 +81,9 @@ class BulkUpdateService
 
   def new_item_attributes
     {
-      book: %i[title number_in_series], grocery: %i[product], music: %i[title], simple: %i[content], to_do: %i[task]
-    }[@list_type.to_sym]
+      BookList: %i[title number_in_series], GroceryList: %i[product], MusicList: %i[title], SimpleList: %i[content],
+      ToDoList: %i[task]
+    }[list_type.to_sym]
   end
 
   def should_update_attr(attr, clear_attr)
@@ -103,13 +103,13 @@ class BulkUpdateService
   end
 
   def create_new_list
-    new_list = list_class.create!(name: @item_params[:new_list_name], owner: @current_user)
+    new_list = List.create!(name: @item_params[:new_list_name], owner: @current_user, type: list_type)
     UsersList.create!(user: @current_user, list: new_list, has_accepted: true)
     new_list.id
   end
 
   def item_attributes(item, list_id)
-    item_attrs = { user: @current_user, "#{@list_type}_list_id": list_id }
+    item_attrs = { user: @current_user, "#{list_type.underscore}_id": list_id }
 
     new_item_attributes.each do |attr|
       item_attrs.merge!(attr => item[attr])
