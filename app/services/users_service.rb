@@ -18,7 +18,7 @@ module UsersService
     <<-SQL
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
       FROM active_lists
-      WHERE user_id = #{user_id}
+      WHERE user_id = '#{user_id}'
       AND has_accepted IS NULL
     SQL
   end
@@ -31,7 +31,7 @@ module UsersService
       FROM "active_lists"
       INNER JOIN "users_lists"
               ON "active_lists"."users_list_id" = "users_lists"."id"
-      WHERE "active_lists"."user_id" = #{user_id}
+      WHERE "active_lists"."user_id" = '#{user_id}'
       AND "active_lists"."has_accepted" = true
       AND "users_lists"."permissions" = 'write'
       AND "active_lists"."completed" = false
@@ -51,12 +51,12 @@ module UsersService
         FROM "lists"
         INNER JOIN "users_lists"
                 ON "lists"."id" = "users_lists"."list_id"
-        WHERE "users_lists"."user_id" = #{user_id}
+        WHERE "users_lists"."user_id" = '#{user_id}'
       )
       AND NOT "users"."id" IN (
         SELECT "users_lists"."user_id"
         FROM "users_lists"
-        WHERE "users_lists"."list_id" = #{list_id}
+        WHERE "users_lists"."list_id" = '#{list_id}'
       );
     SQL
   end
@@ -68,7 +68,7 @@ module UsersService
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted,
              user_id, users_list_id, created_at
       FROM active_lists
-      WHERE user_id = #{user_id}
+      WHERE user_id = '#{user_id}'
       AND has_accepted = true
     SQL
   end

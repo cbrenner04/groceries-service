@@ -4,16 +4,16 @@
 #
 # Table name: active_lists
 #
-#  id            :bigint
+#  id            :uuid
 #  completed     :boolean
 #  has_accepted  :boolean
 #  name          :string
 #  refreshed     :boolean
 #  type          :string
 #  created_at    :datetime
-#  owner_id      :bigint
-#  user_id       :bigint
-#  users_list_id :bigint
+#  owner_id      :uuid
+#  user_id       :uuid
+#  users_list_id :uuid
 #
 class ActiveList < ApplicationRecord
   def readonly?

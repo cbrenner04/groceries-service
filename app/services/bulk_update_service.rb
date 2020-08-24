@@ -56,7 +56,7 @@ class BulkUpdateService
 
   def lists
     @current_user.write_lists.filter do |list|
-      list.type == list_type && list.id != @params[:list_id].to_i
+      list.type == list_type && list.id != @params[:list_id]
     end
   end
 

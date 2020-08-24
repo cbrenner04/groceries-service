@@ -4,7 +4,7 @@
 #
 # Table name: to_do_list_items
 #
-#  id          :bigint           not null, primary key
+#  id          :uuid             not null, primary key
 #  archived_at :datetime
 #  category    :string
 #  completed   :boolean          default(FALSE), not null
@@ -13,14 +13,16 @@
 #  task        :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  assignee_id :integer
-#  list_id     :bigint           not null
-#  user_id     :bigint           not null
+#  assignee_id :uuid
+#  list_id     :uuid             not null
+#  user_id     :uuid             not null
 #
 # Indexes
 #
-#  index_to_do_list_items_on_list_id  (list_id)
-#  index_to_do_list_items_on_user_id  (user_id)
+#  index_to_do_list_items_on_assignee_id  (assignee_id)
+#  index_to_do_list_items_on_created_at   (created_at)
+#  index_to_do_list_items_on_list_id      (list_id)
+#  index_to_do_list_items_on_user_id      (user_id)
 #
 # Foreign Keys
 #
