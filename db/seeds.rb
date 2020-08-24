@@ -29,7 +29,7 @@ item_names = %w(apples bananas oranges chocolate beer)
 item_names.each do |item|
   GroceryListItem.create!(
     user: foo,
-    grocery_list: lists[1][0],
+    list: lists[1][0],
     product: item,
     quantity: "#{(1..10).to_a.sample} #{%w(bag bunch case).sample}"
   )

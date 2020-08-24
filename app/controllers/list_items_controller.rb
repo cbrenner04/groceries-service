@@ -6,7 +6,7 @@ class ListItemsController < ProtectedRouteController
 
   # POST /
   def create
-    new_item = item_class.create(item_params.merge!("#{list.type.underscore}_id": params[:list_id]))
+    new_item = item_class.create(item_params.merge!(list_id: params[:list_id]))
     if new_item.save
       render json: new_item
     else

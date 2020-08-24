@@ -21,7 +21,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
       describe "when old list is a BookList" do
         it "creates new list and items" do
           list = BookList.create!(name: "NewBookList", owner: user, completed: true)
-          BookListItem.create!(user: user, book_list: list, title: "foo", category: "foo")
+          BookListItem.create!(user: user, list: list, title: "foo", category: "foo")
 
           expect do
             post list_refresh_list_path(list.id), headers: auth_params
@@ -35,7 +35,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
       describe "when old list is a GroceryList" do
         it "creates new list and items" do
           list = GroceryList.create!(name: "NewGroceryList", owner: user, completed: true)
-          GroceryListItem.create!(user: user, grocery_list: list, product: "foo", quantity: 1, category: "foo")
+          GroceryListItem.create!(user: user, list: list, product: "foo", quantity: 1, category: "foo")
 
           expect do
             post list_refresh_list_path(list.id), headers: auth_params
@@ -49,7 +49,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
       describe "when old list is a MusicList" do
         it "creates new list and items" do
           list = MusicList.create!(name: "NewMusicList", owner: user, completed: true)
-          MusicListItem.create!(user: user, music_list: list, title: "foo", category: "foo")
+          MusicListItem.create!(user: user, list: list, title: "foo", category: "foo")
 
           expect do
             post list_refresh_list_path(list.id), headers: auth_params
@@ -63,7 +63,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
       describe "when old list is a SimpleList" do
         it "creates new list and items" do
           list = SimpleList.create!(name: "NewSimpleList", owner: user, completed: true)
-          SimpleListItem.create!(user: user, simple_list: list, content: "foo", category: "foo")
+          SimpleListItem.create!(user: user, list: list, content: "foo", category: "foo")
 
           expect do
             post list_refresh_list_path(list.id), headers: auth_params
@@ -77,7 +77,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
       describe "when old list is a ToDoList" do
         it "creates new list and items" do
           list = ToDoList.create!(name: "NewToDoList", owner: user, completed: true)
-          ToDoListItem.create!(user: user, to_do_list: list, task: "foo", category: "foo")
+          ToDoListItem.create!(user: user, list: list, task: "foo", category: "foo")
 
           expect do
             post list_refresh_list_path(list.id), headers: auth_params

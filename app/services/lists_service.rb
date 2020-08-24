@@ -24,14 +24,14 @@ class ListsService
     end
 
     def build_new_list(params, user)
-      new_list_params = params.merge!(owner: user)
-      list_type = new_list_params[:type] || "GroceryList"
-      list_type.constantize.new(new_list_params)
+      list_type = params[:type] || "GroceryList"
+      new_list_params = params.merge!(owner: user, type: list_type)
+      List.new(new_list_params)
     end
 
     def create_new_list_from(old_list)
       list_type = old_list.type || "GroceryList"
-      list_type.constantize.create!(name: old_list[:name], owner_id: old_list[:owner_id])
+      List.create!(name: old_list[:name], owner_id: old_list[:owner_id], type: list_type)
     end
 
     def create_new_items(old_list, new_list, user)
@@ -63,8 +63,7 @@ class ListsService
 
     def create_new_list_items(old_list, new_list, user)
       list_type = old_list.type
-      list_type_key = list_type.to_s.tableize.singularize
-      item_attrs = { user: user, list_type_key => new_list }
+      item_attrs = { user: user, list: new_list }
       filtered_list(old_list).each do |item|
         item_attrs[:category] = item[:category]
         new_item_attributes(list_type).each do |attr|
@@ -75,9 +74,7 @@ class ListsService
     end
 
     def list_items(list)
-      list_type = list.type
-      list_type_key = list_type.to_s.tableize.singularize
-      "#{list_type}Item".constantize.where(list_type_key => list)
+      "#{list.type}Item".constantize.where(list: list)
     end
 
     def ordered_items(list)

@@ -4,7 +4,7 @@
 #
 # Table name: users
 #
-#  id                     :bigint           not null, primary key
+#  id                     :uuid             not null, primary key
 #  allow_password_change  :boolean          default(FALSE), not null
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :inet
@@ -33,6 +33,7 @@
 #
 # Indexes
 #
+#  index_users_on_created_at                         (created_at)
 #  index_users_on_email                              (email) UNIQUE
 #  index_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_users_on_invitations_count                  (invitations_count)

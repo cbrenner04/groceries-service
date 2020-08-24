@@ -4,17 +4,17 @@
 #
 # Table name: users_lists
 #
-#  id           :bigint           not null, primary key
+#  id           :uuid             not null, primary key
 #  has_accepted :boolean
 #  permissions  :string           default("write"), not null
-#  list_id      :bigint           not null
-#  user_id      :bigint           not null
+#  list_id      :uuid             not null
+#  user_id      :uuid             not null
 #
 # Indexes
 #
 #  index_users_lists_on_list_id              (list_id)
+#  index_users_lists_on_list_id_and_user_id  (list_id,user_id) UNIQUE
 #  index_users_lists_on_user_id              (user_id)
-#  index_users_lists_on_user_id_and_list_id  (user_id,list_id) UNIQUE
 #
 # Foreign Keys
 #
