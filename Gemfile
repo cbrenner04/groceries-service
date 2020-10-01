@@ -15,14 +15,14 @@ gem "newrelic_rpm", "~> 6.11", ">= 6.11.0.365"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 4.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 6.0.3", ">= 6.0.3.2"
+gem "rails", "~> 6.0.3", ">= 6.0.3.3"
 gem "scenic", "~> 1.5", ">= 1.5.2"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-raven", "~> 3.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
 group :production do
-  gem "informant-rails", "~> 2.2"
+  gem "informant-rails", "~> 2.2", ">= 2.2.0"
   gem "rails_12factor", "~> 0.0.3"
 end
 
@@ -31,7 +31,7 @@ group :development, :test do
   gem "bundler-audit", "~> 0.7.0.1"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 1.8", ">= 1.8.5"
-  gem "factory_bot_rails", "~> 6.1"
+  gem "factory_bot_rails", "~> 6.1", ">= 6.1.0"
   gem "rspec-rails", "~> 4.0", ">= 4.0.1"
   gem "rubocop", "~> 0.90.0"
   gem "rubocop-performance", "~> 1.7", ">= 1.7.1"
