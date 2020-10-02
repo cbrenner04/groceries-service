@@ -15,7 +15,7 @@ module UsersService
   end
 
   def pending_lists_query(user_id)
-    <<-SQL
+    <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
       FROM active_lists
       WHERE user_id = '#{user_id}'
@@ -24,7 +24,7 @@ module UsersService
   end
 
   def write_lists_query(user_id)
-    <<-SQL
+    <<-SQL.squish
       SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed", "active_lists"."type",
              "active_lists"."refreshed", "active_lists"."owner_id", "active_lists"."has_accepted",
              "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at"
@@ -41,7 +41,7 @@ module UsersService
   # Find users where they have been shared on the same lists as current user
   # Filter out users that are already shared on the supplied list
   def related_users_query(user_id, list_id)
-    <<-SQL
+    <<-SQL.squish
       SELECT DISTINCT "users"."email", "users"."id"
       FROM "users"
       INNER JOIN "users_lists"
@@ -64,7 +64,7 @@ module UsersService
   private
 
   def accepted_lists_query(user_id)
-    <<-SQL
+    <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted,
              user_id, users_list_id, created_at
       FROM active_lists
