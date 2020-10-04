@@ -28,6 +28,10 @@ class UsersListsService
   end
 
   def self.create_users_list(user, list)
-    UsersList.create!(user: user, list: list, has_accepted: true)
+    after_id = user.accepted_lists[:not_completed_lists].find do |l|
+      UsersList.find_by(list: l, user: user).before_id.nil?
+    end.id
+    UsersList.find_by(list_id: after_id, user: user).update!(before_id: list.id)
+    UsersList.create!(user: user, list: list, has_accepted: true, after_id: after_id)
   end
 end

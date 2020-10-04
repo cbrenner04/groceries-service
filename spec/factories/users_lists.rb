@@ -7,6 +7,8 @@
 #  id           :uuid             not null, primary key
 #  has_accepted :boolean
 #  permissions  :string           default("write"), not null
+#  after_id     :uuid
+#  before_id    :uuid
 #  list_id      :uuid             not null
 #  user_id      :uuid             not null
 #
