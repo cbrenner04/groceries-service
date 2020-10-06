@@ -26,12 +26,7 @@ class UsersListsController < ProtectedRouteController
   def update
     # the rescue here is in case a bad value is sent for `permissions`
     # `permissions` accepts `read` and `write` only
-    update_params = users_list_params
-    if users_list.has_accepted.nil? && users_list_params[:has_accepted] == true
-      after_id = update_before_and_after_ids
-      update_params[:after_id] = after_id
-      update_params[:before_id] = nil
-    end
+    update_params = update_before_and_after_ids
     users_list.update(update_params)
     render json: users_list
   rescue ArgumentError => e
@@ -98,10 +93,30 @@ class UsersListsController < ProtectedRouteController
   end
 
   def update_before_and_after_ids
-    after_id = current_user.accepted_lists[:not_completed_lists].find do |l|
+    update_params = users_list_params
+    if users_list.has_accepted.nil? && users_list_params[:has_accepted] == true
+      update_before_id_of_first_incomplete_list
+      update_params[:after_id] = first_incomplete_list_id
+    elsif users_list.has_accepted && users_list_params[:has_accepted] == false
+      update_previous_and_next_list
+      update_params[:after_id] = nil
+    end
+    update_params[:before_id] = nil
+    update_params
+  end
+
+  def first_incomplete_list_id
+    @first_incomplete_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
       UsersList.find_by(list: l, user: current_user).before_id.nil?
     end.id
-    UsersList.find_by(list_id: after_id, user: current_user).update!(before_id: users_list[:list_id])
-    after_id
+  end
+
+  def update_before_id_of_first_incomplete_list
+    UsersList.find_by(list_id: first_incomplete_list_id, user: current_user).update!(before_id: users_list[:list_id])
+  end
+
+  def update_previous_and_next_list
+    UsersList.find(users_list.before_id).update!(after_id: users_list.after_id)
+    UsersList.find(users_list.after_id).update!(before_id: users_list.before_id)
   end
 end

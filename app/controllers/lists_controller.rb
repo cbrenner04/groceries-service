@@ -42,6 +42,7 @@ class ListsController < ProtectedRouteController
 
   # DELETE /:id
   def destroy
+    update_previous_and_next_list
     list.archive
     head :no_content
   end
@@ -67,5 +68,12 @@ class ListsController < ProtectedRouteController
 
   def list
     @list ||= List.find(params[:id])
+  end
+
+  def update_previous_and_next_list
+    users_list = UsersList.find(list_id: list.id, user: current_user)
+    UsersList.find(users_list.before_id).update!(after_id: users_list.after_id)
+    UsersList.find(users_list.after_id).update!(before_id: users_list.before_id)
+    users_list.update!(before_id: nil, after_id: nil)
   end
 end
