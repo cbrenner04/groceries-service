@@ -11,6 +11,7 @@ class ListsController < ProtectedRouteController
   end
 
   # POST /
+  # TODO: update users_lists before_id and after_id
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
     if new_list.save
@@ -33,6 +34,7 @@ class ListsController < ProtectedRouteController
 
   # PUT /:id
   def update
+    # TODO: if completing, need to update users lists before_id and after_id
     if list.update(list_params)
       render json: list
     else

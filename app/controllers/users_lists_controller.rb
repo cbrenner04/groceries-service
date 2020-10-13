@@ -11,6 +11,7 @@ class UsersListsController < ProtectedRouteController
   end
 
   # POST /
+  # TODO: update users lists before_id and after_id
   def create
     new_users_list = UsersList.create(users_list_params)
 
@@ -34,6 +35,7 @@ class UsersListsController < ProtectedRouteController
   end
 
   # DELETE /:id
+  # TODO: update users lists before_id and after_id
   def destroy
     users_list.destroy
     head :no_content

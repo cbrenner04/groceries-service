@@ -5,6 +5,7 @@ class RefreshListsController < ProtectedRouteController
   before_action :require_list_owner, only: %i[create]
 
   # POST /
+  # TODO: need to update users lists before_id and after_id
   def create
     list.update!(refreshed: true)
     new_list = ListsService.create_new_list_from list
