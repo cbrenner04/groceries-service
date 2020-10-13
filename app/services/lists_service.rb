@@ -43,8 +43,9 @@ class ListsService
     end
 
     def filtered_list(list)
+      list_types = %w[GroceryList ToDoList SimpleList]
       list_items(list).reject do |item|
-        item_is_not_active = if %w[GroceryList ToDoList SimpleList].include?(list.type)
+        item_is_not_active = if list_types.include?(list.type)
                                item.refreshed || item.archived_at.present?
                              else
                                item.archived_at.present?
