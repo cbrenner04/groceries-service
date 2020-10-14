@@ -11,7 +11,7 @@ class UsersListsController < ProtectedRouteController
   end
 
   # POST /
-  # TODO: update users lists before_id and after_id
+  # TODO: update users lists before_id and after_id for PENDING
   def create
     new_users_list = UsersList.create(users_list_params)
 
@@ -94,8 +94,20 @@ class UsersListsController < ProtectedRouteController
     UsersListsService.list_users_by_status(params[:list_id], "refused")
   end
 
+  def first_incomplete_list_id
+    @first_incomplete_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
+      UsersList.find_by(list: l, user: current_user).before_id.nil?
+    end.users_list_id
+  end
+
   def update_before_and_after_ids
     update_params = users_list_params
+    update_params = update_lists_and_params(update_params)
+    update_params[:before_id] = nil
+    update_params
+  end
+
+  def update_lists_and_params(update_params)
     if users_list.has_accepted.nil? && users_list_params[:has_accepted] == true
       update_before_id_of_first_incomplete_list
       update_params[:after_id] = first_incomplete_list_id
@@ -103,14 +115,7 @@ class UsersListsController < ProtectedRouteController
       update_previous_and_next_list
       update_params[:after_id] = nil
     end
-    update_params[:before_id] = nil
     update_params
-  end
-
-  def first_incomplete_list_id
-    @first_incomplete_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
-      UsersList.find_by(list: l, user: current_user).before_id.nil?
-    end.id
   end
 
   def update_before_id_of_first_incomplete_list

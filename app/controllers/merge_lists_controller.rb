@@ -3,11 +3,9 @@
 # /lists/merge_lists
 class MergeListsController < ProtectedRouteController
   # POST /
-  # TODO: need to update users lists before_id and after_ids
   def create
     new_list = create_new_list
     users_list = UsersListsService.create_users_list(current_user, new_list)
-    UsersListsService.accept_user_list(new_list)
     ListsService.create_new_items_from_multiple_lists(lists, new_list, current_user)
     render json: ListsService.list_response(new_list, users_list, current_user)
   end

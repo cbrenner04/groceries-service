@@ -364,6 +364,7 @@ describe "/lists", type: :request do
     context "when user is owner" do
       it "destroys a list" do
         delete_list = create :list, name: "foo", owner: user
+        create :users_list, list: delete_list, user: user
         delete list_path(delete_list.id), headers: auth_params
         delete_list.reload
 

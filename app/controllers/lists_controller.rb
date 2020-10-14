@@ -11,7 +11,6 @@ class ListsController < ProtectedRouteController
   end
 
   # POST /
-  # TODO: update users_lists before_id and after_id
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
     if new_list.save
@@ -35,6 +34,7 @@ class ListsController < ProtectedRouteController
   # PUT /:id
   def update
     # TODO: if completing, need to update users lists before_id and after_id
+    # TODO: are there any other actions that will require updates to users lists before_id and after_id?
     if list.update(list_params)
       render json: list
     else
@@ -56,7 +56,6 @@ class ListsController < ProtectedRouteController
   end
 
   def require_list_access
-    users_list = UsersList.find_by(list: list, user: current_user)
     return if users_list&.has_accepted
 
     head :forbidden
@@ -72,10 +71,25 @@ class ListsController < ProtectedRouteController
     @list ||= List.find(params[:id])
   end
 
-  def update_previous_and_next_list
-    users_list = UsersList.find(list_id: list.id, user: current_user)
+  def users_list
+    @users_list ||= UsersList.find_by(list: list, user: current_user)
+  end
+
+  def update_previous_list
+    return unless users_list.before_id
+
     UsersList.find(users_list.before_id).update!(after_id: users_list.after_id)
+  end
+
+  def update_next_list
+    return unless users_list.after_id
+
     UsersList.find(users_list.after_id).update!(before_id: users_list.before_id)
+  end
+
+  def update_previous_and_next_list
+    update_previous_list
+    update_next_list
     users_list.update!(before_id: nil, after_id: nil)
   end
 end
