@@ -33,8 +33,7 @@ class ListsController < ProtectedRouteController
 
   # PUT /:id
   def update
-    # TODO: if completing, need to update users lists before_id and after_id
-    # TODO: are there any other actions that will require updates to users lists before_id and after_id?
+    update_previous_and_next_list if list_params[:completed]
     if list.update(list_params)
       render json: list
     else
@@ -52,7 +51,7 @@ class ListsController < ProtectedRouteController
   private
 
   def list_params
-    params.require(:list).permit(:user, :name, :completed, :refreshed, :type)
+    @list_params ||= params.require(:list).permit(:user, :name, :completed, :refreshed, :type)
   end
 
   def require_list_access

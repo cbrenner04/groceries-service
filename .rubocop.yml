@@ -19,6 +19,11 @@ Rails:
 Layout/LineLength:
   Max: 120
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Spec-related overrides below
+
 Style/Documentation:
   Exclude:
     - "spec/**/*"
@@ -34,9 +39,6 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Exclude:
     - spec/**/*
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
 
 RSpec/NestedGroups:
   Max: 6
