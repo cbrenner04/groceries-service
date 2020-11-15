@@ -75,20 +75,20 @@ class ListsController < ProtectedRouteController
   end
 
   def update_previous_list
-    return unless users_list.before_id
+    return unless users_list.prev_id
 
-    UsersList.find(users_list.before_id).update!(after_id: users_list.after_id)
+    UsersList.find(users_list.prev_id).update!(next_id: users_list.next_id)
   end
 
   def update_next_list
-    return unless users_list.after_id
+    return unless users_list.next_id
 
-    UsersList.find(users_list.after_id).update!(before_id: users_list.before_id)
+    UsersList.find(users_list.next_id).update!(prev_id: users_list.prev_id)
   end
 
   def update_previous_and_next_list
     update_previous_list
     update_next_list
-    users_list.update!(before_id: nil, after_id: nil)
+    users_list.update!(prev_id: nil, next_id: nil)
   end
 end

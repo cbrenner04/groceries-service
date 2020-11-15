@@ -30,8 +30,8 @@ describe "/completed_lists", type: :request do
         "user_id" => user.id,
         "has_accepted" => true,
         "type" => completed_list[:type],
-        "before_id" => nil,
-        "after_id" => nil
+        "prev_id" => nil,
+        "next_id" => nil
       )
       expect(response_body["current_list_permissions"]).to eq(
         user.lists[0].id.to_s => "write",

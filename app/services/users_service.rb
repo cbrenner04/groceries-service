@@ -22,7 +22,7 @@ module UsersService
   def pending_lists_query(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at,
-             before_id, after_id
+             prev_id, next_id
       FROM active_lists
       WHERE user_id = '#{user_id}'
       AND has_accepted IS NULL
@@ -72,7 +72,7 @@ module UsersService
   def accepted_lists_query(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted,
-             user_id, users_list_id, created_at, before_id, after_id
+             user_id, users_list_id, created_at, prev_id, next_id
       FROM active_lists
       WHERE user_id = '#{user_id}'
       AND has_accepted = true

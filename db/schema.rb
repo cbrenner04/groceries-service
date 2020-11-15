@@ -152,8 +152,8 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "permissions", default: "write", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
-    t.uuid "before_id"
-    t.uuid "after_id"
+    t.uuid "prev_id"
+    t.uuid "next_id"
     t.index ["list_id", "user_id"], name: "index_users_lists_on_list_id_and_user_id", unique: true
     t.index ["list_id"], name: "index_users_lists_on_list_id"
     t.index ["user_id"], name: "index_users_lists_on_user_id"
@@ -183,8 +183,8 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
       users_lists.id AS users_list_id,
       users_lists.user_id,
       users_lists.has_accepted,
-      users_lists.before_id,
-      users_lists.after_id
+      users_lists.prev_id,
+      users_lists.next_id
      FROM (lists
        JOIN users_lists ON ((lists.id = users_lists.list_id)))
     WHERE (lists.archived_at IS NULL)

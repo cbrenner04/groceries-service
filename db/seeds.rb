@@ -42,9 +42,9 @@ User.all.each do |user|
 
   [pending, incomplete, complete].each do |lists|
     lists.each_with_index do |list, index|
-      before_id = index == 0 ? nil : lists[index - 1].users_list_id
-      after_id = index == lists.count - 1 ? nil : lists[index + 1].users_list_id
-      UsersList.find_by(user_id: user.id, list: list.id).update!(before_id: before_id, after_id: after_id)
+      prev_id = index == 0 ? nil : lists[index - 1].users_list_id
+      next_id = index == lists.count - 1 ? nil : lists[index + 1].users_list_id
+      UsersList.find_by(user_id: user.id, list: list.id).update!(prev_id: prev_id, next_id: next_id)
     end
   end
 end

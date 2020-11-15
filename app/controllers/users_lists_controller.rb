@@ -13,12 +13,12 @@ class UsersListsController < ProtectedRouteController
   # POST /
   # rubocop:disable Metrics/AbcSize
   def create
-    after_list = current_user.users_lists.find_by(has_accepted: nil, before_id: nil)
-    users_list_params[:after_id] = after_list&.id # nil if no after_list
+    after_list = current_user.users_lists.find_by(has_accepted: nil, prev_id: nil)
+    users_list_params[:next_id] = after_list&.id # nil if no after_list
     new_users_list = UsersList.create(users_list_params)
 
     if new_users_list.save
-      after_list&.update!(before_id: new_users_list.id)
+      after_list&.update!(prev_id: new_users_list.id)
       SharedListNotification.send_notification_for(current_user, users_list_params[:user_id])
       render json: new_users_list
     else
@@ -32,7 +32,7 @@ class UsersListsController < ProtectedRouteController
     # the rescue here is in case a bad value is sent for `permissions`
     # `permissions` accepts `read` and `write` only
     update_lists_and_params
-    users_list_params[:before_id] = nil
+    users_list_params[:prev_id] = nil
     users_list.update(users_list_params)
     render json: users_list
   rescue ArgumentError => e
@@ -101,7 +101,7 @@ class UsersListsController < ProtectedRouteController
 
   def first_incomplete_users_list_id
     first_incomplete_users_list = current_user.accepted_lists[:not_completed_lists].find do |l|
-      UsersList.find_by(list: l, user: current_user).before_id.nil?
+      UsersList.find_by(list: l, user: current_user).prev_id.nil?
     end
     @first_incomplete_users_list_id ||= first_incomplete_users_list.users_list_id
   end
@@ -110,22 +110,22 @@ class UsersListsController < ProtectedRouteController
   def update_lists_and_params
     if users_list.has_accepted.nil? && users_list_params[:has_accepted] == true
       # accepting list share
-      update_before_id_of_first_incomplete_list
-      users_list_params[:after_id] = first_incomplete_users_list_id
+      update_prev_id_of_first_incomplete_list
+      users_list_params[:next_id] = first_incomplete_users_list_id
     elsif users_list.has_accepted && users_list_params[:has_accepted] == false
       # rejecting previously accepted list share
       update_previous_and_next_list
-      users_list_params[:after_id] = nil
+      users_list_params[:next_id] = nil
     end
   end
   # rubocop:enable Metrics/AbcSize
 
-  def update_before_id_of_first_incomplete_list
-    UsersList.find_by(list_id: first_incomplete_users_list_id, user: current_user)&.update!(before_id: users_list.id)
+  def update_prev_id_of_first_incomplete_list
+    UsersList.find_by(list_id: first_incomplete_users_list_id, user: current_user)&.update!(prev_id: users_list.id)
   end
 
   def update_previous_and_next_list
-    UsersList.find(users_list.before_id).update!(after_id: users_list.after_id) if users_list.before_id
-    UsersList.find(users_list.after_id).update!(before_id: users_list.before_id) if users_list.after_id
+    UsersList.find(users_list.prev_id).update!(next_id: users_list.next_id) if users_list.prev_id
+    UsersList.find(users_list.next_id).update!(prev_id: users_list.prev_id) if users_list.next_id
   end
 end
