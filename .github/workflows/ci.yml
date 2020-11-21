@@ -49,4 +49,8 @@ jobs:
           cp config/database.yml.github-actions config/database.yml
           bundle exec rails db:drop db:create db:migrate
       - name: Run tests
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          RAILS_ENV: test
         run: bundle exec rspec
