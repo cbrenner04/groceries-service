@@ -21,7 +21,8 @@ jobs:
         image: postgres:12
         ports: ["5432:5432"]
         env:
-          POSTGRES_PASSWORD: ""
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
@@ -41,9 +42,11 @@ jobs:
         run: bundle exec brakeman -o brakeman-report.json
       - name: Setup test database
         env:
-          PGHOST: 127.0.0.1
-          PGUSER: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           RAILS_ENV: test
-        run: bundle exec rails db:drop db:create db:migrate
+        run: |
+          cp config/database.yml.github-actions config/database.yml
+          bundle exec rails db:drop db:create db:migrate
       - name: Run tests
         run: bundle exec rspec
