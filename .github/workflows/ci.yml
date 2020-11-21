@@ -19,11 +19,8 @@ jobs:
     services:
       postgres:
         image: postgres:12
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: groceries_service_test
-          POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,7 +29,7 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
-      - name: Install PostgreSQL 11 client
+      - name: Install PostgreSQL client
         run: sudo apt-get -yqq install libpq-dev
       - name: Audit dependencies
         run: bundle exec bundle audit check --update
