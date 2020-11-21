@@ -32,6 +32,8 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
+      - name: Install PostgreSQL 11 client
+        run: sudo apt-get -yqq install libpq-dev
       - name: Audit dependencies
         run: bundle exec bundle audit check --update
       - name: Lint
@@ -42,7 +44,7 @@ jobs:
         env:
           RAILS_ENV: test
           PGHOST: localhost
-          # PGUSER: groceries
+          PGUSER: postgres
         run: bundle exec rails db:drop db:create db:migrate
       - name: Run tests
         run: bundle exec rspec
