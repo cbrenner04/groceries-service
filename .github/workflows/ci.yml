@@ -20,7 +20,7 @@ jobs:
       postgres:
         image: postgres:12
         env:
-          POSTGRES_USER: groceries
+          POSTGRES_USER: postgres
           POSTGRES_DB: groceries_service_test
           POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
@@ -32,8 +32,6 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
-      - name: Install dependencies
-        run: bundle install
       - name: Audit dependencies
         run: bundle exec bundle audit check --update
       - name: Lint
@@ -44,7 +42,7 @@ jobs:
         env:
           RAILS_ENV: test
           PGHOST: localhost
-          PGUSER: groceries
+          # PGUSER: groceries
         run: bundle exec rails db:drop db:create db:migrate
       - name: Run tests
         run: bundle exec rspec
