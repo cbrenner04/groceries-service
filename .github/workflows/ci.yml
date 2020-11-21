@@ -9,9 +9,9 @@ name: Ruby
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -25,32 +25,26 @@ jobs:
           POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-        bundler-cache: true 
-    - name: Install dependencies
-      run: bundle install
-    - name: Audit dependencies
-      run: bundle exec bundle audit check --update
-    - name: Lint
-      run: bundle exec rubocop
-    - name: Static analysis
-      run: bundle exec brakeman -o brakeman-report.json
-    - name: Setup test database
-      env:
-        RAILS_ENV: test
-        PGHOST: localhost
-        PGUSER: groceries
-      run: bundle exec rails db:drop db:create db:migrate
-    - name: Run tests
-      run: bundle exec rspec
-
-
-
-  - bundle exec brakeman -o brakeman-report.json
-  - RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
-  - bundle exec rspec
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install
+      - name: Audit dependencies
+        run: bundle exec bundle audit check --update
+      - name: Lint
+        run: bundle exec rubocop
+      - name: Static analysis
+        run: bundle exec brakeman -o brakeman-report.json
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+          PGHOST: localhost
+          PGUSER: groceries
+        run: bundle exec rails db:drop db:create db:migrate
+      - name: Run tests
+        run: bundle exec rspec
