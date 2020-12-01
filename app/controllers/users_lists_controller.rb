@@ -7,25 +7,42 @@ class UsersListsController < ProtectedRouteController
 
   # GET /
   def index
-    render json: index_response
+    user_is_owner = list.owner == current_user
+    invitable_users = current_user.users_that_list_can_be_shared_with(list)
+    render json: {
+      list: list, invitable_users: invitable_users, accepted: accepted_lists, pending: pending_lists,
+      refused: refused_lists, current_user_id: current_user.id, user_is_owner: user_is_owner
+    }
   end
 
   # POST /
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def create
-    after_list = current_user.users_lists.find_by(has_accepted: nil, prev_id: nil)
-    users_list_params[:next_id] = after_list&.id # nil if no after_list
+    # given the manipulation before `.create`, we need to check for required params
+    # this can be handled in the params definition but causes issues for updates. that would look like
+    # params
+    #   .require(:users_list)
+    #   .permit(:user_id, :list_id, :has_accepted, :permissions)
+    #   .tap { |nested_params| nested_params.require(%i[user_id list_id]) }
+    unless users_list_params[:user_id].present? && users_list_params[:list_id].present?
+      return head :unprocessable_entity
+    end
+
+    user = User.find(users_list_params[:user_id])
+    # next_list represents the previous latest unaccepted list which will now be after the list being created
+    next_list = user.users_lists.find_by(has_accepted: nil, prev_id: nil)
+    users_list_params[:next_id] = next_list&.id # nil if no next_list, this is likely only when a user has no lists
     new_users_list = UsersList.create(users_list_params)
 
     if new_users_list.save
-      after_list&.update!(prev_id: new_users_list.id)
+      next_list&.update!(prev_id: new_users_list.id)
       SharedListNotification.send_notification_for(current_user, users_list_params[:user_id])
       render json: new_users_list
     else
       render json: new_users_list.errors, status: :unprocessable_entity
     end
   end
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   # PUT /:id
   def update
@@ -76,15 +93,6 @@ class UsersListsController < ProtectedRouteController
     return if users_list_by_list_and_user&.permissions == "write"
 
     head :forbidden
-  end
-
-  def index_response
-    user_is_owner = list.owner == current_user
-    invitable_users = current_user.users_that_list_can_be_shared_with(list)
-    {
-      list: list, invitable_users: invitable_users, accepted: accepted_lists, pending: pending_lists,
-      refused: refused_lists, current_user_id: current_user.id, user_is_owner: user_is_owner
-    }
   end
 
   def accepted_lists

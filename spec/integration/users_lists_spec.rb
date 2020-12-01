@@ -161,17 +161,42 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "write") }
 
       describe "with valid params" do
-        it "creates a new users list" do
-          expect do
-            post list_users_lists_path(list.id),
-                 params: { users_list: { user_id: other_user.id, list_id: list.id } },
-                 headers: auth_params
-          end.to change(UsersList, :count).by 1
+        context "when no previous users lists exist for the user" do
+          it "creates a new users list" do
+            expect do
+              post list_users_lists_path(list.id),
+                   params: { users_list: { user_id: other_user.id, list_id: list.id } },
+                   headers: auth_params
+            end.to change(UsersList, :count).by 1
+          end
+        end
+
+        context "when previous users lists exist for the user" do
+          it "creates a new users list and updates previous list" do
+            other_list = create :list
+            other_users_list = create :users_list, user: other_user, list: other_list, has_accepted: nil
+
+            expect(other_user.users_lists.count).to eq 1
+            expect(other_users_list.prev_id).to be_falsey
+
+            expect do
+              post list_users_lists_path(list.id),
+                   params: { users_list: { user_id: other_user.id, list_id: list.id } },
+                   headers: auth_params
+            end.to change(UsersList, :count).by 1
+
+            other_users_list.reload
+
+            expect(other_users_list.prev_id).to be_truthy
+            expect(other_user.users_lists.count).to eq 2
+            # TODO: need to be more specific here, this isn't always the second list as they aren't orderd by created_at
+            expect(other_user.users_lists[1].next_id).to be_truthy
+          end
         end
       end
 
       describe "with invalid params" do
-        it "re-renders the 'new' template" do
+        it "returns unprocessible entity" do
           post list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
           expect(response.status).to eq 422
