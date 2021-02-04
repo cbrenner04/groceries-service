@@ -30,7 +30,7 @@ group :development, :test do
   gem "brakeman", "~> 5.0"
   gem "bundler-audit", "~> 0.7.0.1"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
-  gem "database_cleaner", "~> 1.8", ">= 1.8.5"
+  gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.1", ">= 6.1.0"
   gem "rspec-rails", "~> 4.0", ">= 4.0.1"
   gem "rubocop", "~> 1.9.0"
