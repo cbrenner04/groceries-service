@@ -19,7 +19,7 @@ gem "rails", "~> 6.1.0", ">= 6.1.3"
 gem "scenic", "~> 1.5", ">= 1.5.4"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-raven", "~> 3.0"
-gem "sprockets", "~> 3.7", ">= 3.7.2"
+gem "sprockets", "~> 4.0", ">= 4.0.2"
 
 group :production do
   gem "informant-rails", "~> 2.2", ">= 2.2.0"
