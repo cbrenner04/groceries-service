@@ -8,7 +8,7 @@ ruby "2.7.2"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.7", ">= 4.7.3"
 gem "devise_invitable", "~> 2.0", ">= 2.0.2"
-gem "devise_token_auth", "~> 1.1", ">= 1.1.4"
+gem "devise_token_auth", "~> 1.1", ">= 1.1.5"
 gem "libv8", "~> 8.4", ">= 8.4.255.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 6.11", ">= 6.11.0.365"
