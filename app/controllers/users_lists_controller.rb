@@ -39,6 +39,7 @@ class UsersListsController < ProtectedRouteController
       SharedListNotification.send_notification_for(current_user, users_list_params[:user_id])
       render json: new_users_list
     else
+      # this is a catch all in case something goes wrong on `save` but unlikely to get here
       render json: new_users_list.errors, status: :unprocessable_entity
     end
   end
@@ -108,10 +109,9 @@ class UsersListsController < ProtectedRouteController
   end
 
   def first_incomplete_users_list_id
-    first_incomplete_users_list = current_user.accepted_lists[:not_completed_lists].find do |l|
+    @first_incomplete_users_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
       UsersList.find_by(list: l, user: current_user).prev_id.nil?
-    end
-    @first_incomplete_users_list_id ||= first_incomplete_users_list.users_list_id
+    end.users_list_id
   end
 
   # rubocop:disable Metrics/AbcSize
