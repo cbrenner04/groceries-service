@@ -7,9 +7,9 @@
 #  id           :uuid             not null, primary key
 #  has_accepted :boolean
 #  permissions  :string           default("write"), not null
-#  next_id     :uuid
-#  prev_id    :uuid
 #  list_id      :uuid             not null
+#  next_id      :uuid
+#  prev_id      :uuid
 #  user_id      :uuid             not null
 #
 # Indexes
