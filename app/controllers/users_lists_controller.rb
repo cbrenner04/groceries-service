@@ -111,7 +111,7 @@ class UsersListsController < ProtectedRouteController
   end
 
   def accept_list_share
-    first_incomplete_users_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
+    first_incomplete_users_list_id = current_user.accepted_lists[:not_completed_lists].find do |l|
       UsersList.find_by(list: l, user: current_user).prev_id.nil?
     end.users_list_id
     UsersList.find_by(list_id: first_incomplete_users_list_id, user: current_user)&.update!(prev_id: users_list.id)

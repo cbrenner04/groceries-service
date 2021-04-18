@@ -204,10 +204,9 @@ describe "/lists/:list_id/users_lists", type: :request do
 
             other_users_list.reload
 
-            expect(other_users_list.prev_id).to be_truthy
             expect(other_user.users_lists.count).to eq 2
-            # TODO: need to be more specific here, this isn't always the second list as they aren't orderd by created_at
-            expect(other_user.users_lists[1].next_id).to be_truthy
+            expect(other_users_list.prev_id).to be_truthy
+            expect(other_user.users_lists.find_by(list_id: list.id).next_id).to be_truthy
           end
         end
       end
