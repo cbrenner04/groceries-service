@@ -100,22 +100,39 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "write") }
 
       context "when users_list exists" do
-        it "accepts list" do
-          patch list_users_list_path(list.id, users_list.id),
-                params: { users_list: { has_accepted: true } },
-                headers: auth_params
+        context "when list has not been accepted or rejected " do
+          before { users_list.update!(has_accepted: nil) }
 
-          users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq true
+          it "accepts list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: true } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to eq true
+          end
+
+          it "rejects list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: false } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to eq false
+          end
         end
 
-        it "rejects list" do
-          patch list_users_list_path(list.id, users_list.id),
-                params: { users_list: { has_accepted: false } },
-                headers: auth_params
+        context "when list has been accepted" do
+          before { users_list.update!(has_accepted: true) }
 
-          users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq false
+          it "rejects list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: false } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to eq false
+          end
         end
 
         describe "permissions" do

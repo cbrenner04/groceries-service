@@ -40,7 +40,9 @@ class UsersListsController < ProtectedRouteController
       render json: new_users_list
     else
       # this is a catch all in case something goes wrong on `save` but unlikely to get here
+      # :nocov:
       render json: new_users_list.errors, status: :unprocessable_entity
+      # :nocov:
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -116,11 +118,11 @@ class UsersListsController < ProtectedRouteController
 
   # rubocop:disable Metrics/AbcSize
   def update_lists_and_params
-    if users_list.has_accepted.nil? && users_list_params[:has_accepted] == true
+    if users_list.has_accepted.nil? && users_list_params[:has_accepted] == "true"
       # accepting list share
       update_prev_id_of_first_incomplete_list
       users_list_params[:next_id] = first_incomplete_users_list_id
-    elsif users_list.has_accepted && users_list_params[:has_accepted] == false
+    elsif users_list.has_accepted && users_list_params[:has_accepted] == "false"
       # rejecting previously accepted list share
       update_previous_and_next_list
       users_list_params[:next_id] = nil
