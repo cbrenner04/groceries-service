@@ -110,28 +110,25 @@ class UsersListsController < ProtectedRouteController
     UsersListsService.list_users_by_status(params[:list_id], "refused")
   end
 
-  def first_incomplete_users_list_id
-    @first_incomplete_users_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
+  def accept_list_share
+    first_incomplete_users_list_id ||= current_user.accepted_lists[:not_completed_lists].find do |l|
       UsersList.find_by(list: l, user: current_user).prev_id.nil?
     end.users_list_id
+    UsersList.find_by(list_id: first_incomplete_users_list_id, user: current_user)&.update!(prev_id: users_list.id)
+    users_list_params[:next_id] = first_incomplete_users_list_id
   end
 
-  # rubocop:disable Metrics/AbcSize
+  def reject_previously_accepted_list_share
+    update_previous_and_next_list
+    users_list_params[:next_id] = nil
+  end
+
   def update_lists_and_params
     if users_list.has_accepted.nil? && users_list_params[:has_accepted] == "true"
-      # accepting list share
-      update_prev_id_of_first_incomplete_list
-      users_list_params[:next_id] = first_incomplete_users_list_id
+      accept_list_share
     elsif users_list.has_accepted && users_list_params[:has_accepted] == "false"
-      # rejecting previously accepted list share
-      update_previous_and_next_list
-      users_list_params[:next_id] = nil
+      reject_previously_accepted_list_share
     end
-  end
-  # rubocop:enable Metrics/AbcSize
-
-  def update_prev_id_of_first_incomplete_list
-    UsersList.find_by(list_id: first_incomplete_users_list_id, user: current_user)&.update!(prev_id: users_list.id)
   end
 
   def update_previous_and_next_list
