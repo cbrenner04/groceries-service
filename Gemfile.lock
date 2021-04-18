@@ -87,7 +87,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise_invitable (2.0.4)
+    devise_invitable (2.0.3)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     devise_token_auth (1.1.5)
@@ -287,7 +287,7 @@ DEPENDENCIES
   byebug
   database_cleaner (~> 2.0, >= 2.0.0)
   devise (~> 4.7, >= 4.7.3)
-  devise_invitable (~> 2.0, >= 2.0.2)
+  devise_invitable (~> 2.0, >= 2.0.2, < 2.0.4)
   devise_token_auth (~> 1.1, >= 1.1.5)
   factory_bot_rails (~> 6.1, >= 6.1.0)
   informant-rails (~> 2.2, >= 2.2.0)
