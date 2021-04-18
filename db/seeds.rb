@@ -34,3 +34,17 @@ item_names.each do |item|
     quantity: "#{(1..10).to_a.sample} #{%w(bag bunch case).sample}"
   )
 end
+
+User.all.each do |user|
+  pending = user.pending_lists
+  incomplete = user.accepted_lists[:not_completed_lists]
+  complete = user.all_completed_lists
+
+  [pending, incomplete, complete].each do |lists|
+    lists.each_with_index do |list, index|
+      prev_id = index == 0 ? nil : lists[index - 1].users_list_id
+      next_id = index == lists.count - 1 ? nil : lists[index + 1].users_list_id
+      UsersList.find_by(user_id: user.id, list: list.id).update!(prev_id: prev_id, next_id: next_id)
+    end
+  end
+end

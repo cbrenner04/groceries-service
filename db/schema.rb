@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_24_122854) do
+ActiveRecord::Schema.define(version: 2020_10_04_190505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -152,6 +152,8 @@ ActiveRecord::Schema.define(version: 2020_08_24_122854) do
     t.string "permissions", default: "write", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
+    t.uuid "prev_id"
+    t.uuid "next_id"
     t.index ["list_id", "user_id"], name: "index_users_lists_on_list_id_and_user_id", unique: true
     t.index ["list_id"], name: "index_users_lists_on_list_id"
     t.index ["user_id"], name: "index_users_lists_on_user_id"
@@ -180,7 +182,9 @@ ActiveRecord::Schema.define(version: 2020_08_24_122854) do
       lists.owner_id,
       users_lists.id AS users_list_id,
       users_lists.user_id,
-      users_lists.has_accepted
+      users_lists.has_accepted,
+      users_lists.prev_id,
+      users_lists.next_id
      FROM (lists
        JOIN users_lists ON ((lists.id = users_lists.list_id)))
     WHERE (lists.archived_at IS NULL)

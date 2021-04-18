@@ -11,7 +11,9 @@
 #  refreshed     :boolean
 #  type          :string
 #  created_at    :datetime
+#  next_id       :uuid
 #  owner_id      :uuid
+#  prev_id       :uuid
 #  user_id       :uuid
 #  users_list_id :uuid
 #

@@ -8,6 +8,8 @@
 #  has_accepted :boolean
 #  permissions  :string           default("write"), not null
 #  list_id      :uuid             not null
+#  next_id      :uuid
+#  prev_id      :uuid
 #  user_id      :uuid             not null
 #
 # Indexes
