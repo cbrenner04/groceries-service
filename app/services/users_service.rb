@@ -8,33 +8,40 @@ module UsersService
   #       behave like active record model records
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def completed_accepted_lists_query__old__(user_id)
     "#{accepted_lists_query__old__(user_id)} AND completed = true"
   end
+  # :nocov:
 
   def completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = true"
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def limited_completed_accepted_lists_query__old__(user_id)
     "#{completed_accepted_lists_query__old__(user_id)} LIMIT 10"
   end
+  # :nocov:
 
   def limited_completed_accepted_lists_query(user_id)
     "#{completed_accepted_lists_query(user_id)} LIMIT 10"
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def not_completed_accepted_lists_query__old__(user_id)
     "#{accepted_lists_query__old__(user_id)} AND completed = false"
   end
+  # :nocov:
 
   def not_completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = false"
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def pending_lists_query__old__(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
@@ -43,6 +50,7 @@ module UsersService
       AND has_accepted IS NULL
     SQL
   end
+  # :nocov:
 
   def pending_lists_query(user_id)
     <<-SQL.squish
@@ -58,8 +66,7 @@ module UsersService
     <<-SQL.squish
       SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed", "active_lists"."type",
              "active_lists"."refreshed", "active_lists"."owner_id", "active_lists"."has_accepted",
-             "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at",
-             "active_lists"."prev_id", "active_lists"."next_id"
+             "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at"
       FROM "active_lists"
       INNER JOIN "users_lists"
               ON "active_lists"."users_list_id" = "users_lists"."id"
@@ -96,6 +103,7 @@ module UsersService
   private
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def accepted_lists_query__old__(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
@@ -104,6 +112,7 @@ module UsersService
       AND has_accepted = true
     SQL
   end
+  # :nocov:
 
   def accepted_lists_query(user_id)
     <<-SQL.squish

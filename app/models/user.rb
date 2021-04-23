@@ -74,20 +74,24 @@ class User < ApplicationRecord
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def all_completed_lists__old__
     List.find_by_sql(completed_accepted_lists_query__old__(id))
   end
+  # :nocov:
 
   def all_completed_lists
     List.find_by_sql(completed_accepted_lists_query(id))
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def accepted_lists__old__
     not_completed_lists = List.find_by_sql(not_completed_accepted_lists_query__old__(id))
     completed_lists = List.find_by_sql(limited_completed_accepted_lists_query__old__(id))
     { not_completed_lists: not_completed_lists, completed_lists: completed_lists }
   end
+  # :nocov:
 
   def accepted_lists
     not_completed_lists = List.find_by_sql(not_completed_accepted_lists_query(id))
@@ -96,9 +100,11 @@ class User < ApplicationRecord
   end
 
   # TODO: remove after migrations are complete for DND
+  # :nocov:
   def pending_lists__old__
     List.find_by_sql(pending_lists_query__old__(id))
   end
+  # :nocov:
 
   def pending_lists
     List.find_by_sql(pending_lists_query(id))
