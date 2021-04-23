@@ -4,9 +4,9 @@ class AddBeforeIdAndAfterIdToUsersLists < ActiveRecord::Migration[6.0]
     add_column :users_lists, :next_id, :uuid
 
     User.all.each do |user|
-      pending = user.pending_lists
-      incomplete = user.accepted_lists[:not_completed_lists]
-      complete = user.all_completed_lists
+      pending = user.pending_lists__old__
+      incomplete = user.accepted_lists__old__[:not_completed_lists]
+      complete = user.all_completed_lists__old__
 
       [pending, incomplete, complete].each do |lists|
         lists.each_with_index do |list, index|

@@ -7,16 +7,41 @@ module UsersService
   #       etc on these records like a normal model record. These are good for gets but will need to be manipulated to
   #       behave like active record model records
 
+  # TODO: remove after migrations are complete for DND
+  def completed_accepted_lists_query__old__(user_id)
+    "#{accepted_lists_query__old__(user_id)} AND completed = true"
+  end
+
   def completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = true"
+  end
+
+  # TODO: remove after migrations are complete for DND
+  def limited_completed_accepted_lists_query__old__(user_id)
+    "#{completed_accepted_lists_query__old__(user_id)} LIMIT 10"
   end
 
   def limited_completed_accepted_lists_query(user_id)
     "#{completed_accepted_lists_query(user_id)} LIMIT 10"
   end
 
+  # TODO: remove after migrations are complete for DND
+  def not_completed_accepted_lists_query__old__(user_id)
+    "#{accepted_lists_query__old__(user_id)} AND completed = false"
+  end
+
   def not_completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = false"
+  end
+
+  # TODO: remove after migrations are complete for DND
+  def pending_lists_query__old__(user_id)
+    <<-SQL.squish
+      SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
+      FROM active_lists
+      WHERE user_id = '#{user_id}'
+      AND has_accepted IS NULL
+    SQL
   end
 
   def pending_lists_query(user_id)
@@ -33,7 +58,8 @@ module UsersService
     <<-SQL.squish
       SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed", "active_lists"."type",
              "active_lists"."refreshed", "active_lists"."owner_id", "active_lists"."has_accepted",
-             "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at"
+             "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at",
+             "active_lists"."prev_id", "active_lists"."next_id"
       FROM "active_lists"
       INNER JOIN "users_lists"
               ON "active_lists"."users_list_id" = "users_lists"."id"
@@ -68,6 +94,16 @@ module UsersService
   end
 
   private
+
+  # TODO: remove after migrations are complete for DND
+  def accepted_lists_query__old__(user_id)
+    <<-SQL.squish
+      SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
+      FROM active_lists
+      WHERE user_id = '#{user_id}'
+      AND has_accepted = true
+    SQL
+  end
 
   def accepted_lists_query(user_id)
     <<-SQL.squish
