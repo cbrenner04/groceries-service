@@ -10,15 +10,15 @@ gem "devise", "~> 4.7", ">= 4.7.3"
 # TODO: devise_invitable 2.0.4 is borked... waiting for 2.0.5
 # devise_invitable was fixed on 4/14/2021; this comment 4/18/2021
 # hope its ready next time i check
-gem "devise_invitable", "~> 2.0", ">= 2.0.2", "< 2.0.4"
+gem "devise_invitable", "~> 2.0", ">= 2.0.3"
 gem "devise_token_auth", "~> 1.1", ">= 1.1.5"
 gem "libv8", "~> 8.4", ">= 8.4.255.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 6.11", ">= 6.11.0.365"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.0"
+gem "puma", "~> 5.3", ">= 5.3.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 6.1.0", ">= 6.1.3"
+gem "rails", "~> 6.1.3", ">= 6.1.3.2"
 gem "scenic", "~> 1.5", ">= 1.5.4"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-raven", "~> 3.0"
