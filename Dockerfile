@@ -1,14 +1,13 @@
 FROM ruby:2.7.3
 
-# taken from ruby's docker hub readme. consider if this is what i want
+# taken from ruby's docker hub readme
 WORKDIR /usr/src/app
 
+# copy dependency files and install
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-# need to add .dockerignore
-COPY . .
-
-EXPOSE 3300
+# copy rest of files. TODO: still need a .dockerignore
+COPY . ./
 
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
