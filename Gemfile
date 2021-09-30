@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.3"
+ruby "2.7.4"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.0"
@@ -21,7 +21,8 @@ gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.1.4", ">= 6.1.4.1"
 gem "scenic", "~> 1.5", ">= 1.5.4"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-raven", "~> 3.0"
+gem "sentry-rails", "~> 4.7", ">= 4.7.3"
+gem "sentry-ruby", "~> 4.7", ">= 4.7.3"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
 group :production do
