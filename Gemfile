@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.7.3"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.7", ">= 4.7.3"
+gem "devise", "~> 4.8", ">= 4.8.0"
 # TODO: devise_invitable 2.0.4 is borked... waiting for 2.0.5
 # devise_invitable was fixed on 4/14/2021; this comment 4/18/2021
 # hope its ready next time i check
@@ -18,7 +18,7 @@ gem "newrelic_rpm", "~> 7.0", ">= 7.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 5.3", ">= 5.3.1"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 6.1.3", ">= 6.1.3.2"
+gem "rails", "~> 6.1.4", ">= 6.1.4.1"
 gem "scenic", "~> 1.5", ">= 1.5.4"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-raven", "~> 3.0"
@@ -34,9 +34,9 @@ group :development, :test do
   gem "bundler-audit", "~> 0.8.0"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
-  gem "factory_bot_rails", "~> 6.1", ">= 6.1.0"
+  gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 5.0", ">= 5.0.1"
-  gem "rubocop", "~> 1.15.0"
+  gem "rubocop", "~> 1.18.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.8", ">= 2.8.1"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
