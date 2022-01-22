@@ -100,7 +100,7 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "write") }
 
       context "when users_list exists" do
-        context "when list has not been accepted or rejected " do
+        context "when list has not been accepted or rejected" do
           before { users_list.update!(has_accepted: nil) }
 
           it "accepts list" do

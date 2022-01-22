@@ -24,6 +24,6 @@ class ToDoList < List
                               dependent: :destroy
 
   def categories
-    to_do_list_items.map(&:category).uniq.compact.reject(&:empty?).sort
+    to_do_list_items.map(&:category).uniq.compact_blank.sort
   end
 end
