@@ -28,8 +28,7 @@ class MusicList < List
       .map(&:category)
       .concat(["blues", "comedy", "country", "electronic", "folk", "hip hop", "jazz", "latin", "pop", "r&b", "rock"])
       .uniq
-      .compact
-      .reject(&:empty?)
+      .compact_blank
       .sort
   end
 end

@@ -35,7 +35,6 @@ class MusicListItem < ApplicationRecord
   scope :purchased, (-> { where(purchased: true) })
   scope :not_archived, (-> { where(archived_at: nil) })
 
-  validates :user, :list, presence: true
   validates :title, presence: true, if: proc { |item| item.artist.blank? && item.album.blank? }
   validates :artist, presence: true, if: proc { |item| item.title.blank? && item.album.blank? }
   validates :album, presence: true, if: proc { |item| item.artist.blank? && item.title.blank? }

@@ -29,7 +29,6 @@ class UsersList < ApplicationRecord
 
   enum permissions: { read: "read", write: "write" }
 
-  validates :user, :list, presence: true
   validates :user, uniqueness: { scope: :list }
 
   scope :accepted, (-> { where(has_accepted: true) })
