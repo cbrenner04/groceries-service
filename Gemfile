@@ -17,8 +17,8 @@ gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 7.0.0", ">= 7.0.1"
 gem "scenic", "~> 1.5", ">= 1.5.4"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 4.7", ">= 4.7.3"
-gem "sentry-ruby", "~> 4.7", ">= 4.7.3"
+gem "sentry-rails", "~> 5.0", ">= 5.0.0"
+gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
 group :production do
@@ -32,8 +32,8 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
-  gem "rspec-rails", "~> 5.0", ">= 5.0.1"
-  gem "rubocop", "~> 1.24.0"
+  gem "rspec-rails", "~> 5.0", ">= 5.0.2"
+  gem "rubocop", "~> 1.25.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.8", ">= 2.8.1"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
