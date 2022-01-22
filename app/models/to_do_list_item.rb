@@ -39,7 +39,7 @@ class ToDoListItem < ApplicationRecord
   scope :not_refreshed, (-> { where(refreshed: false) })
   scope :refreshed, (-> { where(refreshed: true) })
 
-  validates :user, :list, :task, presence: true
+  validates :task, presence: true
   validates :completed, inclusion: { in: [true, false] }
 
   def self.ordered
