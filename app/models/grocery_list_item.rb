@@ -37,7 +37,7 @@ class GroceryListItem < ApplicationRecord
   scope :not_refreshed, (-> { where(refreshed: false) })
   scope :refreshed, (-> { where(refreshed: true) })
 
-  validates :user, :list, :product, presence: true
+  validates :product, presence: true
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
