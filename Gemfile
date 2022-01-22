@@ -7,10 +7,7 @@ ruby "2.7.5"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.0"
-# TODO: devise_invitable 2.0.4 is borked... waiting for 2.0.5
-# devise_invitable was fixed on 4/14/2021; this comment 4/18/2021
-# hope its ready next time i check
-gem "devise_invitable", "~> 2.0", ">= 2.0.3"
+gem "devise_invitable", "~> 2.0", ">= 2.0.6"
 gem "devise_token_auth", "~> 1.1", ">= 1.1.5"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
