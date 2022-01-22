@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.4"
+ruby "2.7.5"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.0"
@@ -12,7 +12,6 @@ gem "devise", "~> 4.8", ">= 4.8.0"
 # hope its ready next time i check
 gem "devise_invitable", "~> 2.0", ">= 2.0.3"
 gem "devise_token_auth", "~> 1.1", ">= 1.1.5"
-gem "libv8", "~> 8.4", ">= 8.4.255.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
