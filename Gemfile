@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.5"
+ruby "2.7.6"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.1"
@@ -12,9 +12,9 @@ gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.5", ">= 5.5.1"
+gem "puma", "~> 5.6", ">= 5.6.4"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 6.1.4", ">= 6.1.4.4"
+gem "rails", "~> 6.1.4", ">= 6.1.4.7"
 gem "scenic", "~> 1.5", ">= 1.5.5"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-rails", "~> 5.0", ">= 5.0.0"
@@ -33,7 +33,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 5.0", ">= 5.0.2"
-  gem "rubocop", "~> 1.25.0"
+  gem "rubocop", "~> 1.30.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.8", ">= 2.8.1"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
