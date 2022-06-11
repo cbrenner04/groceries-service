@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.5"
+ruby "2.7.6"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.1"
@@ -12,7 +12,7 @@ gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
 gem "lograge", "~> 0.11.2"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.5", ">= 5.5.1"
+gem "puma", "~> 5.6", ">= 5.6.2"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.1.4", ">= 6.1.4.4"
 gem "scenic", "~> 1.5", ">= 1.5.5"
