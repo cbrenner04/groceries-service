@@ -127,7 +127,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
                  params: { list_item: { list_id: list.id, required_attrs[0].to_sym => nil } },
                  headers: auth_params
 
-            expect(response.status).to eq 422
+            expect(response).to have_http_status :unprocessable_entity
             expect(response.body).not_to be_blank
           end
         end
@@ -184,7 +184,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
                 params: { list_item: params },
                 headers: auth_params
 
-            expect(response.status).to eq 422
+            expect(response).to have_http_status :unprocessable_entity
             expect(response.body).not_to be_blank
           end
         end

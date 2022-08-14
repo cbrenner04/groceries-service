@@ -43,7 +43,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         expect(response_body["pending"].count).to eq 1
         expect(response_body["refused"].count).to eq 1
         expect(response_body["current_user_id"]).to eq user.id
-        expect(response_body["user_is_owner"]).to eq false
+        expect(response_body["user_is_owner"]).to be false
       end
     end
   end
@@ -59,7 +59,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq true
+          expect(users_list["has_accepted"]).to be true
         end
 
         it "rejects list" do
@@ -68,7 +68,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq false
+          expect(users_list["has_accepted"]).to be false
         end
 
         describe "permissions" do
@@ -89,7 +89,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response.status).to eq 422
+              expect(response).to have_http_status :unprocessable_entity
             end
           end
         end
@@ -109,7 +109,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                   headers: auth_params
 
             users_list = JSON.parse(response.body)
-            expect(users_list["has_accepted"]).to eq true
+            expect(users_list["has_accepted"]).to be true
           end
 
           it "rejects list" do
@@ -118,7 +118,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                   headers: auth_params
 
             users_list = JSON.parse(response.body)
-            expect(users_list["has_accepted"]).to eq false
+            expect(users_list["has_accepted"]).to be false
           end
         end
 
@@ -131,7 +131,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                   headers: auth_params
 
             users_list = JSON.parse(response.body)
-            expect(users_list["has_accepted"]).to eq false
+            expect(users_list["has_accepted"]).to be false
           end
         end
 
@@ -153,7 +153,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response.status).to eq 422
+              expect(response).to have_http_status :unprocessable_entity
             end
           end
         end
@@ -215,7 +215,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         it "returns unprocessible entity" do
           post list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
-          expect(response.status).to eq 422
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end
