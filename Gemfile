@@ -3,26 +3,26 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.5"
+ruby "2.7.6"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.8", ">= 4.8.0"
+gem "devise", "~> 4.8", ">= 4.8.1"
 gem "devise_invitable", "~> 2.0", ">= 2.0.6"
-gem "devise_token_auth", "~> 1.2"
-gem "lograge", "~> 0.11.2"
+gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
+gem "lograge", "~> 0.12.0"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.5", ">= 5.5.1"
+gem "puma", "~> 5.6", ">= 5.6.4"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 7.0.0", ">= 7.0.1"
-gem "scenic", "~> 1.5", ">= 1.5.4"
+gem "scenic", "~> 1.5", ">= 1.5.5"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-rails", "~> 5.0", ">= 5.0.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
 group :production do
-  gem "informant-rails", "~> 2.2", ">= 2.2.0"
+  gem "informant-rails", "~> 2.4", ">= 2.4.0"
   gem "rails_12factor", "~> 0.0.3"
 end
 
@@ -33,9 +33,9 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 5.0", ">= 5.0.2"
-  gem "rubocop", "~> 1.25.0"
+  gem "rubocop", "~> 1.35.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
-  gem "rubocop-rails", "~> 2.8", ">= 2.8.1"
+  gem "rubocop-rails", "~> 2.13", ">= 2.13.2"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
   gem "simplecov", "~> 0.21.0"
 end
