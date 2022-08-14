@@ -353,9 +353,9 @@ describe "/lists", type: :request do
               prev_user_list.reload
               next_user_list.reload
 
-              expect(update_list.completed).to eq true
-              expect(update_users_list.prev_id).to eq nil
-              expect(update_users_list.next_id).to eq nil
+              expect(update_list.completed).to be true
+              expect(update_users_list.prev_id).to be_nil
+              expect(update_users_list.next_id).to be_nil
               expect(prev_user_list.next_id).not_to eq update_users_list.id
               expect(next_user_list.prev_id).not_to eq update_users_list.id
             end
@@ -368,7 +368,7 @@ describe "/lists", type: :request do
               put list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
               update_list.reload
 
-              expect(update_list.completed).to eq true
+              expect(update_list.completed).to be true
             end
           end
         end
@@ -427,8 +427,8 @@ describe "/lists", type: :request do
 
           expect(List.not_archived).not_to include delete_list
           expect(delete_list.archived_at).not_to be_nil
-          expect(delete_users_list.prev_id).to eq nil
-          expect(delete_users_list.next_id).to eq nil
+          expect(delete_users_list.prev_id).to be_nil
+          expect(delete_users_list.next_id).to be_nil
           expect(prev_user_list.next_id).not_to eq delete_users_list.id
           expect(next_user_list.prev_id).not_to eq delete_users_list.id
         end
