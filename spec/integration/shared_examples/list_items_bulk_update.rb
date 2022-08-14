@@ -193,8 +193,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               end
               expect(item.category).not_to eq(initial_item_values[:category])
               expect(other_item.category).not_to eq(initial_other_item_values[:category])
-              expect(item.category).to eq(nil)
-              expect(other_item.category).to eq(nil)
+              expect(item.category).to be_nil
+              expect(other_item.category).to be_nil
             end
           end
 
@@ -238,8 +238,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               end
               expect(item.category).to eq(initial_item_values[:category])
               expect(other_item.category).to eq(initial_other_item_values[:category])
-              expect(item.category).not_to eq(nil)
-              expect(other_item.category).not_to eq(nil)
+              expect(item.category).not_to be_nil
+              expect(other_item.category).not_to be_nil
             end
           end
 
@@ -285,8 +285,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
 
@@ -329,8 +329,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
           end
@@ -377,8 +377,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
 
@@ -421,8 +421,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
           end
