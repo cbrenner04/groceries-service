@@ -10,7 +10,7 @@ gem "devise", "~> 4.8", ">= 4.8.1"
 gem "devise_invitable", "~> 2.0", ">= 2.0.6"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
 gem "lograge", "~> 0.12.0"
-gem "net-smtp", "~> 0.3.1"
+gem "net-smtp", "~> 0.3.1", require: false
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 5.6", ">= 5.6.4"
