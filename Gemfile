@@ -10,7 +10,6 @@ gem "devise", "~> 4.8", ">= 4.8.1"
 gem "devise_invitable", "~> 2.0", ">= 2.0.6"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
 gem "lograge", "~> 0.12.0"
-gem "net-smtp", "~> 0.3.1", require: false
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 5.6", ">= 5.6.4"
@@ -21,6 +20,11 @@ gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-rails", "~> 5.0", ">= 5.0.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
+
+# some ruby v3 issue?
+gem "net-imap", require: false
+gem "net-pop", require: false
+gem "net-smtp", "~> 0.3.1", require: false
 
 group :production do
   gem "informant-rails", "~> 2.4", ">= 2.4.0"
