@@ -1,4 +1,7 @@
-FROM ruby:2.7.3
+FROM ruby:3.1.2
+
+# throw errors if Gemfile has been modified since Gemfile.lock
+RUN bundle config --global frozen 1
 
 # taken from ruby's docker hub readme
 WORKDIR /usr/src/app
