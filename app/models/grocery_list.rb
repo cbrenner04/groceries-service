@@ -30,6 +30,6 @@ class GroceryList < List
         "condiments", "dairy", "deli", "flowers", "frozen foods", "grains, pasta & sides", "health & beauty",
         "international", "meat & seafood", "paper products", "pet", "pharmacy", "produce", "snacks", "spices"
       ]
-    ).uniq.compact.reject(&:empty?).sort
+    ).uniq.compact_blank.sort
   end
 end

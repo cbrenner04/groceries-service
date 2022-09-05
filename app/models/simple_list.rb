@@ -24,6 +24,6 @@ class SimpleList < List
                                dependent: :destroy
 
   def categories
-    simple_list_items.map(&:category).uniq.compact.reject(&:empty?).sort
+    simple_list_items.map(&:category).uniq.compact_blank.sort
   end
 end

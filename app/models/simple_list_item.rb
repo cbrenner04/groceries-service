@@ -36,7 +36,7 @@ class SimpleListItem < ApplicationRecord
   scope :not_refreshed, (-> { where(refreshed: false) })
   scope :refreshed, (-> { where(refreshed: true) })
 
-  validates :user, :list, :content, presence: true
+  validates :content, presence: true
   validates :completed, :refreshed, inclusion: { in: [true, false] }
 
   def self.ordered
