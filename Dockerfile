@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-# copy rest of files. TODO: still need a .dockerignore
+# copy rest of files
 COPY . ./
 
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]

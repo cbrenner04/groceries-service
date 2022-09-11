@@ -1,0 +1,10 @@
+.github/
+.git/
+coverage/
+log/
+tmp/*
+.gitignore
+brakeman-report.json
+.DS_Store
+Procfile
+renovate.json
