@@ -15,9 +15,9 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0", ">= 6.0.0"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.1.6", ">= 6.1.6.1"
-gem "scenic", "~> 1.5", ">= 1.5.5"
+gem "scenic", "~> 1.6", ">= 1.6.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.0", ">= 5.0.0"
+gem "sentry-rails", "~> 5.4", ">= 5.4.1"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
@@ -27,7 +27,7 @@ gem "net-pop", require: false
 gem "net-smtp", "~> 0.3.1", require: false
 
 group :production do
-  gem "informant-rails", "~> 2.4", ">= 2.4.0"
+  gem "informant-rails", "~> 2.5", ">= 2.5.0"
   gem "rails_12factor", "~> 0.0.3"
 end
 
