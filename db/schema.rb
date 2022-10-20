@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_04_190505) do
-
+ActiveRecord::Schema[7.0].define(version: 2020_10_04_190505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -21,11 +20,11 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "title"
     t.boolean "purchased", default: false, null: false
     t.boolean "read", default: false, null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.integer "number_in_series"
     t.string "category"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
     t.index ["created_at"], name: "index_book_list_items_on_created_at"
@@ -37,11 +36,11 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "product", null: false
     t.string "quantity"
     t.boolean "purchased", default: false, null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.boolean "refreshed", default: false, null: false
     t.string "category"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
     t.index ["created_at"], name: "index_grocery_list_items_on_created_at"
@@ -51,12 +50,12 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
 
   create_table "lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.boolean "completed", default: false, null: false
     t.boolean "refreshed", default: false, null: false
     t.string "type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "owner_id", null: false
     t.index ["created_at"], name: "index_lists_on_created_at"
     t.index ["owner_id"], name: "index_lists_on_owner_id"
@@ -67,10 +66,10 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "artist"
     t.string "album"
     t.boolean "purchased", default: false, null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.string "category"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
     t.index ["created_at"], name: "index_music_list_items_on_created_at"
@@ -82,10 +81,10 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "content", null: false
     t.boolean "completed", default: false, null: false
     t.boolean "refreshed", default: false, null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.string "category"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
     t.index ["created_at"], name: "index_simple_list_items_on_created_at"
@@ -95,13 +94,13 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
 
   create_table "to_do_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "task", null: false
-    t.datetime "due_by"
+    t.datetime "due_by", precision: nil
     t.boolean "completed", default: false, null: false
     t.boolean "refreshed", default: false, null: false
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.string "category"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "assignee_id"
     t.uuid "user_id", null: false
     t.uuid "list_id", null: false
@@ -115,17 +114,17 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
@@ -135,8 +134,8 @@ ActiveRecord::Schema.define(version: 2020_10_04_190505) do
     t.string "uid", default: "", null: false
     t.text "tokens"
     t.boolean "allow_password_change", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

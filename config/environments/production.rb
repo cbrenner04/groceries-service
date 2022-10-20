@@ -1,4 +1,5 @@
 Rails.application.configure do
+  config.active_record.legacy_connection_handling = false
   config.cache_classes = true
   config.eager_load = true
   config.consider_all_requests_local = false

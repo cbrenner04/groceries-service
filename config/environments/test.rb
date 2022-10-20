@@ -1,4 +1,5 @@
 Rails.application.configure do
+  config.active_record.legacy_connection_handling = false
   config.cache_classes = false
   config.action_view.cache_template_loading = true
   config.eager_load = false
