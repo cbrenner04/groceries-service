@@ -12,7 +12,7 @@ gem "devise_token_auth", "~> 1.2", ">= 1.2.0"
 gem "lograge", "~> 0.12.0"
 gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 5.6", ">= 5.6.4"
+gem "puma", "~> 6.0", ">= 6.0.0"
 gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 6.1.6", ">= 6.1.6.1"
 gem "scenic", "~> 1.6", ">= 1.6.0"
@@ -37,7 +37,7 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
-  gem "rspec-rails", "~> 5.1", ">= 5.1.2"
+  gem "rspec-rails", "~> 6.0", ">= 6.0.1"
   gem "rubocop", "~> 1.36.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.13", ">= 2.13.2"
@@ -49,7 +49,7 @@ group :development do
   gem "annotate", "~> 3.1", ">= 3.1.1"
   gem "listen", "~> 3.2"
   gem "spring"
-  gem "spring-watcher-listen", "~> 2.0.0"
+  gem "spring-watcher-listen", "~> 2.1.0"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
