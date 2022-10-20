@@ -2,7 +2,7 @@
 .git/
 coverage/
 log/
-tmp/*
+tmp/
 .gitignore
 brakeman-report.json
 .DS_Store
