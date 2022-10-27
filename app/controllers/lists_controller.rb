@@ -10,17 +10,17 @@ class ListsController < ProtectedRouteController
     render json: ListsService.index_response(current_user)
   end
 
-  # POST /
+  # GET /:id
   def show
     render json: ListsService.show_response(list, current_user)
   end
 
-  # GET /:id
+  # GET /:id/edit
   def edit
     render json: list
   end
 
-  # GET /:id/edit
+  # POST /
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
     if new_list.save

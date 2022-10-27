@@ -4,7 +4,7 @@
 class ListItemsController < ProtectedRouteController
   before_action :require_write_access
 
-  # POST /
+  # GET /:id/edit
   def edit
     categories = list.categories
     response_body = { item: item, list: list, categories: categories }
@@ -17,7 +17,7 @@ class ListItemsController < ProtectedRouteController
     head :not_found
   end
 
-  # GET /:id/edit
+  # POST /
   def create
     new_item = item_class.create(item_params.merge!(list_id: params[:list_id]))
     if new_item.save
