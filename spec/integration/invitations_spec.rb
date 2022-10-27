@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "/auth/invitation", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
   before { login user }
@@ -52,8 +52,8 @@ describe "/auth/invitation", type: :request do
       describe "when user already exists" do
         context "when users_list already exists" do
           it "does not create a new users_list and responds with errors" do
-            other_user = create :user
-            create :users_list, user: other_user, list: list
+            other_user = create(:user)
+            create(:users_list, user: other_user, list: list)
             expect do
               post auth_invitation_path, params: { email: other_user.email, list_id: list.id }, headers: auth_params
             end.not_to change(UsersList, :count)
@@ -66,7 +66,7 @@ describe "/auth/invitation", type: :request do
 
         context "when users_list does not already exist" do
           it "does not create a new user, creates a new users_list" do
-            other_user = create :user
+            other_user = create(:user)
             starting_user_count = User.count
             starting_users_list_count = UsersList.count
             post auth_invitation_path, params: { email: other_user.email, list_id: list.id }, headers: auth_params

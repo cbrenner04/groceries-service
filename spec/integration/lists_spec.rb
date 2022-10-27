@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "/lists", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
   before { login user }
@@ -45,7 +45,7 @@ describe "/lists", type: :request do
       end
 
       context "when invitee has accepted" do
-        before { create :users_list, user: user, list: list }
+        before { create(:users_list, user: user, list: list) }
 
         describe "when BookList" do
           let(:list) { BookList.create!(name: "foo", owner: user) }
@@ -335,16 +335,16 @@ describe "/lists", type: :request do
         describe "when list is completed" do
           context "when prev and next list exist" do
             it "updates list and updates before and after lists" do
-              prev_list = create :list, name: "foo", owner: user
-              prev_user_list = create :users_list, user: user, list: prev_list
-              next_list = create :list, name: "bar", owner: user
-              next_user_list = create :users_list, user: user, list: next_list
-              update_list = create :list, name: "baz", owner: user
-              update_users_list = create :users_list,
+              prev_list = create(:list, name: "foo", owner: user)
+              prev_user_list = create(:users_list, user: user, list: prev_list)
+              next_list = create(:list, name: "bar", owner: user)
+              next_user_list = create(:users_list, user: user, list: next_list)
+              update_list = create(:list, name: "baz", owner: user)
+              update_users_list = create(:users_list,
                                          user: user,
                                          list: update_list,
                                          prev_id: prev_user_list.id,
-                                         next_id: next_user_list.id
+                                         next_id: next_user_list.id)
               prev_user_list.update!(next_id: update_users_list.id)
               next_user_list.update!(prev_id: update_users_list.id)
               put list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
@@ -363,8 +363,8 @@ describe "/lists", type: :request do
 
           context "when preiv and next list do not exist" do
             it "updates list" do
-              update_list = create :list, name: "baz", owner: user
-              create :users_list, user: user, list: update_list
+              update_list = create(:list, name: "baz", owner: user)
+              create(:users_list, user: user, list: update_list)
               put list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
               update_list.reload
 
@@ -375,7 +375,7 @@ describe "/lists", type: :request do
 
         describe "when list is not completed" do
           it "updates a list" do
-            update_list = create :list, name: "foo", owner: user
+            update_list = create(:list, name: "foo", owner: user)
             put list_path(update_list.id), params: { list: { name: "bar" } }, headers: auth_params
             update_list.reload
 
@@ -386,7 +386,7 @@ describe "/lists", type: :request do
 
       describe "with invalid params" do
         it "responds with errors" do
-          list = create :list, owner: user
+          list = create(:list, owner: user)
           put list_path(list.id), params: { id: list.id, list: { name: nil } }, headers: auth_params
 
           expect(JSON.parse(response.body)).to eq("name" => ["can't be blank"])
@@ -407,16 +407,16 @@ describe "/lists", type: :request do
     context "when user is owner" do
       context "when previous and next list exist" do
         it "destroys a list and updates previous and next list" do
-          prev_list = create :list, name: "foo", owner: user
-          prev_user_list = create :users_list, user: user, list: prev_list
-          next_list = create :list, name: "bar", owner: user
-          next_user_list = create :users_list, user: user, list: next_list
-          delete_list = create :list, name: "foo", owner: user
-          delete_users_list = create :users_list,
+          prev_list = create(:list, name: "foo", owner: user)
+          prev_user_list = create(:users_list, user: user, list: prev_list)
+          next_list = create(:list, name: "bar", owner: user)
+          next_user_list = create(:users_list, user: user, list: next_list)
+          delete_list = create(:list, name: "foo", owner: user)
+          delete_users_list = create(:users_list,
                                      list: delete_list,
                                      user: user,
                                      prev_id: prev_user_list.id,
-                                     next_id: next_user_list.id
+                                     next_id: next_user_list.id)
           prev_user_list.update!(next_id: delete_users_list.id)
           next_user_list.update!(prev_id: delete_users_list.id)
           delete list_path(delete_list.id), headers: auth_params
@@ -436,8 +436,8 @@ describe "/lists", type: :request do
 
       context "when previous and next list do not exist" do
         it "destroys a list" do
-          delete_list = create :list, name: "foo", owner: user
-          create :users_list, list: delete_list, user: user
+          delete_list = create(:list, name: "foo", owner: user)
+          create(:users_list, list: delete_list, user: user)
           delete list_path(delete_list.id), headers: auth_params
           delete_list.reload
 
