@@ -54,3 +54,6 @@ RSpec/MessageChain:
 
 RSpec/MultipleMemoizedHelpers:
   Max: 7
+
+RSpec/Rails/InferredSpecType:
+  Enabled: false

@@ -4,10 +4,10 @@ require "rails_helper"
 
 describe "/lists/:list_id/list_items", type: :request do
   describe "simple_list_items" do
-    let(:user) { create :user }
-    let(:list) { create :simple_list, owner: user }
-    let(:users_list) { create :users_list, user: user, list: list }
-    let(:item) { create :simple_list_item, list: list, content: "foobar" }
+    let(:user) { create(:user) }
+    let(:list) { create(:simple_list, owner: user) }
+    let(:users_list) { create(:users_list, user: user, list: list) }
+    let(:item) { create(:simple_list_item, list: list, content: "foobar") }
 
     required_attrs = %w[content]
     item_attrs = %w[content]
