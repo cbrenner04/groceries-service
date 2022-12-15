@@ -17,7 +17,7 @@ gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 7.0.4"
 gem "scenic", "~> 1.6", ">= 1.6.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.4", ">= 5.4.1"
+gem "sentry-rails", "~> 5.5", ">= 5.5.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.0", ">= 4.0.2"
 
