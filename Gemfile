@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.2.0"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.1"
@@ -38,7 +38,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 6.0", ">= 6.0.1"
-  gem "rubocop", "~> 1.37.0"
+  gem "rubocop", "~> 1.42.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.15", ">= 2.15.2"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
