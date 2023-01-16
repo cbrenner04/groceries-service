@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "/lists/:list_id/refresh_list", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
   before { login user }

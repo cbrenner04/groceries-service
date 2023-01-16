@@ -4,10 +4,10 @@ require "rails_helper"
 
 describe "/lists/:list_id/list_items", type: :request do
   describe "music_list_items" do
-    let(:user) { create :user }
-    let(:list) { create :music_list, owner: user }
-    let(:users_list) { create :users_list, user: user, list: list }
-    let(:item) { create :music_list_item, list: list }
+    let(:user) { create(:user) }
+    let(:list) { create(:music_list, owner: user) }
+    let(:users_list) { create(:users_list, user: user, list: list) }
+    let(:item) { create(:music_list_item, list: list) }
 
     required_attrs = %w[title artist album]
     item_attrs = %w[title artist album]

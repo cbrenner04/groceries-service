@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "/completed_lists", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
 
   before do
     login user
@@ -29,7 +29,9 @@ describe "/completed_lists", type: :request do
         "users_list_id" => UsersList.find_by(user_id: user.id, list_id: completed_list.id).id,
         "user_id" => user.id,
         "has_accepted" => true,
-        "type" => completed_list[:type]
+        "type" => completed_list[:type],
+        "prev_id" => nil,
+        "next_id" => nil
       )
       expect(response_body["current_list_permissions"]).to eq(
         user.lists[0].id.to_s => "write",

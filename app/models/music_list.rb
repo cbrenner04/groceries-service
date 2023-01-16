@@ -26,10 +26,9 @@ class MusicList < List
   def categories
     music_list_items
       .map(&:category)
-      .concat(["blues", "comedy", "country", "electronic", "folk", "hip hop", "jazz", "latin", "pop", "r&b", "rock"])
+      .push("blues", "comedy", "country", "electronic", "folk", "hip hop", "jazz", "latin", "pop", "r&b", "rock")
       .uniq
-      .compact
-      .reject(&:empty?)
+      .compact_blank
       .sort
   end
 end

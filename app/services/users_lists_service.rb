@@ -16,18 +16,25 @@ class UsersListsService
   end
 
   def self.list_users(list_id)
-    accepted_users_lists = UsersList.where(list_id: list_id).public_send("accepted")
-    pending_users_lists = UsersList.where(list_id: list_id).public_send("pending")
+    accepted_users_lists = UsersList.where(list_id: list_id).public_send(:accepted)
+    pending_users_lists = UsersList.where(list_id: list_id).public_send(:pending)
     accepted_users_lists.to_a
                         .concat(pending_users_lists.to_a)
                         .map { |user_list| User.find(user_list.user_id) }
   end
 
-  def self.accept_user_list(list)
-    UsersList.find_by(list: list).update!(has_accepted: true)
-  end
-
   def self.create_users_list(user, list)
-    UsersList.create!(user: user, list: list, has_accepted: true)
+    # find first incomplete users list id
+    first_incomplete_list = user.accepted_lists[:not_completed_lists].find do |l|
+      UsersList.find_by(list: l, user: user).prev_id.nil?
+    end
+    first_incomplete_list_users_list_id = first_incomplete_list&.users_list_id || nil
+    # the first incomplete users list will now be after the newly created list
+    # this needs to be set on the new users list in the next_id
+    new_users_list =
+      UsersList.create!(user: user, list: list, has_accepted: true, next_id: first_incomplete_list_users_list_id)
+    # and the first incomplete list in the prev_id
+    UsersList.find(first_incomplete_list_users_list_id).update!(prev_id: new_users_list.id) if first_incomplete_list
+    new_users_list
   end
 end

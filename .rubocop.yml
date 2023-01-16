@@ -9,7 +9,7 @@ AllCops:
     - config/**/*
     - db/**/*
     - vendor/**/*
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
   DisplayCopNames: true
   NewCops: enable
 
@@ -18,6 +18,11 @@ Rails:
 
 Layout/LineLength:
   Max: 120
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Spec-related overrides below
 
 Style/Documentation:
   Exclude:
@@ -35,9 +40,6 @@ Metrics/MethodLength:
   Exclude:
     - spec/**/*
 
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
 RSpec/NestedGroups:
   Max: 6
 
@@ -52,3 +54,6 @@ RSpec/MessageChain:
 
 RSpec/MultipleMemoizedHelpers:
   Max: 7
+
+RSpec/Rails/InferredSpecType:
+  Enabled: false

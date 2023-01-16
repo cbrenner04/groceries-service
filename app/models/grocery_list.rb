@@ -24,12 +24,10 @@ class GroceryList < List
                                 dependent: :destroy
 
   def categories
-    grocery_list_items.map(&:category).concat(
-      [
-        "alcohol", "baby", "bakery", "baking", "beverages", "canned goods & soups", "cereal", "cleaning supplies",
-        "condiments", "dairy", "deli", "flowers", "frozen foods", "grains, pasta & sides", "health & beauty",
-        "international", "meat & seafood", "paper products", "pet", "pharmacy", "produce", "snacks", "spices"
-      ]
-    ).uniq.compact.reject(&:empty?).sort
+    grocery_list_items.map(&:category).push("alcohol", "baby", "bakery", "baking", "beverages", "canned goods & soups",
+                                            "cereal", "cleaning supplies", "condiments", "dairy", "deli", "flowers",
+                                            "frozen foods", "grains, pasta & sides", "health & beauty", "international",
+                                            "meat & seafood", "paper products", "pet", "pharmacy", "produce", "snacks",
+                                            "spices").uniq.compact_blank.sort
   end
 end

@@ -10,6 +10,16 @@ class ListsController < ProtectedRouteController
     render json: ListsService.index_response(current_user)
   end
 
+  # GET /:id
+  def show
+    render json: ListsService.show_response(list, current_user)
+  end
+
+  # GET /:id/edit
+  def edit
+    render json: list
+  end
+
   # POST /
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
@@ -21,18 +31,9 @@ class ListsController < ProtectedRouteController
     end
   end
 
-  # GET /:id
-  def show
-    render json: ListsService.show_response(list, current_user)
-  end
-
-  # GET /:id/edit
-  def edit
-    render json: list
-  end
-
   # PUT /:id
   def update
+    update_previous_and_next_list if list_params[:completed]
     if list.update(list_params)
       render json: list
     else
@@ -42,6 +43,7 @@ class ListsController < ProtectedRouteController
 
   # DELETE /:id
   def destroy
+    update_previous_and_next_list
     list.archive
     head :no_content
   end
@@ -49,11 +51,10 @@ class ListsController < ProtectedRouteController
   private
 
   def list_params
-    params.require(:list).permit(:user, :name, :completed, :refreshed, :type)
+    @list_params ||= params.require(:list).permit(:user, :name, :completed, :refreshed, :type)
   end
 
   def require_list_access
-    users_list = UsersList.find_by(list: list, user: current_user)
     return if users_list&.has_accepted
 
     head :forbidden
@@ -67,5 +68,27 @@ class ListsController < ProtectedRouteController
 
   def list
     @list ||= List.find(params[:id])
+  end
+
+  def users_list
+    @users_list ||= UsersList.find_by(list: list, user: current_user)
+  end
+
+  def update_previous_list
+    return unless users_list.prev_id
+
+    UsersList.find(users_list.prev_id).update!(next_id: users_list.next_id)
+  end
+
+  def update_next_list
+    return unless users_list.next_id
+
+    UsersList.find(users_list.next_id).update!(prev_id: users_list.prev_id)
+  end
+
+  def update_previous_and_next_list
+    update_previous_list
+    update_next_list
+    users_list.update!(prev_id: nil, next_id: nil)
   end
 end

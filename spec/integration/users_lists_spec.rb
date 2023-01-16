@@ -3,11 +3,11 @@
 require "rails_helper"
 
 describe "/lists/:list_id/users_lists", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
   let(:users_list) { list.users_lists.find_by(user: user) }
-  let(:other_user) { create :user }
-  let(:third_user) { create :user }
+  let(:other_user) { create(:user) }
+  let(:third_user) { create(:user) }
 
   before { login user }
 
@@ -43,7 +43,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         expect(response_body["pending"].count).to eq 1
         expect(response_body["refused"].count).to eq 1
         expect(response_body["current_user_id"]).to eq user.id
-        expect(response_body["user_is_owner"]).to eq false
+        expect(response_body["user_is_owner"]).to be false
       end
     end
   end
@@ -59,7 +59,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq true
+          expect(users_list["has_accepted"]).to be true
         end
 
         it "rejects list" do
@@ -68,7 +68,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                 headers: auth_params
 
           users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq false
+          expect(users_list["has_accepted"]).to be false
         end
 
         describe "permissions" do
@@ -89,7 +89,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response.status).to eq 422
+              expect(response).to have_http_status :unprocessable_entity
             end
           end
         end
@@ -100,22 +100,39 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "write") }
 
       context "when users_list exists" do
-        it "accepts list" do
-          patch list_users_list_path(list.id, users_list.id),
-                params: { users_list: { has_accepted: true } },
-                headers: auth_params
+        context "when list has not been accepted or rejected" do
+          before { users_list.update!(has_accepted: nil) }
 
-          users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq true
+          it "accepts list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: true } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to be true
+          end
+
+          it "rejects list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: false } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to be false
+          end
         end
 
-        it "rejects list" do
-          patch list_users_list_path(list.id, users_list.id),
-                params: { users_list: { has_accepted: false } },
-                headers: auth_params
+        context "when list has been accepted" do
+          before { users_list.update!(has_accepted: true) }
 
-          users_list = JSON.parse(response.body)
-          expect(users_list["has_accepted"]).to eq false
+          it "rejects list" do
+            patch list_users_list_path(list.id, users_list.id),
+                  params: { users_list: { has_accepted: false } },
+                  headers: auth_params
+
+            users_list = JSON.parse(response.body)
+            expect(users_list["has_accepted"]).to be false
+          end
         end
 
         describe "permissions" do
@@ -136,7 +153,7 @@ describe "/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response.status).to eq 422
+              expect(response).to have_http_status :unprocessable_entity
             end
           end
         end
@@ -161,20 +178,44 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "write") }
 
       describe "with valid params" do
-        it "creates a new users list" do
-          expect do
-            post list_users_lists_path(list.id),
-                 params: { users_list: { user_id: other_user.id, list_id: list.id } },
-                 headers: auth_params
-          end.to change(UsersList, :count).by 1
+        context "when no previous users lists exist for the user" do
+          it "creates a new users list" do
+            expect do
+              post list_users_lists_path(list.id),
+                   params: { users_list: { user_id: other_user.id, list_id: list.id } },
+                   headers: auth_params
+            end.to change(UsersList, :count).by 1
+          end
+        end
+
+        context "when previous users lists exist for the user" do
+          it "creates a new users list and updates previous list" do
+            other_list = create(:list)
+            other_users_list = create(:users_list, user: other_user, list: other_list, has_accepted: nil)
+
+            expect(other_user.users_lists.count).to eq 1
+            expect(other_users_list.prev_id).to be_falsey
+
+            expect do
+              post list_users_lists_path(list.id),
+                   params: { users_list: { user_id: other_user.id, list_id: list.id } },
+                   headers: auth_params
+            end.to change(UsersList, :count).by 1
+
+            other_users_list.reload
+
+            expect(other_user.users_lists.count).to eq 2
+            expect(other_users_list.prev_id).to be_truthy
+            expect(other_user.users_lists.find_by(list_id: list.id).next_id).to be_truthy
+          end
         end
       end
 
       describe "with invalid params" do
-        it "re-renders the 'new' template" do
+        it "returns unprocessible entity" do
           post list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
-          expect(response.status).to eq 422
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end

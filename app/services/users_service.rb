@@ -2,21 +2,60 @@
 
 # service object for Users
 module UsersService
+  # NOTE: find_by_sql (which is what these queries are being used for) returns the attributes in the select statement
+  #       as attributes of the model. This is not actually the model's record so you will not be able to save, update,
+  #       etc on these records like a normal model record. These are good for gets but will need to be manipulated to
+  #       behave like active record model records
+
+  # TODO: remove after migrations are complete for DND
+  # :nocov:
+  def completed_accepted_lists_query__old__(user_id)
+    "#{accepted_lists_query__old__(user_id)} AND completed = true"
+  end
+  # :nocov:
+
   def completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = true"
   end
+
+  # TODO: remove after migrations are complete for DND
+  # :nocov:
+  def limited_completed_accepted_lists_query__old__(user_id)
+    "#{completed_accepted_lists_query__old__(user_id)} LIMIT 10"
+  end
+  # :nocov:
 
   def limited_completed_accepted_lists_query(user_id)
     "#{completed_accepted_lists_query(user_id)} LIMIT 10"
   end
 
+  # TODO: remove after migrations are complete for DND
+  # :nocov:
+  def not_completed_accepted_lists_query__old__(user_id)
+    "#{accepted_lists_query__old__(user_id)} AND completed = false"
+  end
+  # :nocov:
+
   def not_completed_accepted_lists_query(user_id)
     "#{accepted_lists_query(user_id)} AND completed = false"
   end
 
-  def pending_lists_query(user_id)
+  # TODO: remove after migrations are complete for DND
+  # :nocov:
+  def pending_lists_query__old__(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
+      FROM active_lists
+      WHERE user_id = '#{user_id}'
+      AND has_accepted IS NULL
+    SQL
+  end
+  # :nocov:
+
+  def pending_lists_query(user_id)
+    <<-SQL.squish
+      SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at,
+             prev_id, next_id
       FROM active_lists
       WHERE user_id = '#{user_id}'
       AND has_accepted IS NULL
@@ -63,10 +102,22 @@ module UsersService
 
   private
 
+  # TODO: remove after migrations are complete for DND
+  # :nocov:
+  def accepted_lists_query__old__(user_id)
+    <<-SQL.squish
+      SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at
+      FROM active_lists
+      WHERE user_id = '#{user_id}'
+      AND has_accepted = true
+    SQL
+  end
+  # :nocov:
+
   def accepted_lists_query(user_id)
     <<-SQL.squish
       SELECT id, name, completed, type, refreshed, owner_id, has_accepted,
-             user_id, users_list_id, created_at
+             user_id, users_list_id, created_at, prev_id, next_id
       FROM active_lists
       WHERE user_id = '#{user_id}'
       AND has_accepted = true

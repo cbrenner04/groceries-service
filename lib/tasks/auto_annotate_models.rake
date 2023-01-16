@@ -12,7 +12,7 @@ if Rails.env.development?
     Annotate.set_defaults(
       "active_admin" => "false",
       "additional_file_patterns" => [],
-      "routes" => "true",
+      "routes" => "false", # TODO: this breaks in Rails >= 6.1, turn back on when fixed with https://github.com/ctran/annotate_models/pull/843
       "models" => "true",
       "position_in_routes" => "before",
       "position_in_class" => "before",

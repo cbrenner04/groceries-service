@@ -8,6 +8,8 @@
 #  has_accepted :boolean
 #  permissions  :string           default("write"), not null
 #  list_id      :uuid             not null
+#  next_id      :uuid
+#  prev_id      :uuid
 #  user_id      :uuid             not null
 #
 # Indexes
@@ -27,7 +29,6 @@ class UsersList < ApplicationRecord
 
   enum permissions: { read: "read", write: "write" }
 
-  validates :user, :list, presence: true
   validates :user, uniqueness: { scope: :list }
 
   scope :accepted, (-> { where(has_accepted: true) })

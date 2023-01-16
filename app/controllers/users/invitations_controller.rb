@@ -6,9 +6,6 @@ module Users
     include InvitableMethods
     before_action :authenticate_user!, only: :create
 
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    # rubocop:disable Metrics/BlockNesting
     def create
       # do nothing if user already exists and this isn't related to list sharing
       if invited_user && !list_id
@@ -16,42 +13,18 @@ module Users
       elsif list_id
         # if sharing a list, current user must have write permissions
         if current_user_has_write_access
-          if invited_user
-            # if the user exists, just create the users list
-            share_list(invited_user)
-          else
-            # if user doesn't exist, do the inviting and create the users list
-            user = User.invite!(invite_params, current_user)
-            if user.valid?
-              users_list = create_users_list(user)
-              render json: { user: user, users_list: { id: users_list.id, permissions: users_list.permissions } },
-                     status: :created
-            else
-              render json: user.errors, status: :unprocessable_entity
-            end
-          end
+          # if the user exists, just create the users list otherwise do the inviting and create the users list
+          invited_user ? share_list(invited_user) : invite_user_with_list
         end
       else
         # if this isn't related to list sharing, just do regular invitation
-        user = User.invite!(invite_params, current_user)
-        if user.valid?
-          render json: { user: user }, status: :created
-        else
-          render json: user.errors, status: :unprocessable_entity
-        end
+        invite_user_without_list
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    # rubocop:enable Metrics/BlockNesting
 
     def update
-      if !accept_invitation_params[:password] ||
-         !accept_invitation_params[:password_confirmation] ||
-         accept_invitation_params[:password] !=
-         accept_invitation_params[:password_confirmation]
-        render json: { errors: "password and password confirmation must be the same" }, status: :unprocessable_entity
-        return
-      end
+      return render_password_error unless valid_accept_invitation_params?
+
       user = User.accept_invitation!(accept_invitation_params)
       if user.errors.empty?
         render json: { success: ["User updated."] }, status: :accepted
@@ -59,7 +32,6 @@ module Users
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     private
 
@@ -69,6 +41,15 @@ module Users
 
     def accept_invitation_params
       params.permit(:password, :password_confirmation, :invitation_token)
+    end
+
+    def valid_accept_invitation_params?
+      accept_invitation_params[:password] && accept_invitation_params[:password_confirmation] &&
+        accept_invitation_params[:password] == accept_invitation_params[:password_confirmation]
+    end
+
+    def render_password_error
+      render json: { errors: "password and password confirmation must be the same" }, status: :unprocessable_entity
     end
 
     def list_id
@@ -102,6 +83,26 @@ module Users
       list = List.find(params[:list_id])
       users_list = UsersList.find_by(list: list, user: current_user)
       users_list&.permissions == "write"
+    end
+
+    def invite_user_with_list
+      user = User.invite!(invite_params, current_user)
+      if user.valid?
+        users_list = create_users_list(user)
+        render json: { user: user, users_list: { id: users_list.id, permissions: users_list.permissions } },
+               status: :created
+      else
+        render json: user.errors, status: :unprocessable_entity
+      end
+    end
+
+    def invite_user_without_list
+      user = User.invite!(invite_params, current_user)
+      if user.valid?
+        render json: { user: user }, status: :created
+      else
+        render json: user.errors, status: :unprocessable_entity
+      end
     end
   end
 end

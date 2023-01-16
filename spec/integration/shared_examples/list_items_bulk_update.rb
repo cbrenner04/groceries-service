@@ -44,14 +44,14 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
       context "when all items exist" do
         it "responds with 200 and correct body" do
-          other_list = create list_type.to_sym, owner: user
-          other_users_list = create :users_list, user: user, list: other_list
+          other_list = create(list_type.to_sym, owner: user)
+          other_users_list = create(:users_list, user: user, list: other_list)
 
           get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
           complete_attr = list_type == "to_do_list" ? "completed" : "purchased"
-          item_attrs = new_item_attrs.concat(["id", "list_id", complete_attr, "user_id", "category"])
+          item_attrs = new_item_attrs.push("id", "list_id", complete_attr, "user_id", "category")
 
           expect(response).to have_http_status :success
           expect(response_body["items"].count).to eq 2
@@ -193,8 +193,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               end
               expect(item.category).not_to eq(initial_item_values[:category])
               expect(other_item.category).not_to eq(initial_other_item_values[:category])
-              expect(item.category).to eq(nil)
-              expect(other_item.category).to eq(nil)
+              expect(item.category).to be_nil
+              expect(other_item.category).to be_nil
             end
           end
 
@@ -238,8 +238,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               end
               expect(item.category).to eq(initial_item_values[:category])
               expect(other_item.category).to eq(initial_other_item_values[:category])
-              expect(item.category).not_to eq(nil)
-              expect(other_item.category).not_to eq(nil)
+              expect(item.category).not_to be_nil
+              expect(other_item.category).not_to be_nil
             end
           end
 
@@ -285,15 +285,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
 
             describe "when existing list is requested" do
               it "does not create list, creates new items, and archives current items" do
-                other_list = create list_type.to_sym, owner: user
-                create :users_list, user: user, list: other_list
+                other_list = create(list_type.to_sym, owner: user)
+                create(:users_list, user: user, list: other_list)
 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
@@ -329,8 +329,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
           end
@@ -377,15 +377,15 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
 
             describe "when existing list is requested" do
               it "does not create list or archive items, creates new items" do
-                other_list = create list_type.to_sym, owner: user
-                create :users_list, user: user, list: other_list
+                other_list = create(list_type.to_sym, owner: user)
+                create(:users_list, user: user, list: other_list)
 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
@@ -421,8 +421,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                   expect(new_items[0][attr.to_sym]).to eq value
                   expect(new_items[1][attr.to_sym]).to eq value
                 end
-                expect(new_items[0].category).to eq nil
-                expect(new_items[1].category).to eq nil
+                expect(new_items[0].category).to be_nil
+                expect(new_items[1].category).to be_nil
               end
             end
           end
@@ -430,8 +430,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
         describe "with invalid params" do
           it "returns unproccessable entity" do
-            other_list = create list_type.to_sym, owner: user
-            create :users_list, user: user, list: other_list
+            other_list = create(list_type.to_sym, owner: user)
+            create(:users_list, user: user, list: other_list)
 
             update_params[:list_items][:copy] = true
 
