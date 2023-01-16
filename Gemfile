@@ -19,7 +19,7 @@ gem "scenic", "~> 1.6", ">= 1.6.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-rails", "~> 5.5", ">= 5.5.0"
 gem "sentry-ruby", "~> 5.0"
-gem "sprockets", "~> 4.0", ">= 4.0.2"
+gem "sprockets", "~> 4.2", ">= 4.2.0"
 
 # some ruby v3 issue?
 gem "net-imap", require: false
