@@ -42,7 +42,7 @@ group :development, :test do
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.15", ">= 2.15.2"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
-  gem "simplecov", "~> 0.21.0"
+  gem "simplecov", "~> 0.22.0"
 end
 
 group :development do
