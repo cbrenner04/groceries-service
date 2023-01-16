@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.2.0"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.8", ">= 4.8.1"
@@ -17,7 +17,7 @@ gem "rack-cors", "~> 1.1", ">= 1.1.1"
 gem "rails", "~> 7.0.4"
 gem "scenic", "~> 1.6", ">= 1.6.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.4", ">= 5.4.1"
+gem "sentry-rails", "~> 5.5", ">= 5.5.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.2", ">= 4.2.0"
 
@@ -38,7 +38,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.0"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 6.0", ">= 6.0.1"
-  gem "rubocop", "~> 1.37.0"
+  gem "rubocop", "~> 1.42.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.15", ">= 2.15.2"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
