@@ -24,12 +24,10 @@ class BookList < List
                              dependent: :destroy
 
   def categories
-    book_list_items.map(&:category).concat(
-      [
-        "action & adventure", "autobiography", "biography", "crime", "drama", "fantasy", "graphic novel", "health",
-        "historical fiction", "history", "horror", "memoir", "mystery", "poetry", "science", "science fiction",
-        "self help", "spirituality", "textbook", "thriller", "travel", "true crime"
-      ]
-    ).uniq.compact_blank.sort
+    book_list_items.map(&:category).push("action & adventure", "autobiography", "biography", "crime", "drama",
+                                         "fantasy", "graphic novel", "health", "historical fiction", "history",
+                                         "horror", "memoir", "mystery", "poetry", "science", "science fiction",
+                                         "self help", "spirituality", "textbook", "thriller", "travel",
+                                         "true crime").uniq.compact_blank.sort
   end
 end

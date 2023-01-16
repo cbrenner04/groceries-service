@@ -51,7 +51,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
           response_body = JSON.parse(response.body).to_h
           complete_attr = list_type == "to_do_list" ? "completed" : "purchased"
-          item_attrs = new_item_attrs.concat(["id", "list_id", complete_attr, "user_id", "category"])
+          item_attrs = new_item_attrs.push("id", "list_id", complete_attr, "user_id", "category")
 
           expect(response).to have_http_status :success
           expect(response_body["items"].count).to eq 2
