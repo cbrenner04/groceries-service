@@ -27,7 +27,6 @@ gem "net-pop", require: false
 gem "net-smtp", "~> 0.3.1", require: false
 
 group :production do
-  gem "informant-rails", "~> 2.5", ">= 2.5.0"
   gem "rails_12factor", "~> 0.0.3"
 end
 
