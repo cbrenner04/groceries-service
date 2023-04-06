@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.1"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.8", ">= 4.8.1"
+gem "devise", "~> 4.9", ">= 4.9.0"
 gem "devise_invitable", "~> 2.0", ">= 2.0.7"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
 gem "lograge", "~> 0.12.0"
@@ -14,7 +14,7 @@ gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0", ">= 6.0.0"
 gem "rack-cors", "~> 2.0", ">= 2.0.0"
-gem "rails", "~> 7.0.4", ">= 7.0.4.2"
+gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 gem "scenic", "~> 1.7", ">= 1.7.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
 gem "sentry-rails", "~> 5.8", ">= 5.8.0"
@@ -39,7 +39,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0", ">= 6.0.1"
   gem "rubocop", "~> 1.48.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
-  gem "rubocop-rails", "~> 2.17", ">= 2.17.4"
+  gem "rubocop-rails", "~> 2.18", ">= 2.18.0"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
   gem "simplecov", "~> 0.22.0"
 end
