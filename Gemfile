@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.1"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.8", ">= 4.8.1"
+gem "devise", "~> 4.9", ">= 4.9.0"
 gem "devise_invitable", "~> 2.0", ">= 2.0.7"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
 gem "lograge", "~> 0.12.0"
@@ -39,7 +39,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0", ">= 6.0.1"
   gem "rubocop", "~> 1.48.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
-  gem "rubocop-rails", "~> 2.17", ">= 2.17.4"
+  gem "rubocop-rails", "~> 2.18", ">= 2.18.0"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
   gem "simplecov", "~> 0.22.0"
 end
