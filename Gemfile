@@ -3,21 +3,21 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.1"
+ruby "3.2.2"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.8", ">= 4.8.1"
+gem "devise", "~> 4.9", ">= 4.9.0"
 gem "devise_invitable", "~> 2.0", ">= 2.0.7"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
 gem "lograge", "~> 0.12.0"
-gem "newrelic_rpm", "~> 8.0", ">= 8.0.0"
+gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0", ">= 6.0.0"
-gem "rack-cors", "~> 1.1", ">= 1.1.1"
-gem "rails", "~> 7.0.4", ">= 7.0.4.1"
+gem "rack-cors", "~> 2.0", ">= 2.0.0"
+gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 gem "scenic", "~> 1.7", ">= 1.7.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.7", ">= 5.7.0"
+gem "sentry-rails", "~> 5.8", ">= 5.8.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.2", ">= 4.2.0"
 
@@ -27,7 +27,6 @@ gem "net-pop", require: false
 gem "net-smtp", "~> 0.3.1", require: false
 
 group :production do
-  gem "informant-rails", "~> 2.5", ">= 2.5.0"
   gem "rails_12factor", "~> 0.0.3"
 end
 
@@ -38,9 +37,9 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
   gem "rspec-rails", "~> 6.0", ">= 6.0.1"
-  gem "rubocop", "~> 1.45.0"
+  gem "rubocop", "~> 1.49.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
-  gem "rubocop-rails", "~> 2.17", ">= 2.17.4"
+  gem "rubocop-rails", "~> 2.18", ">= 2.18.0"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
   gem "simplecov", "~> 0.22.0"
 end
