@@ -8,7 +8,7 @@ ruby "3.2.2"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.0"
 gem "devise_invitable", "~> 2.0", ">= 2.0.7"
-gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
+gem "devise_token_auth", "~> 1.2", ">= 1.2.2"
 gem "lograge", "~> 0.12.0"
 gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
@@ -36,7 +36,7 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
   gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
-  gem "rspec-rails", "~> 6.0", ">= 6.0.1"
+  gem "rspec-rails", "~> 6.0", ">= 6.0.3"
   gem "rubocop", "~> 1.54.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.18", ">= 2.18.0"
