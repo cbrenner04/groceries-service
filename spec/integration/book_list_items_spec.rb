@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "./shared_examples/list_items"
+require_relative "shared_examples/list_items"
 
 describe "/lists/:list_id/list_items", type: :request do
   describe "book_list_items" do

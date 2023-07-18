@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "./shared_examples/list_items_bulk_update"
+require_relative "shared_examples/list_items_bulk_update"
 
 describe "/lists/:list_id/list_items/bulk_update", type: :request do
   describe "music_list_items" do
