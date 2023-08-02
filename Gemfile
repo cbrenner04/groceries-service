@@ -9,7 +9,7 @@ gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.0"
 gem "devise_invitable", "~> 2.0", ">= 2.0.7"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.2"
-gem "lograge", "~> 0.12.0"
+gem "lograge", "~> 0.13.0"
 gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0", ">= 6.0.0"
