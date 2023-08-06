@@ -4,16 +4,6 @@
 class ListItemsController < ProtectedRouteController
   before_action :require_write_access
 
-  # POST /
-  def create
-    new_item = item_class.create(item_params.merge!(list_id: params[:list_id]))
-    if new_item.save
-      render json: new_item
-    else
-      render json: new_item.errors, status: :unprocessable_entity
-    end
-  end
-
   # GET /:id/edit
   def edit
     categories = list.categories
@@ -25,6 +15,16 @@ class ListItemsController < ProtectedRouteController
     render json: response_body
   rescue ActiveRecord::RecordNotFound
     head :not_found
+  end
+
+  # POST /
+  def create
+    new_item = item_class.create(item_params.merge!(list_id: params[:list_id]))
+    if new_item.save
+      render json: new_item
+    else
+      render json: new_item.errors, status: :unprocessable_entity
+    end
   end
 
   # PUT /:id

@@ -3,11 +3,11 @@
 require "rails_helper"
 
 describe "/lists/:list_id/users_lists", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
   let(:users_list) { list.users_lists.find_by(user: user) }
-  let(:other_user) { create :user }
-  let(:third_user) { create :user }
+  let(:other_user) { create(:user) }
+  let(:third_user) { create(:user) }
 
   before { login user }
 
@@ -190,8 +190,8 @@ describe "/lists/:list_id/users_lists", type: :request do
 
         context "when previous users lists exist for the user" do
           it "creates a new users list and updates previous list" do
-            other_list = create :list
-            other_users_list = create :users_list, user: other_user, list: other_list, has_accepted: nil
+            other_list = create(:list)
+            other_users_list = create(:users_list, user: other_user, list: other_list, has_accepted: nil)
 
             expect(other_user.users_lists.count).to eq 1
             expect(other_users_list.prev_id).to be_falsey

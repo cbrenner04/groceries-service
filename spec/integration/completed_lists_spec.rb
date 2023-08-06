@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "/completed_lists", type: :request do
-  let(:user) { create :user_with_lists }
+  let(:user) { create(:user_with_lists) }
 
   before do
     login user

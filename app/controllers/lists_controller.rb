@@ -10,6 +10,16 @@ class ListsController < ProtectedRouteController
     render json: ListsService.index_response(current_user)
   end
 
+  # GET /:id
+  def show
+    render json: ListsService.show_response(list, current_user)
+  end
+
+  # GET /:id/edit
+  def edit
+    render json: list
+  end
+
   # POST /
   def create
     new_list = ListsService.build_new_list(list_params, current_user)
@@ -19,16 +29,6 @@ class ListsController < ProtectedRouteController
     else
       render json: new_list.errors, status: :unprocessable_entity
     end
-  end
-
-  # GET /:id
-  def show
-    render json: ListsService.show_response(list, current_user)
-  end
-
-  # GET /:id/edit
-  def edit
-    render json: list
   end
 
   # PUT /:id
