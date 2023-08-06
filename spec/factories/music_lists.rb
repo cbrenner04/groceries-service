@@ -22,7 +22,7 @@
 FactoryBot.define do
   factory :music_list do
     sequence(:name) { |n| "MyString#{n}" }
-    association :owner, factory: :user
+    owner factory: %i[user]
     type { "MusicList" }
   end
 end

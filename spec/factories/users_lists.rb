@@ -25,8 +25,8 @@
 #
 FactoryBot.define do
   factory :users_list do
-    association :user
-    association :list
+    user
+    list
     has_accepted { true }
   end
 end
