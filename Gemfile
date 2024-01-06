@@ -17,9 +17,9 @@ gem "rack-cors", "~> 2.0", ">= 2.0.0"
 gem "rails", "~> 7.0.7", ">= 7.0.7.1"
 gem "scenic", "~> 1.7", ">= 1.7.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.8", ">= 5.8.0"
+gem "sentry-rails", "~> 5.11", ">= 5.11.0"
 gem "sentry-ruby", "~> 5.0"
-gem "sprockets", "~> 4.2", ">= 4.2.0"
+gem "sprockets", "~> 4.2", ">= 4.2.1"
 
 # some ruby v3 issue?
 gem "net-imap", require: false
