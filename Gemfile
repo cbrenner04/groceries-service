@@ -7,7 +7,7 @@ ruby "3.2.2"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
-gem "devise_invitable", "~> 2.0", ">= 2.0.7"
+gem "devise_invitable", "~> 2.0", ">= 2.0.9"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.2"
 gem "lograge", "~> 0.14.0"
 gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
