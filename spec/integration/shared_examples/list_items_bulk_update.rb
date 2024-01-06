@@ -112,7 +112,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                                                   else
                                                     "updated #{attr}"
                                                   end
-        update_params[:list_items]["clear_#{attr}".to_sym] = false
+        update_params[:list_items][:"clear_#{attr}"] = false
       end
     end
 

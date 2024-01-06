@@ -140,7 +140,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        update_item = create("#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list: list)
+        update_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
         put list_list_item_path(list.id, update_item.id),
             params: { id: update_item.id, list_item: { required_attrs[0].to_sym => "bar" } },
             headers: auth_params
@@ -165,7 +165,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
       describe "when item does exist" do
         describe "with valid data" do
           it "updates item" do
-            update_item = create("#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list: list)
+            update_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
             put list_list_item_path(list.id, update_item.id),
                 params: { list_item: { required_attrs[0].to_sym => "bar" } },
                 headers: auth_params
@@ -179,7 +179,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
           it "return 422 and error message" do
             params = {}
             required_attrs.each { |attr| params[attr.to_sym] = "" }
-            update_item = create("#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list: list)
+            update_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
             put list_list_item_path(list.id, update_item.id),
                 params: { list_item: params },
                 headers: auth_params
@@ -197,7 +197,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        delete_item = create("#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list: list)
+        delete_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
         delete list_list_item_path(list.id, delete_item.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
@@ -217,7 +217,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
 
       describe "when item does exist" do
         it "destroys a item" do
-          delete_item = create("#{list_type}_item".to_sym, required_attrs[0].to_sym => "foo", list: list)
+          delete_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
           delete list_list_item_path(list.id, delete_item.id), headers: auth_params
           delete_item.reload
 
