@@ -137,6 +137,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.5)
     minitest (5.20.0)
     msgpack (1.7.2)
     net-imap (0.4.9.1)
@@ -151,7 +152,12 @@ GEM
     newrelic_rpm (9.6.0)
       base64
     nio4r (2.7.0)
+    nokogiri (1.16.0)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.16.0-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.24.0)
@@ -294,7 +300,9 @@ GEM
     zeitwerk (2.6.12)
 
 PLATFORMS
+  ruby
   x86_64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   annotate (~> 3.2, >= 3.2.0)
