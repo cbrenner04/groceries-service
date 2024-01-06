@@ -311,7 +311,7 @@ DEPENDENCIES
   bundler-audit (~> 0.9.0)
   byebug
   database_cleaner (~> 2.0, >= 2.0.1)
-  devise (~> 4.9, >= 4.9.0)
+  devise (~> 4.9, >= 4.9.3)
   devise_invitable (~> 2.0, >= 2.0.7)
   devise_token_auth (~> 1.2, >= 1.2.2)
   factory_bot_rails (~> 6.2, >= 6.2.0)
