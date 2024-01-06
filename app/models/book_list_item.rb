@@ -44,7 +44,7 @@ class BookListItem < ApplicationRecord
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
-    all.order(author: :asc, number_in_series: :asc, title: :asc)
+    order(author: :asc, number_in_series: :asc, title: :asc)
   end
 
   def archive
