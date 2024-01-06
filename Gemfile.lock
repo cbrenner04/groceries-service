@@ -322,7 +322,7 @@ DEPENDENCIES
   rspec-rails (~> 6.0, >= 6.0.3)
   rubocop (~> 1.59.0)
   rubocop-performance (~> 1.8, >= 1.8.1)
-  rubocop-rails (~> 2.18, >= 2.18.0)
+  rubocop-rails (~> 2.21, >= 2.21.0)
   rubocop-rspec (~> 2.0, >= 2.0.0)
   scenic (~> 1.7, >= 1.7.0)
   secure_headers (~> 6.3, >= 6.3.1)
