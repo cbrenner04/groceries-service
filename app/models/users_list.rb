@@ -31,7 +31,7 @@ class UsersList < ApplicationRecord
 
   validates :user, uniqueness: { scope: :list }
 
-  scope :accepted, (-> { where(has_accepted: true) })
-  scope :pending, (-> { where(has_accepted: nil) })
-  scope :refused, (-> { where(has_accepted: false) })
+  scope :accepted, -> { where(has_accepted: true) }
+  scope :pending, -> { where(has_accepted: nil) }
+  scope :refused, -> { where(has_accepted: false) }
 end
