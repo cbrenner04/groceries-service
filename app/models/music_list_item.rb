@@ -41,7 +41,7 @@ class MusicListItem < ApplicationRecord
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
-    all.order(artist: :asc, album: :asc, title: :asc)
+    order(artist: :asc, album: :asc, title: :asc)
   end
 
   def archive
