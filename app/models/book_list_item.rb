@@ -32,11 +32,11 @@ class BookListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list, class_name: "BookList", inverse_of: :book_list_items
 
-  scope :not_purchased, (-> { where(purchased: false) })
-  scope :purchased, (-> { where(purchased: true) })
-  scope :not_read, (-> { where(read: false) })
-  scope :read, (-> { where(read: true) })
-  scope :not_archived, (-> { where(archived_at: nil) })
+  scope :not_purchased, -> { where(purchased: false) }
+  scope :purchased, -> { where(purchased: true) }
+  scope :not_read, -> { where(read: false) }
+  scope :read, -> { where(read: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
 
   validates :author, presence: true, if: proc { |item| item.title.blank? }
   validates :title, presence: true, if: proc { |item| item.author.blank? }
@@ -44,7 +44,7 @@ class BookListItem < ApplicationRecord
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
-    all.order(author: :asc, number_in_series: :asc, title: :asc)
+    order(author: :asc, number_in_series: :asc, title: :asc)
   end
 
   def archive
