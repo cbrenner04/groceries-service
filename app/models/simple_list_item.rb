@@ -30,11 +30,11 @@ class SimpleListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list, class_name: "SimpleList", inverse_of: :simple_list_items
 
-  scope :not_completed, (-> { where(completed: false) })
-  scope :completed, (-> { where(completed: true) })
-  scope :not_archived, (-> { where(archived_at: nil) })
-  scope :not_refreshed, (-> { where(refreshed: false) })
-  scope :refreshed, (-> { where(refreshed: true) })
+  scope :not_completed, -> { where(completed: false) }
+  scope :completed, -> { where(completed: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :not_refreshed, -> { where(refreshed: false) }
+  scope :refreshed, -> { where(refreshed: true) }
 
   validates :content, presence: true
   validates :completed, :refreshed, inclusion: { in: [true, false] }
