@@ -31,9 +31,9 @@ class MusicListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list, class_name: "MusicList", inverse_of: :music_list_items
 
-  scope :not_purchased, (-> { where(purchased: false) })
-  scope :purchased, (-> { where(purchased: true) })
-  scope :not_archived, (-> { where(archived_at: nil) })
+  scope :not_purchased, -> { where(purchased: false) }
+  scope :purchased, -> { where(purchased: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
 
   validates :title, presence: true, if: proc { |item| item.artist.blank? && item.album.blank? }
   validates :artist, presence: true, if: proc { |item| item.title.blank? && item.album.blank? }
@@ -41,7 +41,7 @@ class MusicListItem < ApplicationRecord
   validates :purchased, inclusion: { in: [true, false] }
 
   def self.ordered
-    all.order(artist: :asc, album: :asc, title: :asc)
+    order(artist: :asc, album: :asc, title: :asc)
   end
 
   def archive
