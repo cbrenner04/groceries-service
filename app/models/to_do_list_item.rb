@@ -33,11 +33,11 @@ class ToDoListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list, class_name: "ToDoList", inverse_of: :to_do_list_items
 
-  scope :not_completed, (-> { where(completed: false) })
-  scope :completed, (-> { where(completed: true) })
-  scope :not_archived, (-> { where(archived_at: nil) })
-  scope :not_refreshed, (-> { where(refreshed: false) })
-  scope :refreshed, (-> { where(refreshed: true) })
+  scope :not_completed, -> { where(completed: false) }
+  scope :completed, -> { where(completed: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :not_refreshed, -> { where(refreshed: false) }
+  scope :refreshed, -> { where(refreshed: true) }
 
   validates :task, presence: true
   validates :completed, inclusion: { in: [true, false] }

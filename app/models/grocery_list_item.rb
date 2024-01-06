@@ -31,11 +31,11 @@ class GroceryListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list, class_name: "GroceryList", inverse_of: :grocery_list_items
 
-  scope :not_purchased, (-> { where(purchased: false) })
-  scope :purchased, (-> { where(purchased: true) })
-  scope :not_archived, (-> { where(archived_at: nil) })
-  scope :not_refreshed, (-> { where(refreshed: false) })
-  scope :refreshed, (-> { where(refreshed: true) })
+  scope :not_purchased, -> { where(purchased: false) }
+  scope :purchased, -> { where(purchased: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :not_refreshed, -> { where(refreshed: false) }
+  scope :refreshed, -> { where(refreshed: true) }
 
   validates :product, presence: true
   validates :purchased, inclusion: { in: [true, false] }
