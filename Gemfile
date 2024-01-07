@@ -35,8 +35,8 @@ group :development, :test do
   gem "bundler-audit", "~> 0.9.0"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
-  gem "factory_bot_rails", "~> 6.2", ">= 6.2.0"
-  gem "rspec-rails", "~> 6.0", ">= 6.0.3"
+  gem "factory_bot_rails", "~> 6.3", ">= 6.3.0"
+  gem "rspec-rails", "~> 6.0", ">= 6.0.4"
   gem "rubocop", "~> 1.59.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.21", ">= 2.21.0"
