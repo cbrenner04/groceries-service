@@ -40,7 +40,7 @@ class SimpleListItem < ApplicationRecord
   validates :completed, :refreshed, inclusion: { in: [true, false] }
 
   def self.ordered
-    all.order(created_at: :asc, content: :asc)
+    order(created_at: :asc, content: :asc)
   end
 
   def archive
