@@ -24,7 +24,7 @@ gem "sprockets", "~> 4.2", ">= 4.2.1"
 # some ruby v3 issue?
 gem "net-imap", require: false
 gem "net-pop", require: false
-gem "net-smtp", "~> 0.3.1", require: false
+gem "net-smtp", "~> 0.4.0", require: false
 
 group :production do
   gem "rails_12factor", "~> 0.0.3"
