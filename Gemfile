@@ -37,7 +37,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
   gem "factory_bot_rails", "~> 6.3", ">= 6.3.0"
   gem "rspec-rails", "~> 6.0", ">= 6.0.4"
-  gem "rubocop", "~> 1.60.0"
+  gem "rubocop", "~> 1.63.0"
   gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
   gem "rubocop-rails", "~> 2.21", ">= 2.21.0"
   gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
