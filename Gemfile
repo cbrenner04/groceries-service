@@ -38,9 +38,9 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.3", ">= 6.3.0"
   gem "rspec-rails", "~> 6.1", ">= 6.1.2"
   gem "rubocop", "~> 1.64.0"
-  gem "rubocop-performance", "~> 1.8", ">= 1.8.1"
-  gem "rubocop-rails", "~> 2.21", ">= 2.21.0"
-  gem "rubocop-rspec", "~> 2.0", ">= 2.0.0"
+  gem "rubocop-performance", "~> 1.21", ">= 1.21.0"
+  gem "rubocop-rails", "~> 2.24", ">= 2.24.0"
+  gem "rubocop-rspec", "~> 2.29", ">= 2.29.2"
   gem "simplecov", "~> 0.22.0"
 end
 
