@@ -62,6 +62,7 @@ module UsersService
     SQL
   end
 
+  # rubocop:disable Metrics/MethodLength
   def write_lists_query(user_id)
     <<-SQL.squish
       SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed", "active_lists"."type",
@@ -99,6 +100,7 @@ module UsersService
       );
     SQL
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 

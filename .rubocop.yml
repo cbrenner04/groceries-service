@@ -2,6 +2,8 @@ require:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-performance
+  - rubocop-factory_bot
+  - rubocop-rspec_rails
 
 AllCops:
   Exclude:
@@ -55,5 +57,5 @@ RSpec/MessageChain:
 RSpec/MultipleMemoizedHelpers:
   Max: 7
 
-RSpec/Rails/InferredSpecType:
+RSpecRails/InferredSpecType:
   Enabled: false

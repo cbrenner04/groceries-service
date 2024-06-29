@@ -16,8 +16,8 @@ class UsersListsService
   end
 
   def self.list_users(list_id)
-    accepted_users_lists = UsersList.where(list_id: list_id).public_send(:accepted)
-    pending_users_lists = UsersList.where(list_id: list_id).public_send(:pending)
+    accepted_users_lists = UsersList.where(list_id: list_id).accepted
+    pending_users_lists = UsersList.where(list_id: list_id).pending
     accepted_users_lists.to_a
                         .concat(pending_users_lists.to_a)
                         .map { |user_list| User.find(user_list.user_id) }
