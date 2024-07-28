@@ -289,10 +289,10 @@ GEM
       activerecord (>= 4.0.0)
       railties (>= 4.0.0)
     secure_headers (6.5.0)
-    sentry-rails (5.18.1)
+    sentry-rails (5.18.2)
       railties (>= 5.0)
-      sentry-ruby (~> 5.18.1)
-    sentry-ruby (5.18.1)
+      sentry-ruby (~> 5.18.2)
+    sentry-ruby (5.18.2)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     simplecov (0.22.0)
@@ -358,7 +358,7 @@ DEPENDENCIES
   rubocop-rspec_rails (~> 2.30)
   scenic (~> 1.8, >= 1.8.0)
   secure_headers (~> 6.3, >= 6.3.1)
-  sentry-rails (~> 5.18, >= 5.18.1)
+  sentry-rails (~> 5.18, >= 5.18.2)
   sentry-ruby (~> 5.0)
   simplecov (~> 0.22.0)
   spring
