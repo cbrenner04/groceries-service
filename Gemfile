@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.3"
+ruby "3.3.4"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -14,10 +14,10 @@ gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.0", ">= 6.0.0"
 gem "rack-cors", "~> 2.0", ">= 2.0.0"
-gem "rails", "~> 7.1.0", ">= 7.1.3.4"
+gem "rails", "~> 7.2.0", ">= 7.2.0"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 6.3", ">= 6.3.1"
-gem "sentry-rails", "~> 5.17", ">= 5.17.0"
+gem "sentry-rails", "~> 5.18", ">= 5.18.2"
 gem "sentry-ruby", "~> 5.0"
 gem "sprockets", "~> 4.2", ">= 4.2.1"
 
@@ -37,10 +37,12 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
   gem "factory_bot_rails", "~> 6.3", ">= 6.3.0"
   gem "rspec-rails", "~> 6.1", ">= 6.1.2"
-  gem "rubocop", "~> 1.64.0"
+  gem "rubocop", "~> 1.65", ">= 1.65.1"
+  gem "rubocop-factory_bot", "~> 2.26", ">= 2.26.1"
   gem "rubocop-performance", "~> 1.21", ">= 1.21.0"
   gem "rubocop-rails", "~> 2.24", ">= 2.24.0"
-  gem "rubocop-rspec", "~> 2.29", ">= 2.29.2"
+  gem "rubocop-rspec", "~> 3.0", ">= 3.0.3"
+  gem "rubocop-rspec_rails", "~> 2.30"
   gem "simplecov", "~> 0.22.0"
 end
 
