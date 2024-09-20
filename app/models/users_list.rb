@@ -27,7 +27,7 @@ class UsersList < ApplicationRecord
   belongs_to :user
   belongs_to :list
 
-  enum permissions: { read: "read", write: "write" }
+  enum :permissions, { read: "read", write: "write" }
 
   validates :user, uniqueness: { scope: :list }
 
