@@ -70,6 +70,7 @@ describe "/lists", type: :request do
             expect(response_body["purchased_items"].first["id"])
               .to eq(BookListItem.where(list: list).not_archived.ordered.purchased.first.id)
             expect(response_body["categories"]).to include "foo"
+            expect(response_body["lists_to_update"]).to eq []
           end
         end
 
@@ -112,6 +113,8 @@ describe "/lists", type: :request do
             expect(response_body["purchased_items"].first["id"])
               .to eq(GroceryListItem.where(list: list).not_archived.ordered.purchased.not_refreshed.first.id)
             expect(response_body["categories"]).to include "foo"
+            # curent list is not included in the lists_to_update array
+            expect(response_body["lists_to_update"].count).to eq user.write_lists.count - 1
           end
         end
 
@@ -143,6 +146,7 @@ describe "/lists", type: :request do
             expect(response_body["purchased_items"].first["id"])
               .to eq(MusicListItem.where(list: list).not_archived.ordered.purchased.first.id)
             expect(response_body["categories"]).to include "foo"
+            expect(response_body["lists_to_update"]).to eq []
           end
         end
 
@@ -174,6 +178,7 @@ describe "/lists", type: :request do
             expect(response_body["purchased_items"].first["id"])
               .to eq(SimpleListItem.where(list: list).not_archived.ordered.completed.first.id)
             expect(response_body["categories"]).to include "foo"
+            expect(response_body["lists_to_update"]).to eq []
           end
         end
 
@@ -213,6 +218,7 @@ describe "/lists", type: :request do
             expect(response_body["purchased_items"].first["id"])
               .to eq(ToDoListItem.where(list: list).not_archived.ordered.completed.not_refreshed.first.id)
             expect(response_body["categories"]).to include "foo"
+            expect(response_body["lists_to_update"]).to eq []
           end
         end
       end
