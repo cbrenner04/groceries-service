@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.6"
+ruby "3.4.1"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -14,7 +14,7 @@ gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.4", ">= 6.4.3"
 gem "rack-cors", "~> 2.0", ">= 2.0.0"
-gem "rails", "~> 7.1", ">= 7.1.4.1"
+gem "rails", "~> 7.2.2", ">= 7.2.2.1"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 7.0", ">= 7.0.0"
 gem "sentry-rails", "~> 5.19", ">= 5.19.0"
@@ -31,7 +31,7 @@ group :production do
 end
 
 group :development, :test do
-  gem "brakeman", "~> 6.0"
+  gem "brakeman", "~> 7.0"
   gem "bundler-audit", "~> 0.9.0"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
