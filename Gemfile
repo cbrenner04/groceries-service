@@ -31,7 +31,7 @@ group :production do
 end
 
 group :development, :test do
-  gem "brakeman", "~> 6.0"
+  gem "brakeman", "~> 7.0"
   gem "bundler-audit", "~> 0.9.0"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
