@@ -70,8 +70,7 @@ class UsersListsController < ProtectedRouteController
 
   def users_list_params
     @users_list_params ||= params
-                           .require(:users_list)
-                           .permit(:user_id, :list_id, :has_accepted, :permissions)
+                           .expect(users_list: %i[user_id list_id has_accepted permissions])
   end
 
   def users_list

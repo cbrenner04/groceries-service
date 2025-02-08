@@ -32,10 +32,9 @@ class ListItemsBulkUpdateController < ProtectedRouteController
 
   def item_params
     params
-      .require(:list_items)
-      .permit(:author, :clear_author, :quantity, :clear_quantity, :artist, :clear_artist, :album, :clear_album,
-              :assignee_id, :clear_assignee, :due_by, :clear_due_by, :category, :clear_category, :copy, :move,
-              :existing_list_id, :new_list_name, :update_current_items)
+      .expect(list_items: %i[author clear_author quantity clear_quantity artist clear_artist album clear_album
+                             assignee_id clear_assignee due_by clear_due_by category clear_category copy move
+                             existing_list_id new_list_name update_current_items])
   end
 
   def require_write_access
