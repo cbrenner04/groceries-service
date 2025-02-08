@@ -69,7 +69,7 @@ class ListItemsController < ProtectedRouteController
       SimpleList: %i[content completed refreshed],
       ToDoList: %i[task assignee_id due_by completed refreshed]
     }[list.type.to_sym]
-    params.expect(list_item: [generic_params.concat(specific_params)])
+    params.expect(list_item: generic_params.concat(specific_params))
   end
 
   def require_write_access
