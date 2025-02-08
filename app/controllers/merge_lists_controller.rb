@@ -14,8 +14,7 @@ class MergeListsController < ProtectedRouteController
 
   def merge_list_params
     params
-      .require(:merge_lists)
-      .permit(:list_ids, :new_list_name)
+      .expect(merge_lists: %i[list_ids new_list_name])
   end
 
   def lists

@@ -51,7 +51,7 @@ class ListsController < ProtectedRouteController
   private
 
   def list_params
-    @list_params ||= params.require(:list).permit(:user, :name, :completed, :refreshed, :type)
+    @list_params ||= params.expect(list: %i[user name completed refreshed type])
   end
 
   def require_list_access
