@@ -18,7 +18,6 @@ Rails.application.routes.draw do
     resource :refresh_list, only: [:create]
     collection { resource :merge_lists, only: [:create] }
     namespace :v1, &list_items_routes
-    namespace :v2, &list_items_routes
     resources :users_lists, only: [:index, :create, :update, :destroy]
   end
   resources :completed_lists, only: :index
