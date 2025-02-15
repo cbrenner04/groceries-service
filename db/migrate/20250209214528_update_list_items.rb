@@ -22,17 +22,27 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       book_list.book_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: book_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.purchased)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: author_field,
-                              user: list_item.user, archived_at: list_item.archived_at, data: list_item.author)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: title_field,
-                              user: list_item.user, archived_at: list_item.archived_at, data: list_item.title)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: number_in_series_field,
-                              user: list_item.user, archived_at: list_item.archived_at,
-                              data: list_item.number_in_series)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: category_field,
-                              user: list_item.user, archived_at: list_item.archived_at, data: list_item.category)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: read_field,
-                              user: list_item.user, archived_at: list_item.archived_at, data: list_item.read)
+        if list_item.author
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: author_field,
+                                user: list_item.user, archived_at: list_item.archived_at, data: list_item.author)
+        end
+        if list_item.title
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: title_field,
+                                user: list_item.user, archived_at: list_item.archived_at, data: list_item.title)
+        end
+        if list_item.number_in_series
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: number_in_series_field,
+                                user: list_item.user, archived_at: list_item.archived_at,
+                                data: list_item.number_in_series)
+        end
+        if list_item.category
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: category_field,
+                                user: list_item.user, archived_at: list_item.archived_at, data: list_item.category)
+        end
+        if list_item.read
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: read_field,
+                                user: list_item.user, archived_at: list_item.archived_at, data: list_item.read)
+        end
       end
     end
 
@@ -57,10 +67,14 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: category_field,
                                 user: list_item.user, data: list_item.category)
         end
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: product_field,
-                              user: list_item.user, data: list_item.product)
-        ListItemField.create!(list_item: new_list_item, list_item_field_configuration: quantity_field,
-                              user: list_item.user, data: list_item.quantity)
+        if list_item.product
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: product_field,
+                                user: list_item.user, data: list_item.product)
+        end
+        if list_item.quantity
+          ListItemField.create!(list_item: new_list_item, list_item_field_configuration: quantity_field,
+                                user: list_item.user, data: list_item.quantity)
+        end
       end
     end
 
@@ -83,14 +97,22 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       music_list.music_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: music_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.purchased)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: category_field, data: list_item.category)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: title_field, data: list_item.title)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: artist_field, data: list_item.artist)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: album_field, data: list_item.album)
+        if list_item.category
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: category_field, data: list_item.category)
+        end
+        if list_item.title
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: title_field, data: list_item.title)
+        end
+        if list_item.artist
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: artist_field, data: list_item.artist)
+        end
+        if list_item.album
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: album_field, data: list_item.album)
+        end
       end
     end
 
@@ -109,10 +131,16 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       simple_list.simple_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: simple_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.completed, refreshed: list_item.refreshed)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: category_field, data: list_item.category)
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: content_field, data: list_item.content)
+
+        if list_item.category
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                               list_item_field_configuration: category_field, data: list_item.category)
+        end
+
+        if list_item.content
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: content_field, data: list_item.content)
+        end
       end
     end
 
