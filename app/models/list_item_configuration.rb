@@ -3,5 +3,5 @@
 # comment
 class ListItemConfiguration < ApplicationRecord
   belongs_to :list
-  has_many :list_item_configuration_field, dependent: :destroy
+  has_many :list_item_field_configuration, dependent: :destroy
 end
