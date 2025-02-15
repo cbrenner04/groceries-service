@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # wrapper for specific list items controllers
-class V1::ListItemsController < ProtectedRouteController
+class V1::ListItemsController < ProtectedRouteController # rubocop:disable Style/ClassAndModuleChildren
   before_action :require_write_access
 
   # GET /:id/edit
