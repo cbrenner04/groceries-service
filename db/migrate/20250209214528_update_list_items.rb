@@ -22,11 +22,11 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       book_list.book_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: book_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.purchased)
-        if list_item.author
+        if list_item.author.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: author_field,
                                 user: list_item.user, archived_at: list_item.archived_at, data: list_item.author)
         end
-        if list_item.title
+        if list_item.title.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: title_field,
                                 user: list_item.user, archived_at: list_item.archived_at, data: list_item.title)
         end
@@ -35,11 +35,11 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
                                 user: list_item.user, archived_at: list_item.archived_at,
                                 data: list_item.number_in_series)
         end
-        if list_item.category
+        if list_item.category.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: category_field,
                                 user: list_item.user, archived_at: list_item.archived_at, data: list_item.category)
         end
-        if list_item.read
+        if list_item.read.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: read_field,
                                 user: list_item.user, archived_at: list_item.archived_at, data: list_item.read)
         end
@@ -63,15 +63,15 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       grocery_list.grocery_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: grocery_list, user: list_item.user, archived_at: list_item.archived_at,
                                          refreshed: list_item.refreshed, completed: list_item.purchased)
-        if list_item.category
+        if list_item.category.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: category_field,
                                 user: list_item.user, data: list_item.category)
         end
-        if list_item.product
+        if list_item.product.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: product_field,
                                 user: list_item.user, data: list_item.product)
         end
-        if list_item.quantity
+        if list_item.quantity.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, list_item_field_configuration: quantity_field,
                                 user: list_item.user, data: list_item.quantity)
         end
@@ -97,19 +97,19 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       music_list.music_list_items.all.each do |list_item|
         new_list_item = ListItem.create!(list: music_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.purchased)
-        if list_item.category
+        if list_item.category.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: category_field, data: list_item.category)
         end
-        if list_item.title
+        if list_item.title.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: title_field, data: list_item.title)
         end
-        if list_item.artist
+        if list_item.artist.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: artist_field, data: list_item.artist)
         end
-        if list_item.album
+        if list_item.album.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: album_field, data: list_item.album)
         end
@@ -132,12 +132,12 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
         new_list_item = ListItem.create!(list: simple_list, user: list_item.user, archived_at: list_item.archived_at,
                                          completed: list_item.completed, refreshed: list_item.refreshed)
 
-        if list_item.category
+        if list_item.category.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                list_item_field_configuration: category_field, data: list_item.category)
         end
 
-        if list_item.content
+        if list_item.content.length > 0 # empty string broke me here
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: content_field, data: list_item.content)
         end
@@ -171,8 +171,10 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: due_by_field, data: list_item.due_by)
         end
-        ListItemField.create!(list_item: new_list_item, user: list_item.user,
-                              list_item_field_configuration: task_field, data: list_item.task)
+        if list_item.task.length > 0 # empty string broke me here
+          ListItemField.create!(list_item: new_list_item, user: list_item.user,
+                                list_item_field_configuration: task_field, data: list_item.task)
+        end
         if list_item.assignee_id
           ListItemField.create!(list_item: new_list_item, user: list_item.user,
                                 list_item_field_configuration: assignee_field,
