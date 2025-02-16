@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # /lists
-class ListsController < ProtectedRouteController
+class V1::ListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[show]
   before_action :require_list_owner, only: %i[edit update destroy]
 

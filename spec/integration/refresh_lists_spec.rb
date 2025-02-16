@@ -11,7 +11,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
   describe "POST /" do
     context "when user is not owner" do
       it "responds with forbidden" do
-        post list_refresh_list_path(list.id), headers: auth_params
+        post v1_list_refresh_list_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -24,7 +24,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
           BookListItem.create!(user: user, list: list, title: "foo", category: "foo")
 
           expect do
-            post list_refresh_list_path(list.id), headers: auth_params
+            post v1_list_refresh_list_path(list.id), headers: auth_params
           end.to change(List, :count).by(1).and change(BookListItem, :count).by(1)
           new_list_item = BookListItem.last
           expect(new_list_item[:title]).to eq "foo"
@@ -38,7 +38,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
           GroceryListItem.create!(user: user, list: list, product: "foo", quantity: 1, category: "foo")
 
           expect do
-            post list_refresh_list_path(list.id), headers: auth_params
+            post v1_list_refresh_list_path(list.id), headers: auth_params
           end.to change(List, :count).by(1).and change(GroceryListItem, :count).by(1)
           new_list_item = GroceryListItem.last
           expect(new_list_item[:product]).to eq "foo"
@@ -52,7 +52,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
           MusicListItem.create!(user: user, list: list, title: "foo", category: "foo")
 
           expect do
-            post list_refresh_list_path(list.id), headers: auth_params
+            post v1_list_refresh_list_path(list.id), headers: auth_params
           end.to change(List, :count).by(1).and change(MusicListItem, :count).by(1)
           new_list_item = MusicListItem.last
           expect(new_list_item[:title]).to eq "foo"
@@ -66,7 +66,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
           SimpleListItem.create!(user: user, list: list, content: "foo", category: "foo")
 
           expect do
-            post list_refresh_list_path(list.id), headers: auth_params
+            post v1_list_refresh_list_path(list.id), headers: auth_params
           end.to change(List, :count).by(1).and change(SimpleListItem, :count).by(1)
           new_list_item = SimpleListItem.last
           expect(new_list_item[:content]).to eq "foo"
@@ -80,7 +80,7 @@ describe "/lists/:list_id/refresh_list", type: :request do
           ToDoListItem.create!(user: user, list: list, task: "foo", category: "foo")
 
           expect do
-            post list_refresh_list_path(list.id), headers: auth_params
+            post v1_list_refresh_list_path(list.id), headers: auth_params
           end.to change(List, :count).by(1).and change(ToDoListItem, :count).by(1)
           new_list_item = ToDoListItem.last
           expect(new_list_item[:task]).to eq "foo"

@@ -16,7 +16,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
+        get "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -24,7 +24,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
     describe "when list does not exist" do
       it "responds with 403" do
-        get "#{list_v1_list_items_bulk_update_path('fake_id')}?item_ids=#{item_ids}", headers: auth_params
+        get "#{v1_list_list_items_bulk_update_path('fake_id')}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -35,7 +35,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
       context "when one item does not exist" do
         it "response with not found" do
-          get "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          get "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params
 
           expect(response).to have_http_status :not_found
@@ -47,7 +47,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
           other_list = create(list_type.to_sym, owner: user)
           other_users_list = create(:users_list, user: user, list: other_list)
 
-          get "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
+          get "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
           complete_attr = list_type == "to_do_list" ? "completed" : "purchased"
@@ -123,7 +123,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
       end
 
       it "responds with forbidden" do
-        put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+        put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
             headers: auth_params,
             params: update_params,
             as: :json
@@ -139,7 +139,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
         it "responds with not found" do
           update_params[:list_items][:copy] = true
           update_params[:list_items][:new_list_name] = "bulk update list"
-          put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params,
               params: update_params,
               as: :json
@@ -169,7 +169,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_params[:list_items][:update_current_items] = true
               update_params[:list_items][:new_list_name] = "bulk update list"
 
-              put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+              put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -214,7 +214,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               update_params[:list_items][:update_current_items] = false
               update_params[:list_items][:new_list_name] = "bulk update list"
 
-              put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+              put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -254,7 +254,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 update_params[:list_items][:new_list_name] = "bulk update list"
                 update_params[:list_items][:update_current_items] = false
 
-                put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -300,7 +300,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
                 update_params[:list_items][:existing_list_id] = other_list.id
 
-                put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -346,7 +346,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
                 update_params[:list_items][:new_list_name] = "bulk update list"
 
-                put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -392,7 +392,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
                 update_params[:list_items][:existing_list_id] = other_list.id
 
-                put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+                put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -435,7 +435,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
 
             update_params[:list_items][:copy] = true
 
-            put "#{list_v1_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+            put "#{v1_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                 headers: auth_params,
                 params: update_params,
                 as: :json

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# /lists/merge_lists
-class MergeListsController < ProtectedRouteController
+# /lists/v1_merge_lists
+class V1::MergeListsController < ProtectedRouteController
   # POST /
   def create
     new_list = create_new_list
@@ -12,13 +12,13 @@ class MergeListsController < ProtectedRouteController
 
   private
 
-  def merge_list_params
+  def v1_merge_list_params
     params
       .expect(merge_lists: %i[list_ids new_list_name])
   end
 
   def lists
-    @lists ||= List.where(id: merge_list_params[:list_ids].split(","))
+    @lists ||= List.where(id: v1_merge_list_params[:list_ids].split(","))
   end
 
   def list_type
@@ -26,6 +26,6 @@ class MergeListsController < ProtectedRouteController
   end
 
   def create_new_list
-    List.create(name: merge_list_params[:new_list_name], owner_id: current_user.id, type: list_type)
+    List.create(name: v1_merge_list_params[:new_list_name], owner_id: current_user.id, type: list_type)
   end
 end

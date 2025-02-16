@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # generic controller for bulk updating list items
-class V1::ListItemsBulkUpdateController < ProtectedRouteController # rubocop:disable Style/ClassAndModuleChildren
+class V1::ListItemsBulkUpdateController < ProtectedRouteController
   before_action :require_write_access
 
   # GET /

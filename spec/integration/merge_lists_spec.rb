@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/lists/merge_lists", type: :request do
+describe "/lists/v1_merge_lists", type: :request do
   let(:user) { create(:user_with_lists) }
 
   before { login user }
@@ -15,7 +15,7 @@ describe "/lists/merge_lists", type: :request do
         BookListItem.create!(user: user, list: first_list, title: "foo", category: "foo")
         BookListItem.create!(user: user, list: second_list, title: "bar", category: "bar")
         expect do
-          post merge_lists_path,
+          post v1_merge_lists_path,
                params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
                headers: auth_params
         end.to change(BookList, :count).by(1).and change(BookListItem, :count).by(2).and change(UsersList, :count).by(1)
@@ -29,7 +29,7 @@ describe "/lists/merge_lists", type: :request do
         GroceryListItem.create!(user: user, list: first_list, product: "foo", category: "foo")
         GroceryListItem.create!(user: user, list: second_list, product: "bar", category: "bar")
         expect do
-          post merge_lists_path,
+          post v1_merge_lists_path,
                params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
                headers: auth_params
         end.to change(GroceryList, :count).by(1)
@@ -45,7 +45,7 @@ describe "/lists/merge_lists", type: :request do
         MusicListItem.create!(user: user, list: first_list, title: "foo", category: "foo")
         MusicListItem.create!(user: user, list: second_list, title: "bar", category: "bar")
         expect do
-          post merge_lists_path,
+          post v1_merge_lists_path,
                params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
                headers: auth_params
         end.to change(MusicList, :count).by(1)
@@ -61,7 +61,7 @@ describe "/lists/merge_lists", type: :request do
         SimpleListItem.create!(user: user, list: first_list, content: "foo", category: "foo")
         SimpleListItem.create!(user: user, list: second_list, content: "bar", category: "bar")
         expect do
-          post merge_lists_path,
+          post v1_merge_lists_path,
                params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
                headers: auth_params
         end.to change(SimpleList, :count).by(1)
@@ -77,7 +77,7 @@ describe "/lists/merge_lists", type: :request do
         ToDoListItem.create!(user: user, list: first_list, task: "foo", category: "foo")
         ToDoListItem.create!(user: user, list: second_list, task: "bar", category: "bar")
         expect do
-          post merge_lists_path,
+          post v1_merge_lists_path,
                params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
                headers: auth_params
         end.to change(ToDoList, :count).by(1).and change(ToDoListItem, :count).by(2).and change(UsersList, :count).by(1)
