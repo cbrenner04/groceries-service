@@ -7,10 +7,10 @@ class V1::RefreshListsController < ProtectedRouteController
   # POST /
   def create
     list.update!(refreshed: true)
-    new_list = ListsService.create_new_list_from(list)
+    new_list = V1::ListsService.create_new_list_from(list)
     users_list = UsersListsService.create_users_list(current_user, new_list)
-    ListsService.create_new_items(list, new_list, current_user)
-    render json: ListsService.list_response(new_list, users_list, current_user)
+    V1::ListsService.create_new_items(list, new_list, current_user)
+    render json: V1::ListsService.list_response(new_list, users_list, current_user)
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_09_214528) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_16_210322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -49,10 +49,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_214528) do
   end
 
   create_table "list_item_configurations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "list_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["list_id"], name: "index_list_item_configurations_on_list_id", unique: true
+    t.string "name", null: false
+    t.boolean "allow_other_users_to_view", default: false, null: false
+    t.uuid "user_id", null: false
+    t.index ["name"], name: "index_list_item_configurations_on_name", unique: true
+    t.index ["user_id"], name: "index_list_item_configurations_on_user_id"
   end
 
   create_table "list_item_field_configurations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -99,6 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_214528) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "owner_id", null: false
+    t.uuid "list_item_configuration_id"
     t.index ["created_at"], name: "index_lists_on_created_at"
     t.index ["owner_id"], name: "index_lists_on_owner_id"
   end
@@ -204,7 +208,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_214528) do
   add_foreign_key "book_list_items", "users"
   add_foreign_key "grocery_list_items", "lists"
   add_foreign_key "grocery_list_items", "users"
-  add_foreign_key "list_item_configurations", "lists"
+  add_foreign_key "list_item_configurations", "users"
   add_foreign_key "list_item_field_configurations", "list_item_configurations"
   add_foreign_key "list_item_fields", "list_item_field_configurations"
   add_foreign_key "list_item_fields", "list_items"
@@ -232,7 +236,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_214528) do
       users_lists.user_id,
       users_lists.has_accepted,
       users_lists.prev_id,
-      users_lists.next_id
+      users_lists.next_id,
+      lists.list_item_configuration_id
      FROM (lists
        JOIN users_lists ON ((lists.id = users_lists.list_id)))
     WHERE (lists.archived_at IS NULL)

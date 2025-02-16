@@ -7,12 +7,12 @@ class V1::ListsController < ProtectedRouteController
 
   # GET /
   def index
-    render json: ListsService.index_response(current_user)
+    render json: V1::ListsService.index_response(current_user)
   end
 
   # GET /:id
   def show
-    render json: ListsService.show_response(list, current_user)
+    render json: V1::ListsService.show_response(list, current_user)
   end
 
   # GET /:id/edit
@@ -22,10 +22,10 @@ class V1::ListsController < ProtectedRouteController
 
   # POST /
   def create
-    new_list = ListsService.build_new_list(list_params, current_user)
+    new_list = V1::ListsService.build_new_list(list_params, current_user)
     if new_list.save
       users_list = UsersListsService.create_users_list(current_user, new_list)
-      render json: ListsService.list_response(new_list, users_list, current_user)
+      render json: V1::ListsService.list_response(new_list, users_list, current_user)
     else
       render json: new_list.errors, status: :unprocessable_entity
     end
