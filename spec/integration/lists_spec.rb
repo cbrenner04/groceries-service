@@ -250,7 +250,8 @@ describe "/lists", type: :request do
           "created_at" => list[:created_at].iso8601(3),
           "updated_at" => list[:updated_at].iso8601(3),
           "owner_id" => list[:owner_id],
-          "type" => list[:type]
+          "type" => list[:type],
+          "list_item_configuration_id" => nil
         )
       end
     end

@@ -93,6 +93,6 @@ class User < ApplicationRecord
   end
 
   def available_list_item_configurations
-    self.list_item_configurations.concat(ListItemConfiguration.public_configs)
+    list_item_configurations.concat(ListItemConfiguration.public_configs)
   end
 end

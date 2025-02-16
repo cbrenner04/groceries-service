@@ -15,11 +15,8 @@ class V2::ListsService
 
     def show_response(list, user)
       {
-        current_user_id: user.id,
-        list: list,
-        not_completed_items: ordered_items(list).not_completed,
-        completed_items: ordered_items(list).completed.not_refreshed,
-        categories: list.categories,
+        current_user_id: user.id, list: list, not_completed_items: ordered_items(list).not_completed,
+        completed_items: ordered_items(list).completed.not_refreshed, categories: list.categories,
         list_users: UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
