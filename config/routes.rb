@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     post "/auth/invitation", to: "users/invitations#create"
   end
   namespace :v1, &list_routes
+  namespace :v2, &list_routes
   resources :completed_lists, only: :index
   root to: "v1/lists#index"
   get "*unmatched_route", to: "application#route_not_found"

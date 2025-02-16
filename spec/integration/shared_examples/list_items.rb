@@ -55,7 +55,8 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
             "type" => list[:type],
             "owner_id" => list[:owner_id],
             "created_at" => list[:created_at].iso8601(3),
-            "updated_at" => list[:updated_at].iso8601(3)
+            "updated_at" => list[:updated_at].iso8601(3),
+            "list_item_configuration_id" => nil
           )
           expect(response_body["categories"]).to eq(list.categories)
         end

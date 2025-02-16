@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for Lists
-class ListsService
+class V1::ListsService
   class << self
     def index_response(user)
       {

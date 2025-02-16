@@ -6,8 +6,8 @@ class V1::MergeListsController < ProtectedRouteController
   def create
     new_list = create_new_list
     users_list = UsersListsService.create_users_list(current_user, new_list)
-    ListsService.create_new_items_from_multiple_lists(lists, new_list, current_user)
-    render json: ListsService.list_response(new_list, users_list, current_user)
+    V1::ListsService.create_new_items_from_multiple_lists(lists, new_list, current_user)
+    render json: V1::ListsService.list_response(new_list, users_list, current_user)
   end
 
   private
