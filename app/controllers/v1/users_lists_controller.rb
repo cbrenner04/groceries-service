@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# /lists/:list_id/users_lists
+# /v1/lists/:list_id/users_lists
 class V1::UsersListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[index update]
   before_action :require_write_access, only: %i[create]

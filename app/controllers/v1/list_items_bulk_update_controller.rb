@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# /v1/lists/:list_id/list_items/bulk_update
 # generic controller for bulk updating list items
 class V1::ListItemsBulkUpdateController < ProtectedRouteController
   before_action :require_write_access
