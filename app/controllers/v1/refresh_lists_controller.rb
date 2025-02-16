@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# /lists/:list_id/refresh_list
-class RefreshListsController < ProtectedRouteController
+# /v1/lists/:list_id/refresh_list
+class V1::RefreshListsController < ProtectedRouteController
   before_action :require_list_owner, only: %i[create]
 
   # POST /

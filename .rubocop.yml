@@ -24,6 +24,9 @@ Layout/LineLength:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
 # Spec-related overrides below
 
 Style/Documentation:

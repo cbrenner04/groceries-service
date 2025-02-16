@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# /lists/merge_lists
-class MergeListsController < ProtectedRouteController
+# /v1/lists/_merge_lists
+class V1::MergeListsController < ProtectedRouteController
   # POST /
   def create
     new_list = create_new_list
@@ -13,8 +13,7 @@ class MergeListsController < ProtectedRouteController
   private
 
   def merge_list_params
-    params
-      .expect(merge_lists: %i[list_ids new_list_name])
+    params.expect(merge_lists: %i[list_ids new_list_name])
   end
 
   def lists
