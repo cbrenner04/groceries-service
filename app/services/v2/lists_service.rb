@@ -13,6 +13,7 @@ class V2::ListsService
       }
     end
 
+    # rubocop:disable Metrics/MethodLength
     def show_response(list, user)
       {
         current_user_id: user.id,
@@ -28,6 +29,7 @@ class V2::ListsService
         list_item_configuration: list.list_item_configuration
       }
     end
+    # rubocop:enable Metrics/MethodLength
 
     def ordered_items(list)
       list.list_items.not_archived.ordered
@@ -72,7 +74,6 @@ class V2::ListsService
     end
 
     def create_new_list_items(old_list, new_list, user)
-      item_attrs = { user: user, list: new_list }
       items = old_list.list_items.reject { |item| item.refreshed || item.archived_at.present? }
       items.each do |item|
         new_item = new_list.list_items.create!(user: user)

@@ -44,7 +44,7 @@ class V2::ListsController < ProtectedRouteController
   # DELETE /:id
   def destroy
     V2::ListsService.update_previous_and_next_list(users_list)
-    list.list_items.each { |li| li.archive }
+    list.list_items.each(&:archive)
     list.archive
     head :no_content
   end
