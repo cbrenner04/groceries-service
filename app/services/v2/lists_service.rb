@@ -44,10 +44,7 @@ class V2::ListsService
     end
 
     def build_new_list(params, user)
-      # TODO: remove when `type` attr is removed from List
-      list_type = params[:type] || "GroceryList"
-      # TODO: remove `type` when `type` attr is removed from List
-      new_list_params = params.merge!(owner: user, type: list_type)
+      new_list_params = params.merge!(owner: user)
       List.new(new_list_params)
     end
 
@@ -67,6 +64,24 @@ class V2::ListsService
       update_previous_list(users_list)
       update_next_list(users_list)
       users_list.update!(prev_id: nil, next_id: nil)
+    end
+
+    def create_new_list_items(old_list, new_list, user)
+      item_attrs = { user: user, list: new_list }
+      items = old_list.list_items.reject { |item| item.refreshed || item.archived_at.present? }
+      items.each do |item|
+        new_item = new_list.list_items.create!(user: user)
+        item.list_item_fields.each do |list_item_field|
+          field_config = list_item_field.list_item_field_configuration
+          new_item
+            .list_item_fields
+            .create!(user: user, data: list_item_field.data, list_item_field_configuration: field_config)
+        end
+      end
+    end
+
+    def create_new_items_from_multiple_lists(lists, new_list, user)
+      lists.each { |old_list| create_new_list_items(old_list, new_list, user) }
     end
   end
 end
