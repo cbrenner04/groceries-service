@@ -66,6 +66,11 @@ class V2::ListsService
       users_list.update!(prev_id: nil, next_id: nil)
     end
 
+    def create_new_list_from(old_list)
+      List.create!(name: old_list[:name], owner_id: old_list[:owner_id],
+                   list_item_configuration_id: old_list[:list_item_configuration_id])
+    end
+
     def create_new_list_items(old_list, new_list, user)
       item_attrs = { user: user, list: new_list }
       items = old_list.list_items.reject { |item| item.refreshed || item.archived_at.present? }
@@ -80,8 +85,14 @@ class V2::ListsService
       end
     end
 
+    # for merging lists
     def create_new_items_from_multiple_lists(lists, new_list, user)
       lists.each { |old_list| create_new_list_items(old_list, new_list, user) }
+    end
+
+    # for refreshing list
+    def create_new_items(old_list, new_list, user)
+      create_new_list_items(old_list, new_list, user)
     end
   end
 end
