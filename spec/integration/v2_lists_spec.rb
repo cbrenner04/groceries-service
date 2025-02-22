@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/lists", type: :request do
+describe "/v2/lists", type: :request do
   let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 

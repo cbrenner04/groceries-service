@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/lists/:list_id/users_lists", type: :request do
+describe "/v2/lists/:list_id/users_lists", type: :request do
   let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
   let(:users_list) { list.users_lists.find_by(user: user) }
@@ -16,7 +16,7 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { list.users_lists.delete_all }
 
       it "responds with forbidden" do
-        get v1_list_users_lists_path(list.id), headers: auth_params
+        get v2_list_users_lists_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -27,7 +27,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         UsersList.create(user: other_user, list: list)
         UsersList.create(user: third_user, list: list, has_accepted: false)
 
-        get v1_list_users_lists_path(list.id), headers: auth_params
+        get v2_list_users_lists_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :success
         response_body = JSON.parse(response.body)
@@ -54,7 +54,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
       context "when users_list exists" do
         it "accepts list" do
-          patch v1_list_users_list_path(list.id, users_list.id),
+          patch v2_list_users_list_path(list.id, users_list.id),
                 params: { users_list: { has_accepted: true } },
                 headers: auth_params
 
@@ -63,7 +63,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         end
 
         it "rejects list" do
-          patch v1_list_users_list_path(list.id, users_list.id),
+          patch v2_list_users_list_path(list.id, users_list.id),
                 params: { users_list: { has_accepted: false } },
                 headers: auth_params
 
@@ -74,7 +74,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         describe "permissions" do
           context "with good data" do
             it "updates permissions" do
-              patch v1_list_users_list_path(list.id, users_list.id),
+              patch v2_list_users_list_path(list.id, users_list.id),
                     params: { users_list: { permissions: "read" } },
                     headers: auth_params
 
@@ -85,7 +85,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
           context "with bad data" do
             it "returns 422" do
-              patch v1_list_users_list_path(list.id, users_list.id),
+              patch v2_list_users_list_path(list.id, users_list.id),
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
@@ -104,7 +104,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           before { users_list.update!(has_accepted: nil) }
 
           it "accepts list" do
-            patch v1_list_users_list_path(list.id, users_list.id),
+            patch v2_list_users_list_path(list.id, users_list.id),
                   params: { users_list: { has_accepted: true } },
                   headers: auth_params
 
@@ -113,7 +113,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           end
 
           it "rejects list" do
-            patch v1_list_users_list_path(list.id, users_list.id),
+            patch v2_list_users_list_path(list.id, users_list.id),
                   params: { users_list: { has_accepted: false } },
                   headers: auth_params
 
@@ -126,7 +126,7 @@ describe "/lists/:list_id/users_lists", type: :request do
           before { users_list.update!(has_accepted: true) }
 
           it "rejects list" do
-            patch v1_list_users_list_path(list.id, users_list.id),
+            patch v2_list_users_list_path(list.id, users_list.id),
                   params: { users_list: { has_accepted: false } },
                   headers: auth_params
 
@@ -138,7 +138,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         describe "permissions" do
           context "with good data" do
             it "updates permissions" do
-              patch v1_list_users_list_path(list.id, users_list.id),
+              patch v2_list_users_list_path(list.id, users_list.id),
                     params: { users_list: { permissions: "read" } },
                     headers: auth_params
 
@@ -149,7 +149,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
           context "with bad data" do
             it "returns 422" do
-              patch v1_list_users_list_path(list.id, users_list.id),
+              patch v2_list_users_list_path(list.id, users_list.id),
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
@@ -166,7 +166,7 @@ describe "/lists/:list_id/users_lists", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        post v1_list_users_lists_path(list.id),
+        post v2_list_users_lists_path(list.id),
              params: { users_list: { user_id: other_user.id, list_id: list.id } },
              headers: auth_params
 
@@ -181,7 +181,7 @@ describe "/lists/:list_id/users_lists", type: :request do
         context "when no previous users lists exist for the user" do
           it "creates a new users list" do
             expect do
-              post v1_list_users_lists_path(list.id),
+              post v2_list_users_lists_path(list.id),
                    params: { users_list: { user_id: other_user.id, list_id: list.id } },
                    headers: auth_params
             end.to change(UsersList, :count).by 1
@@ -197,7 +197,7 @@ describe "/lists/:list_id/users_lists", type: :request do
             expect(other_users_list.prev_id).to be_falsey
 
             expect do
-              post v1_list_users_lists_path(list.id),
+              post v2_list_users_lists_path(list.id),
                    params: { users_list: { user_id: other_user.id, list_id: list.id } },
                    headers: auth_params
             end.to change(UsersList, :count).by 1
@@ -213,7 +213,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
       describe "with invalid params" do
         it "returns unprocessible entity" do
-          post v1_list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
+          post v2_list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
           expect(response).to have_http_status :unprocessable_entity
         end
@@ -223,7 +223,7 @@ describe "/lists/:list_id/users_lists", type: :request do
 
   describe "DELETE /:id" do
     it "deletes the list" do
-      delete v1_list_users_list_path(list.id, users_list.id), headers: auth_params
+      delete v2_list_users_list_path(list.id, users_list.id), headers: auth_params
 
       expect do
         UsersList.find(users_list.id)
