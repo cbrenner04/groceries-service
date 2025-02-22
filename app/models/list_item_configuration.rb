@@ -8,5 +8,4 @@ class ListItemConfiguration < ApplicationRecord
   scope :public_configs, -> { where(allow_other_users_to_view: true) }
 
   validates :name, presence: true, uniqueness: true
-  validates :allow_other_users_to_view, presence: true
 end

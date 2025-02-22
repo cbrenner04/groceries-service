@@ -15,12 +15,17 @@ class V2::ListsService
 
     def show_response(list, user)
       {
-        current_user_id: user.id, list: list, not_completed_items: ordered_items(list).not_completed,
-        completed_items: ordered_items(list).completed.not_refreshed, categories: list.categories,
+        current_user_id: user.id,
+        list: list,
+        not_completed_items: ordered_items(list).not_completed,
+        completed_items: ordered_items(list).completed.not_refreshed,
+        # TODO: how we handling this moving forward?
+        # categories: list.categories,
         list_users: UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
-        available_list_item_configurations: user.available_list_item_configurations
+        available_list_item_configurations: user.available_list_item_configurations,
+        list_item_configuration: list.list_item_configuration
       }
     end
 
@@ -44,6 +49,24 @@ class V2::ListsService
       # TODO: remove `type` when `type` attr is removed from List
       new_list_params = params.merge!(owner: user, type: list_type)
       List.new(new_list_params)
+    end
+
+    def update_previous_list(users_list)
+      return unless users_list.prev_id
+
+      UsersList.find(users_list.prev_id).update!(next_id: users_list.next_id)
+    end
+
+    def update_next_list(users_list)
+      return unless users_list.next_id
+
+      UsersList.find(users_list.next_id).update!(prev_id: users_list.prev_id)
+    end
+
+    def update_previous_and_next_list(users_list)
+      update_previous_list(users_list)
+      update_next_list(users_list)
+      users_list.update!(prev_id: nil, next_id: nil)
     end
   end
 end

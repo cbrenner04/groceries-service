@@ -32,10 +32,22 @@ class V2::ListsController < ProtectedRouteController
   end
 
   # PUT /:id
-  def update; end
+  def update
+    V2::ListsService.update_previous_and_next_list(users_list) if list_params[:completed]
+    if list.update(list_params)
+      render json: list
+    else
+      render json: list.errors, status: :unprocessable_entity
+    end
+  end
 
   # DELETE /:id
-  def destroy; end
+  def destroy
+    V2::ListsService.update_previous_and_next_list(users_list)
+    list.list_items.each { |li| li.archive }
+    list.archive
+    head :no_content
+  end
 
   private
 
@@ -46,5 +58,21 @@ class V2::ListsController < ProtectedRouteController
   def list_params
     # TODO: remove `type` when `type` attr is removed from List
     @list_params ||= params.expect(list: %i[user name completed refreshed type list_item_configuration_id])
+  end
+
+  def users_list
+    @users_list ||= UsersList.find_by(list: list, user: current_user)
+  end
+
+  def require_list_access
+    return if users_list&.has_accepted
+
+    head :forbidden
+  end
+
+  def require_list_owner
+    return if list.owner == current_user
+
+    head :forbidden
   end
 end
