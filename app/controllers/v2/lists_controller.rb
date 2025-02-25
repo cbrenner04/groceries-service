@@ -24,7 +24,7 @@ class V2::ListsController < ProtectedRouteController
   def create
     new_list = V2::ListsService.build_new_list(list_params, current_user)
     if new_list.save
-      users_list = UsersListsService.create_users_list(current_user, new_list)
+      users_list = V2::UsersListsService.create_users_list(current_user, new_list)
       render json: V2::ListsService.list_response(new_list, users_list, current_user)
     else
       render json: new_list.errors, status: :unprocessable_entity

@@ -14,7 +14,7 @@ class V1::ListsService
       {
         current_user_id: user.id, list: list, not_purchased_items: not_purchased_items(list),
         purchased_items: purchased_items(list), categories: list.categories,
-        list_users: UsersListsService.list_users(list.id),
+        list_users: V1::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user)
       }

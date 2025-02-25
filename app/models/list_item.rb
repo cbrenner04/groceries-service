@@ -5,6 +5,7 @@ class ListItem < ApplicationRecord
   belongs_to :user
   belongs_to :list
   has_many :list_item_fields, dependent: :destroy
+  accepts_nested_attributes_for :list_item_fields
 
   scope :not_completed, -> { where(completed: false) }
   scope :completed, -> { where(completed: true) }

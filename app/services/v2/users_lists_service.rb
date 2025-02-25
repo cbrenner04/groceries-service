@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for UsersLists
-class UsersListsService
+class V2::UsersListsService
   class << self
     def list_users_by_status(list_id, status)
       users_lists = UsersList.where(list_id: list_id).public_send(status)
@@ -21,7 +21,7 @@ class UsersListsService
       pending_users_lists = UsersList.where(list_id: list_id).pending
       accepted_users_lists.to_a
                           .concat(pending_users_lists.to_a)
-                          .map { |user_list| User.find(user_list.user_id) }
+                          .map { |user_list| User.find(user_list.user_id).email }
     end
 
     def create_users_list(user, list)

@@ -22,7 +22,7 @@ class V2::ListsService
         completed_items: ordered_items(list).completed.not_refreshed,
         # TODO: how we handling this moving forward?
         # categories: list.categories,
-        list_users: UsersListsService.list_users(list.id),
+        list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
         available_list_item_configurations: user.available_list_item_configurations,

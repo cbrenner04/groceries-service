@@ -92,15 +92,15 @@ class V1::UsersListsController < ProtectedRouteController
   end
 
   def accepted_lists
-    UsersListsService.list_users_by_status(params[:list_id], "accepted")
+    V1::UsersListsService.list_users_by_status(params[:list_id], "accepted")
   end
 
   def pending_lists
-    UsersListsService.list_users_by_status(params[:list_id], "pending")
+    V1::UsersListsService.list_users_by_status(params[:list_id], "pending")
   end
 
   def refused_lists
-    UsersListsService.list_users_by_status(params[:list_id], "refused")
+    V1::UsersListsService.list_users_by_status(params[:list_id], "refused")
   end
 
   def accept_list_share

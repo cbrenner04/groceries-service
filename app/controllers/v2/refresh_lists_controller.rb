@@ -9,7 +9,7 @@ class V2::RefreshListsController < ProtectedRouteController
     list.update!(refreshed: true)
     new_list = V2::ListsService.create_new_list_from(list)
     new_list.update!(list_item_configuration_id: list.list_item_configuration_id)
-    users_list = UsersListsService.create_users_list(current_user, new_list)
+    users_list = V2::UsersListsService.create_users_list(current_user, new_list)
     V2::ListsService.create_new_items(list, new_list, current_user)
     render json: V2::ListsService.list_response(new_list, users_list, current_user)
   end
