@@ -8,7 +8,6 @@ class V2::BulkUpdateService
     @current_user = current_user
   end
 
-  # TODO: `list_users` is legacy functionality for "ToDo Lists", not entirely sure how we will mimic this in UX
   def show_body
     { items: items, list: list, lists: lists, list_users: V2::UsersListsService.list_users(list.id) }
   end

@@ -56,8 +56,7 @@ class V2::ListsController < ProtectedRouteController
   end
 
   def list_params
-    # TODO: remove `type` when `type` attr is removed from List
-    @list_params ||= params.expect(list: %i[user name completed refreshed type list_item_configuration_id])
+    @list_params ||= params.expect(list: %i[user name completed refreshed list_item_configuration_id])
   end
 
   def users_list

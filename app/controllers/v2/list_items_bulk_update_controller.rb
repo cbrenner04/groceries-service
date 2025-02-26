@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: should this be rethought?
+
 # /v2/lists/:list_id/list_items/bulk_update
 # controller for bulk updating list items
 class V2::ListItemsBulkUpdateController < ProtectedRouteController

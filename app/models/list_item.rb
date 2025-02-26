@@ -13,6 +13,10 @@ class ListItem < ApplicationRecord
   scope :not_refreshed, -> { where(refreshed: false) }
   scope :refreshed, -> { where(refreshed: true) }
 
+  # this is kind of weird but without it you'll get a 500 and an error from the database if `nil` is supplied
+  validates :completed, inclusion: { in: [true, false] }, allow_nil: false
+  validates :refreshed, inclusion: { in: [true, false] }, allow_nil: false
+
   # TODO: currently `ordered` is different based on the item configuration. do we continue this?
   def self.ordered
     order(created_at: :asc)

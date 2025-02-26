@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :lists, only: [:index, :show, :create, :edit, :update, :destroy] do
       resource :refresh_list, only: [:create]
       collection { resource :merge_lists, only: [:create] }
-      resources :list_items, only: [:create, :edit, :update, :destroy] do
+      resources :list_items, only: [:index, :show, :create, :edit, :update, :destroy] do
         collection do
           resource :bulk_update, only: [:show, :update], controller: "list_items_bulk_update", as: :list_items_bulk_update
         end
