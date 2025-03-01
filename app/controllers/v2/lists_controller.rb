@@ -3,6 +3,7 @@
 # /v2/lists
 class V2::ListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[show]
+  before_action :require_list_existence, only: %i[show edit update destroy]
   before_action :require_list_owner, only: %i[edit update destroy]
 
   # GET /
@@ -61,6 +62,12 @@ class V2::ListsController < ProtectedRouteController
 
   def users_list
     @users_list ||= UsersList.find_by(list: list, user: current_user)
+  end
+
+  def require_list_existence
+    list
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   def require_list_access

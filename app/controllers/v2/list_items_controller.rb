@@ -6,6 +6,7 @@
 class V2::ListItemsController < ProtectedRouteController
   before_action :require_list_access
   before_action :require_write_access, only: %i[create edit update destroy]
+  before_action :require_item_existence, only: %i[show edit update destroy]
 
   # GET /
   def index
@@ -20,8 +21,6 @@ class V2::ListItemsController < ProtectedRouteController
   # GET /:id/edit
   def edit
     render json: { item: item, list: list, list_users: V2::UsersListsService.list_users(params[:list_id]) }
-  rescue ActiveRecord::RecordNotFound
-    head :not_found
   end
 
   # POST /
@@ -37,16 +36,12 @@ class V2::ListItemsController < ProtectedRouteController
     else
       render json: item.errors, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound
-    head :not_found
   end
 
   # DELETE /:id
   def destroy
     item.archive
     head :no_content
-  rescue ActiveRecord::RecordNotFound
-    head :not_found
   end
 
   private
@@ -76,8 +71,12 @@ class V2::ListItemsController < ProtectedRouteController
   end
 
   def require_write_access
-    return if users_list&.permissions == "write"
+    head :forbidden unless users_list&.permissions == "write"
+  end
 
-    head :forbidden
+  def require_item_existence
+    item
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 end

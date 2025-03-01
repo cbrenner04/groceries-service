@@ -16,13 +16,15 @@ class V2::RefreshListsController < ProtectedRouteController
 
   private
 
+  def list
+    @list ||= List.find(params[:list_id])
+  end
+
   def require_list_owner
     return if list.owner == current_user
 
     head :forbidden
-  end
-
-  def list
-    @list ||= List.find(params[:list_id])
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 end

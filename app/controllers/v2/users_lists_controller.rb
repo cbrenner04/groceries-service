@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: are we handling record not found?
+
 # /v2/lists/:list_id/users_lists
 class V2::UsersListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[index update]

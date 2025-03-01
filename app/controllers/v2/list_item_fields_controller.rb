@@ -82,7 +82,7 @@ class V2::ListItemFieldsController < ProtectedRouteController
   end
 
   def require_field_existence
-    head :not_found unless item_field
+    item_field
   rescue ActiveRecord::RecordNotFound
     head :not_found
   end

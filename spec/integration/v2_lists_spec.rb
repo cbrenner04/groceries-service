@@ -21,7 +21,15 @@ describe "/v2/lists", type: :request do
   end
 
   describe "GET /:id" do
-    context "when a user has not been invited" do
+    describe "when list does not exist" do
+      it "responds with 404" do
+        get v2_list_path("foobar"), headers: auth_params
+
+        expect(response).to have_http_status :not_found
+      end
+    end
+
+    describe "when a user has not been invited" do
       before { list.users_lists.delete_all }
 
       it "responds with forbidden" do
@@ -31,7 +39,7 @@ describe "/v2/lists", type: :request do
       end
     end
 
-    context "when a user has been invited" do
+    describe "when a user has been invited" do
       context "when invitee has not accepted" do
         before { list.users_lists.find_by(user: user).update!(has_accepted: nil) }
 
@@ -76,7 +84,15 @@ describe "/v2/lists", type: :request do
   end
 
   describe "GET /:id/edit" do
-    context "when user is not owner" do
+    describe "when list does not exist" do
+      it "responds with 404" do
+        get edit_v2_list_path("foobar"), headers: auth_params
+
+        expect(response).to have_http_status :not_found
+      end
+    end
+
+    describe "when user is not owner" do
       it "responds with forbidden" do
         get edit_v2_list_path(list.id), headers: auth_params
 
@@ -84,7 +100,7 @@ describe "/v2/lists", type: :request do
       end
     end
 
-    context "when user is owner" do
+    describe "when user is owner" do
       before { list.update!(owner: user) }
 
       it "responds with success and correct payload" do
@@ -127,6 +143,14 @@ describe "/v2/lists", type: :request do
   end
 
   describe "PUT /:id" do
+    describe "when list does not exist" do
+      it "responds with 404" do
+        put v2_list_path("foobar"), params: { list: { name: "bar" } }, headers: auth_params
+
+        expect(response).to have_http_status :not_found
+      end
+    end
+
     context "when user is not owner" do
       it "responds with forbidden" do
         put v2_list_path(list.id), params: { list: { name: "bar" } }, headers: auth_params
@@ -207,7 +231,15 @@ describe "/v2/lists", type: :request do
   end
 
   describe "DELETE /:id" do
-    context "when user is not owner" do
+    describe "when list does not exist" do
+      it "responds with 404" do
+        delete v2_list_path("foobar"), headers: auth_params
+
+        expect(response).to have_http_status :not_found
+      end
+    end
+
+    describe "when user is not owner" do
       it "responds with forbidden" do
         delete v2_list_path(list.id), headers: auth_params
 
@@ -215,7 +247,7 @@ describe "/v2/lists", type: :request do
       end
     end
 
-    context "when user is owner" do
+    describe "when user is owner" do
       context "when previous and next list exist" do
         it "destroys a list and updates previous and next list" do
           prev_list = create(:list, name: "foo", owner: user)
