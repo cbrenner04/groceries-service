@@ -30,7 +30,7 @@ describe "/v2/lists/:list_id/refresh_list", type: :request do
         it "creates new list and items" do
           list_item_config = user.list_item_configurations.create!(name: "foo")
           list_item_field_config = list_item_config
-                                   .list_item_field_configuration.create!(label: "foo", data_type: "free_text")
+                                   .list_item_field_configurations.create!(label: "foo", data_type: "free_text")
           list = List.create!(name: "NewList", owner: user, completed: true,
                               list_item_configuration_id: list_item_config.id)
           list_item = ListItem.create!(user: user, list: list)
