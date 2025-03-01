@@ -7,4 +7,8 @@ class ListItemField < ApplicationRecord
   belongs_to :list_item
 
   validates :data, presence: true
+
+  def archive
+    update archived_at: Time.zone.now
+  end
 end
