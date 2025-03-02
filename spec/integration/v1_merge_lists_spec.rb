@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/lists/v1_merge_lists", type: :request do
+describe "v1/lists/merge_lists", type: :request do
   let(:user) { create(:user_with_lists) }
 
   before { login user }

@@ -10,7 +10,7 @@ class V1::ListItemsController < ProtectedRouteController
     categories = list.categories
     response_body = { item: item, list: list, categories: categories }
     if list.type == "ToDoList"
-      list_users = UsersListsService.list_users(params[:list_id])
+      list_users = V1::UsersListsService.list_users(params[:list_id])
       response_body[:list_users] = list_users
     end
     render json: response_body

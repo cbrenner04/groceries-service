@@ -23,7 +23,6 @@ class List < ApplicationRecord
   has_many :users_lists, dependent: :destroy
   has_many :users, through: :users_lists, source: :user, dependent: :destroy
   belongs_to :owner, class_name: "User", inverse_of: :lists
-  has_one :list_item_configuration, dependent: :destroy
   has_many :list_items, dependent: :destroy
 
   scope :descending, -> { order(created_at: :desc) }
@@ -38,5 +37,9 @@ class List < ApplicationRecord
 
   def as_json(options = {})
     super(options.merge(methods: :type))
+  end
+
+  def list_item_configuration
+    ListItemConfiguration.find(list_item_configuration_id)
   end
 end

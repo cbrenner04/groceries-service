@@ -46,7 +46,7 @@ Metrics/MethodLength:
     - spec/**/*
 
 RSpec/NestedGroups:
-  Max: 6
+  Enabled: false
 
 RSpec/ExampleLength:
   Enabled: false
@@ -58,7 +58,7 @@ RSpec/MessageChain:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 7
+  Enabled: false
 
 RSpecRails/InferredSpecType:
   Enabled: false

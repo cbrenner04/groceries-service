@@ -7,7 +7,7 @@ class V1::ListItemsBulkUpdateController < ProtectedRouteController
 
   # GET /
   def show
-    service = BulkUpdateService.new(params, {}, current_user)
+    service = V1::BulkUpdateService.new(params, {}, current_user)
     render json: service.show_body
   rescue ActiveRecord::RecordNotFound
     render json: "One or more items were not found", status: :not_found
@@ -16,7 +16,7 @@ class V1::ListItemsBulkUpdateController < ProtectedRouteController
   # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
-    service = BulkUpdateService.new(params, item_params, current_user)
+    service = V1::BulkUpdateService.new(params, item_params, current_user)
     service.update_current_items
     service.create_new_items if item_params[:move] || item_params[:copy]
     service.items.each(&:archive) if item_params[:move]

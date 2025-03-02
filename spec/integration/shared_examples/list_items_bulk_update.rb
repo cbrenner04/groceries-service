@@ -71,7 +71,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
             "type" => list[:type],
             "owner_id" => list[:owner_id],
             "created_at" => list[:created_at].iso8601(3),
-            "updated_at" => list[:updated_at].iso8601(3)
+            "updated_at" => list[:updated_at].iso8601(3),
+            "list_item_configuration_id" => nil
           )
           expect(response_body["categories"]).to eq(list.categories)
           expect(response_body["lists"].count).to eq 1
@@ -85,7 +86,8 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
             "created_at" => other_list[:created_at].iso8601(3),
             "has_accepted" => true,
             "user_id" => user.id,
-            "users_list_id" => other_users_list.id
+            "users_list_id" => other_users_list.id,
+            "list_item_configuration_id" => nil
           )
         end
       end
