@@ -13,6 +13,7 @@ describe "/v2/lists", type: :request do
       get v2_lists_path, headers: auth_params
 
       response_body = JSON.parse(response.body)
+
       expect(response).to have_http_status :success
       expect(response_body["accepted_lists"].count).to eq user.accepted_lists.count
       expect(response_body["pending_lists"].count).to eq user.pending_lists.count

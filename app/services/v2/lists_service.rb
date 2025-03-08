@@ -9,7 +9,7 @@ class V2::ListsService
         pending_lists: user.pending_lists,
         current_user_id: user.id,
         current_list_permissions: user.current_list_permissions,
-        available_list_item_configurations: user.available_list_item_configurations
+        list_item_configurations: user.list_item_configurations
       }
     end
 
@@ -25,7 +25,7 @@ class V2::ListsService
         list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
-        available_list_item_configurations: user.available_list_item_configurations,
+        list_item_configurations: user.list_item_configurations,
         list_item_configuration: list.list_item_configuration
       }
     end
