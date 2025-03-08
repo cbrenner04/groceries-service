@@ -91,8 +91,4 @@ class User < ApplicationRecord
   def write_lists
     List.find_by_sql(write_lists_query(id))
   end
-
-  def available_list_item_configurations
-    list_item_configurations.concat(ListItemConfiguration.public_configs)
-  end
 end
