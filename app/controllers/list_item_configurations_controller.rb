@@ -54,7 +54,7 @@ class ListItemConfigurationsController < ProtectedRouteController
   end
 
   def item_configuration_params
-    @item_configuration_params ||= params.expect(list_item_configuration: %i[name allow_other_users_to_view])
+    @item_configuration_params ||= params.expect(list_item_configuration: %i[name])
   end
 
   def require_configuration_existence

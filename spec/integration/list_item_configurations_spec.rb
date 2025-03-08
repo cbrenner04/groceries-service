@@ -21,7 +21,6 @@ describe "/list_item_configurations", type: :request do
       expect(response_body.count).to eq 1
       expect(response_body.first).to eq(
         {
-          "allow_other_users_to_view" => list_item_configuration[:allow_other_users_to_view],
           "archived_at" => nil,
           "created_at" => list_item_configuration[:created_at].iso8601(3),
           "id" => list_item_configuration[:id],
@@ -54,7 +53,6 @@ describe "/list_item_configurations", type: :request do
         expect(new_configuration[:name]).to eq name
         expect(JSON.parse(response.body)).to eq(
           {
-            "allow_other_users_to_view" => false,
             "archived_at" => nil,
             "created_at" => new_configuration[:created_at].iso8601(3),
             "id" => new_configuration[:id],
@@ -90,8 +88,7 @@ describe "/list_item_configurations", type: :request do
             headers: auth_params,
             params: {
               list_item_configuration: {
-                name: "foobar",
-                allow_other_users_to_view: true
+                name: "foobar"
               }
             }
 
@@ -134,8 +131,7 @@ describe "/list_item_configurations", type: :request do
               headers: auth_params,
               params: {
                 list_item_configuration: {
-                  name: "foobar",
-                  allow_other_users_to_view: true
+                  name: "foobar"
                 }
               }
 
@@ -160,7 +156,6 @@ describe "/list_item_configurations", type: :request do
           expect(response).to have_http_status :ok
           expect(JSON.parse(response.body)).to eq(
             {
-              "allow_other_users_to_view" => list_item_configuration[:allow_other_users_to_view],
               "archived_at" => nil,
               "created_at" => list_item_configuration[:created_at].iso8601(3),
               "id" => list_item_configuration[:id],
@@ -179,7 +174,6 @@ describe "/list_item_configurations", type: :request do
           expect(response).to have_http_status :ok
           expect(JSON.parse(response.body)).to eq(
             {
-              "allow_other_users_to_view" => list_item_configuration[:allow_other_users_to_view],
               "archived_at" => nil,
               "created_at" => list_item_configuration[:created_at].iso8601(3),
               "id" => list_item_configuration[:id],
@@ -210,14 +204,12 @@ describe "/list_item_configurations", type: :request do
         context "with good params" do
           it "updates configuration" do
             expect(list_item_configuration[:name]).to eq "MyString"
-            expect(list_item_configuration[:allow_other_users_to_view]).to be false
 
             put list_item_configuration_path(list_item_configuration.id),
                 headers: auth_params,
                 params: {
                   list_item_configuration: {
-                    name: "foobar",
-                    allow_other_users_to_view: true
+                    name: "foobar"
                   }
                 }
 
@@ -226,7 +218,6 @@ describe "/list_item_configurations", type: :request do
             expect(response).to have_http_status :ok
             expect(JSON.parse(response.body)).to eq(
               {
-                "allow_other_users_to_view" => true,
                 "archived_at" => nil,
                 "created_at" => list_item_configuration[:created_at].iso8601(3),
                 "id" => list_item_configuration[:id],
@@ -236,7 +227,6 @@ describe "/list_item_configurations", type: :request do
               }
             )
             expect(list_item_configuration[:name]).to eq "foobar"
-            expect(list_item_configuration[:allow_other_users_to_view]).to be true
           end
         end
       end
