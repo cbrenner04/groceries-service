@@ -6,6 +6,7 @@ class ListItemFieldConfiguration < ApplicationRecord
   has_many :list_item_fields, dependent: nil
 
   validates :label, presence: true
+  validates :position, presence: true
   validates :data_type,
             presence: true,
             inclusion: { in: %w[boolean date_time free_text number],

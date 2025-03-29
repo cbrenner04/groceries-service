@@ -8,7 +8,7 @@ class ListItem < ApplicationRecord
   accepts_nested_attributes_for :list_item_fields
 
   scope :not_completed, -> { where(completed: false) }
-  scope :completed, -> { where(completed: true) }
+  scope :completed, -> { where(completed: true).where(refreshed: false) }
   scope :not_archived, -> { where(archived_at: nil) }
   scope :not_refreshed, -> { where(refreshed: false) }
   scope :refreshed, -> { where(refreshed: true) }
