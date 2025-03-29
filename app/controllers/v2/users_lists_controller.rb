@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-# /lists/:list_id/users_lists
-class UsersListsController < ProtectedRouteController
+# TODO: are we handling record not found?
+
+# /v2/lists/:list_id/users_lists
+class V2::UsersListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[index update]
   before_action :require_write_access, only: %i[create]
 
@@ -19,11 +21,6 @@ class UsersListsController < ProtectedRouteController
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def create
     # given the manipulation before `.create`, we need to check for required params
-    # this can be handled in the params definition but causes issues for updates. that would look like
-    # params
-    #   .require(:users_list)
-    #   .permit(:user_id, :list_id, :has_accepted, :permissions)
-    #   .tap { |nested_params| nested_params.require(%i[user_id list_id]) }
     unless users_list_params[:user_id].present? && users_list_params[:list_id].present?
       return head :unprocessable_entity
     end
@@ -69,9 +66,7 @@ class UsersListsController < ProtectedRouteController
   private
 
   def users_list_params
-    @users_list_params ||= params
-                           .require(:users_list)
-                           .permit(:user_id, :list_id, :has_accepted, :permissions)
+    @users_list_params ||= params.expect(users_list: %i[user_id list_id has_accepted permissions])
   end
 
   def users_list
@@ -99,15 +94,15 @@ class UsersListsController < ProtectedRouteController
   end
 
   def accepted_lists
-    UsersListsService.list_users_by_status(params[:list_id], "accepted")
+    V2::UsersListsService.list_users_by_status(params[:list_id], "accepted")
   end
 
   def pending_lists
-    UsersListsService.list_users_by_status(params[:list_id], "pending")
+    V2::UsersListsService.list_users_by_status(params[:list_id], "pending")
   end
 
   def refused_lists
-    UsersListsService.list_users_by_status(params[:list_id], "refused")
+    V2::UsersListsService.list_users_by_status(params[:list_id], "refused")
   end
 
   def accept_list_share

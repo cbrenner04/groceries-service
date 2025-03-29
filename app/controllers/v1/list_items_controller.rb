@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# /v1/lists/:list_id/list_items
 # wrapper for specific list items controllers
-class ListItemsController < ProtectedRouteController
+class V1::ListItemsController < ProtectedRouteController
   before_action :require_write_access
 
   # GET /:id/edit
@@ -9,7 +10,7 @@ class ListItemsController < ProtectedRouteController
     categories = list.categories
     response_body = { item: item, list: list, categories: categories }
     if list.type == "ToDoList"
-      list_users = UsersListsService.list_users(params[:list_id])
+      list_users = V1::UsersListsService.list_users(params[:list_id])
       response_body[:list_users] = list_users
     end
     render json: response_body
@@ -69,7 +70,7 @@ class ListItemsController < ProtectedRouteController
       SimpleList: %i[content completed refreshed],
       ToDoList: %i[task assignee_id due_by completed refreshed]
     }[list.type.to_sym]
-    params.require(:list_item).permit(generic_params.concat(specific_params))
+    params.expect(list_item: generic_params.concat(specific_params))
   end
 
   def require_write_access

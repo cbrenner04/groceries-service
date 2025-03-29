@@ -11,7 +11,7 @@ AllCops:
     - config/**/*
     - db/**/*
     - vendor/**/*
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.4
   DisplayCopNames: true
   NewCops: enable
 
@@ -23,6 +23,9 @@ Layout/LineLength:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
 
 # Spec-related overrides below
 
@@ -43,7 +46,7 @@ Metrics/MethodLength:
     - spec/**/*
 
 RSpec/NestedGroups:
-  Max: 6
+  Enabled: false
 
 RSpec/ExampleLength:
   Enabled: false
@@ -55,7 +58,7 @@ RSpec/MessageChain:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 7
+  Enabled: false
 
 RSpecRails/InferredSpecType:
   Enabled: false

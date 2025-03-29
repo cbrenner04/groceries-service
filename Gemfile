@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.1"
+ruby "3.4.2"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -14,7 +14,7 @@ gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 6.4", ">= 6.4.3"
 gem "rack-cors", "~> 2.0", ">= 2.0.0"
-gem "rails", "~> 7.2.2", ">= 7.2.2.1"
+gem "rails", "~> 8.0.0", ">= 8.0.1"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 7.0", ">= 7.0.0"
 gem "sentry-rails", "~> 5.19", ">= 5.19.0"
@@ -47,7 +47,6 @@ group :development, :test do
 end
 
 group :development do
-  gem "annotate", "~> 3.2", ">= 3.2.0"
   gem "listen", "~> 3.2"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.1.0"

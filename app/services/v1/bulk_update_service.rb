@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for builk update controllers
-class BulkUpdateService
+class V1::BulkUpdateService
   def initialize(params, item_params, current_user)
     @params = params
     @item_params = item_params
@@ -10,7 +10,7 @@ class BulkUpdateService
 
   def show_body
     body = { items: items, list: list, lists: lists, categories: list.categories }
-    body[:list_users] = UsersListsService.list_users(list.id) if list_type == "ToDoList"
+    body[:list_users] = V1::UsersListsService.list_users(list.id) if list_type == "ToDoList"
     body
   end
 

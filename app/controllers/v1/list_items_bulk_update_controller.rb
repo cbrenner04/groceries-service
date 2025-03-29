@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+# /v1/lists/:list_id/list_items/bulk_update
 # generic controller for bulk updating list items
-class ListItemsBulkUpdateController < ProtectedRouteController
+class V1::ListItemsBulkUpdateController < ProtectedRouteController
   before_action :require_write_access
 
   # GET /
   def show
-    service = BulkUpdateService.new(params, {}, current_user)
+    service = V1::BulkUpdateService.new(params, {}, current_user)
     render json: service.show_body
   rescue ActiveRecord::RecordNotFound
     render json: "One or more items were not found", status: :not_found
@@ -15,7 +16,7 @@ class ListItemsBulkUpdateController < ProtectedRouteController
   # PUT /
   # rubocop:disable Metrics/AbcSize
   def update
-    service = BulkUpdateService.new(params, item_params, current_user)
+    service = V1::BulkUpdateService.new(params, item_params, current_user)
     service.update_current_items
     service.create_new_items if item_params[:move] || item_params[:copy]
     service.items.each(&:archive) if item_params[:move]
@@ -32,10 +33,9 @@ class ListItemsBulkUpdateController < ProtectedRouteController
 
   def item_params
     params
-      .require(:list_items)
-      .permit(:author, :clear_author, :quantity, :clear_quantity, :artist, :clear_artist, :album, :clear_album,
-              :assignee_id, :clear_assignee, :due_by, :clear_due_by, :category, :clear_category, :copy, :move,
-              :existing_list_id, :new_list_name, :update_current_items)
+      .expect(list_items: %i[author clear_author quantity clear_quantity artist clear_artist album clear_album
+                             assignee_id clear_assignee due_by clear_due_by category clear_category copy move
+                             existing_list_id new_list_name update_current_items])
   end
 
   def require_write_access

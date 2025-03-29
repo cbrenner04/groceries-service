@@ -24,5 +24,6 @@ FactoryBot.define do
     sequence(:name) { |n| "MyString#{n}" }
     owner factory: %i[user]
     type { "GroceryList" }
+    list_item_configuration_id { nil }
   end
 end
