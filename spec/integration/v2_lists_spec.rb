@@ -77,6 +77,8 @@ describe "/v2/lists", type: :request do
 
           first_completed_item = ListItem.where(list: list).not_archived.ordered.completed.first.id
           expect(response_body["completed_items"].first["id"]).to eq(first_completed_item)
+          # TODO: add checks for fields in the response
+
           # TODO: still need to decide on this
           # expect(response_body["categories"]).to include "foo"
         end

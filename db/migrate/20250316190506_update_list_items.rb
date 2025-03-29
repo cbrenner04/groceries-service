@@ -6,42 +6,42 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       puts "#{user.email} configurations"
       puts "book list configuration"
       item_config = user.list_item_configurations.create!(name: "book list template")
-      item_config.list_item_field_configurations.create!(label: "author", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "title", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "number_in_series", data_type: "number")
-      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "read", data_type: "boolean")
+      item_config.list_item_field_configurations.create!(label: "author", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.create!(label: "title", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.create!(label: "number_in_series", data_type: "number", position: 3)
+      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text", position: 5)
+      item_config.list_item_field_configurations.create!(label: "read", data_type: "boolean", position: 6)
 
       puts "grocery list configuration"
       item_config = user.list_item_configurations.create!(name: "grocery list template")
-      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "product", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "quantity", data_type: "free_text")
+      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text", position: 3)
+      item_config.list_item_field_configurations.create!(label: "product", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.create!(label: "quantity", data_type: "free_text", position: 1)
 
 
       puts "music list configuration"
       item_config = user.list_item_configurations.create!(name: "music list template")
-      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "title", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "artist", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "album", data_type: "free_text")
+      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text", position: 4)
+      item_config.list_item_field_configurations.create!(label: "title", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.create!(label: "artist", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.create!(label: "album", data_type: "free_text", position: 3)
 
       puts "simple list configurations"
       # create a template for simple list with no category
       item_config = user.list_item_configurations.create!(name: "simple list template")
-      item_config.list_item_field_configurations.create!(label: "content", data_type: "free_text")
+      item_config.list_item_field_configurations.create!(label: "content", data_type: "free_text", position: 1)
 
       # the current simple list is with category
       item_config = user.list_item_configurations.create!(name: "simple list with category template")
-      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "content", data_type: "free_text")
+      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.create!(label: "content", data_type: "free_text", position: 1)
 
       puts "to do list configuration"
       item_config = user.list_item_configurations.create!(name: "to do list template")
-      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "due_by", data_type: "date_time")
-      item_config.list_item_field_configurations.create!(label: "task", data_type: "free_text")
-      item_config.list_item_field_configurations.create!(label: "assignee", data_type: "free_text")
+      item_config.list_item_field_configurations.create!(label: "category", data_type: "free_text", position: 4)
+      item_config.list_item_field_configurations.create!(label: "due_by", data_type: "date_time", position: 3)
+      item_config.list_item_field_configurations.create!(label: "task", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.create!(label: "assignee", data_type: "free_text", position: 2)
     end
 
     # add data for all existing book lists
