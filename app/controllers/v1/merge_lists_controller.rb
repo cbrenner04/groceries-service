@@ -13,12 +13,7 @@ class V1::MergeListsController < ProtectedRouteController
   private
 
   def merge_list_params
-<<<<<<< HEAD:app/controllers/merge_lists_controller.rb
-    params
-      .expect(merge_lists: %i[list_ids new_list_name])
-=======
     params.expect(merge_lists: %i[list_ids new_list_name])
->>>>>>> 30c143d364aa433322d0614b5b805325ba020e49:app/controllers/v1/merge_lists_controller.rb
   end
 
   def lists

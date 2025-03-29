@@ -66,12 +66,7 @@ class V2::UsersListsController < ProtectedRouteController
   private
 
   def users_list_params
-<<<<<<< HEAD:app/controllers/users_lists_controller.rb
-    @users_list_params ||= params
-                           .expect(users_list: %i[user_id list_id has_accepted permissions])
-=======
     @users_list_params ||= params.expect(users_list: %i[user_id list_id has_accepted permissions])
->>>>>>> 30c143d364aa433322d0614b5b805325ba020e49:app/controllers/v2/users_lists_controller.rb
   end
 
   def users_list
