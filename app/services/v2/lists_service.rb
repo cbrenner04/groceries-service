@@ -18,8 +18,8 @@ class V2::ListsService
       {
         current_user_id: user.id,
         list: list,
-        not_completed_items: ordered_items(list, :not_completed),
-        completed_items: ordered_items(list, :completed),
+        not_completed_items: ordered_items(list).not_completed,
+        completed_items: ordered_items(list).completed.not_refreshed,
         # TODO: how we handling this moving forward?
         # categories: list.categories,
         list_users: V2::UsersListsService.list_users(list.id),
@@ -31,19 +31,8 @@ class V2::ListsService
     end
     # rubocop:enable Metrics/MethodLength
 
-    def ordered_items(list, additional_scope)
-      items = list.list_items.not_archived.ordered.send(additional_scope)
-      items.map do |item|
-        fields = item.list_item_fields.map do |field|
-          field.attributes.merge(
-            {
-              label: field.list_item_field_configuration.label,
-              position: field.list_item_field_configuration.position
-            }
-          )
-        end
-        item.attributes.merge(fields: fields.sort_by { |field| field[:position] })
-      end
+    def ordered_items(list)
+      list.list_items.not_archived.ordered
     end
 
     def lists_to_update(list, user)
