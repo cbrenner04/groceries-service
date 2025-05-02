@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_01_212046) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_16_190506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_212046) do
     t.uuid "list_item_configuration_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", null: false
     t.index ["list_item_configuration_id"], name: "idx_on_list_item_configuration_id_0c41bb26c8"
   end
 
