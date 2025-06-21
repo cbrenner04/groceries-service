@@ -234,7 +234,7 @@ describe "/list_item_configurations", type: :request do
       describe "DELETE /:id" do
         it "archives the list item configuration and its related list item field configurations" do
           list_item_field_configuration =
-            list_item_configuration.list_item_field_configurations.create!(label: "foo", data_type: "free_text")
+            list_item_configuration.list_item_field_configurations.create!(label: "foo", data_type: "free_text", position: 1)
 
           expect(list_item_configuration.archived_at).to be_falsy
           expect(list_item_field_configuration.archived_at).to be_falsy

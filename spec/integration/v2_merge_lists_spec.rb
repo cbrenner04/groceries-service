@@ -11,7 +11,7 @@ describe "v2/lists/merge_lists", type: :request do
     it "creates a new list, users_list, and adds new items to the list" do
       list_item_config = user.list_item_configurations.create!(name: "foo")
       list_item_field_config = list_item_config
-                               .list_item_field_configurations.create!(label: "foo", data_type: "free_text")
+                               .list_item_field_configurations.create!(label: "foo", data_type: "free_text", position: 1)
       first_list = List.create!(name: "FirstList", owner: user, completed: true,
                                 list_item_configuration_id: list_item_config.id)
       second_list = List.create!(name: "SecondList", owner: user, completed: true,
