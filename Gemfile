@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.2"
+ruby "3.4.4"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -36,7 +36,7 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "database_cleaner", "~> 2.0", ">= 2.0.1"
   gem "factory_bot_rails", "~> 6.3", ">= 6.3.0"
-  gem "rspec-rails", "~> 7.0", ">= 7.0.0"
+  gem "rspec-rails", "~> 8.0", ">= 8.0.1"
   gem "rubocop", "~> 1.65", ">= 1.65.1"
   gem "rubocop-factory_bot", "~> 2.26", ">= 2.26.1"
   gem "rubocop-performance", "~> 1.21", ">= 1.21.0"
