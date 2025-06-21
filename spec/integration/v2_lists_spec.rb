@@ -82,6 +82,23 @@ describe "/v2/lists", type: :request do
           # TODO: still need to decide on this
           # expect(response_body["categories"]).to include "foo"
         end
+
+        it "returns fields sorted by position in not_completed_items" do
+          list_item = ListItem.create!(user: user, list: list, completed: false)
+          config1 = ListItemFieldConfiguration.create!(label: "A", data_type: "free_text", position: 2,
+                                                       list_item_configuration: list.list_item_configuration)
+          config2 = ListItemFieldConfiguration.create!(label: "B", data_type: "free_text", position: 1,
+                                                       list_item_configuration: list.list_item_configuration)
+          list_item.list_item_fields.create!(user: user, data: "foo", list_item_field_configuration: config1)
+          list_item.list_item_fields.create!(user: user, data: "bar", list_item_field_configuration: config2)
+
+          get v2_list_path(list.id), headers: auth_params
+          expect(response).to be_successful
+          response_body = JSON.parse(response.body)
+          fields = response_body["not_completed_items"].first["fields"]
+          expect(fields.map { |f| f["label"] }).to eq %w[B A]
+          expect(fields.map { |f| f["position"] }).to eq [1, 2]
+        end
       end
     end
   end

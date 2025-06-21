@@ -194,12 +194,43 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: nil,
-                       data_type: "free_text"
+                       data_type: "free_text",
+                       position: 1
                      }
                    }
 
               expect(response).to have_http_status :unprocessable_entity
               expect(JSON.parse(response.body)).to eq({ "label" => ["can't be blank"] })
+            end
+
+            describe "when position is blank" do
+              it "auto-assigns position and creates successfully" do
+                post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                     headers: auth_params,
+                     params: {
+                       list_item_field_configuration: {
+                         label: "foo",
+                         data_type: "free_text"
+                       }
+                     }
+
+                new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
+
+                expect(response).to have_http_status :ok
+                expect(JSON.parse(response.body)).to eq(
+                  {
+                    "archived_at" => nil,
+                    "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
+                    "data_type" => "free_text",
+                    "id" => new_list_item_field_configuration[:id],
+                    "label" => "foo",
+                    "list_item_configuration_id" => list_item_configuration[:id],
+                    "position" => new_list_item_field_configuration[:position],
+                    "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
+                  }
+                )
+                expect(new_list_item_field_configuration[:position]).to be > 0
+              end
             end
           end
 
@@ -210,7 +241,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: "foo",
-                       data_type: nil
+                       data_type: nil,
+                       position: 1
                      }
                    }
 
@@ -223,6 +255,36 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
             end
           end
 
+          describe "when position is not a blank" do
+            it "auto-assigns position and creates successfully" do
+              post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                   headers: auth_params,
+                   params: {
+                     list_item_field_configuration: {
+                       label: "foo",
+                       data_type: "free_text"
+                     }
+                   }
+
+              new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
+
+              expect(response).to have_http_status :ok
+              expect(JSON.parse(response.body)).to eq(
+                {
+                  "archived_at" => nil,
+                  "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
+                  "data_type" => "free_text",
+                  "id" => new_list_item_field_configuration[:id],
+                  "label" => "foo",
+                  "list_item_configuration_id" => list_item_configuration[:id],
+                  "position" => new_list_item_field_configuration[:position],
+                  "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
+                }
+              )
+              expect(new_list_item_field_configuration[:position]).to be > 0
+            end
+          end
+
           describe "when data_type is not one of the options" do
             it "returns 422" do
               post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
@@ -230,7 +292,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: "foo",
-                       data_type: "bar"
+                       data_type: "bar",
+                       position: 1
                      }
                    }
 
@@ -242,6 +305,23 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               )
             end
           end
+
+          describe "when position is not a number" do
+            it "returns 422" do
+              post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                   headers: auth_params,
+                   params: {
+                     list_item_field_configuration: {
+                       label: "foo",
+                       data_type: "free_text",
+                       position: "bar"
+                     }
+                   }
+
+              expect(response).to have_http_status :unprocessable_entity
+              expect(JSON.parse(response.body)).to eq({ "position" => ["is not a number"] })
+            end
+          end
         end
 
         context "with good params" do
@@ -251,7 +331,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                  params: {
                    list_item_field_configuration: {
                      label: "foo",
-                     data_type: "free_text"
+                     data_type: "free_text",
+                     position: 1
                    }
                  }
 
@@ -270,6 +351,38 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                 "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
               }
             )
+          end
+
+          it "creates a list item field configuration with auto-assigned position" do
+            post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                 headers: auth_params,
+                 params: {
+                   list_item_field_configuration: {
+                     label: "auto-positioned",
+                     data_type: "free_text"
+                   }
+                 }
+
+            puts "Response status: #{response.status}"
+            puts "Response body: #{response.body}"
+
+            new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
+
+            expect(response).to have_http_status :ok
+            expect(JSON.parse(response.body)).to eq(
+              {
+                "archived_at" => nil,
+                "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
+                "data_type" => "free_text",
+                "id" => new_list_item_field_configuration[:id],
+                "label" => "auto-positioned",
+                "list_item_configuration_id" => list_item_configuration[:id],
+                "position" => new_list_item_field_configuration[:position],
+                "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
+              }
+            )
+            # Verify that position was auto-assigned (should be greater than 0)
+            expect(new_list_item_field_configuration[:position]).to be > 0
           end
         end
       end

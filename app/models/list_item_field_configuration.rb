@@ -6,13 +6,13 @@ class ListItemFieldConfiguration < ApplicationRecord
   has_many :list_item_fields, dependent: nil
 
   validates :label, presence: true
-  validates :position, presence: true
+  validates :position, presence: true, numericality: { only_integer: true }
   validates :data_type,
             presence: true,
             inclusion: { in: %w[boolean date_time free_text number],
                          message: I18n.t("list_item_field_configuration_data_type_error") }
 
-  before_create :set_position
+  before_validation :set_position, on: :create
 
   def archive
     update archived_at: Time.zone.now

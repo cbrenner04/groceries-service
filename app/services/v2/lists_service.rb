@@ -29,8 +29,8 @@ class V2::ListsService
         list_item_configuration: list.list_item_configuration
       }
     end
-    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:disable Metrics/AbcSize
     def ordered_items(list, additional_scope)
       items = list.list_items.not_archived.ordered.send(additional_scope)
       items.map do |item|
@@ -45,6 +45,7 @@ class V2::ListsService
         item.attributes.merge(fields: fields.sort_by { |field| field[:position] })
       end
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def lists_to_update(list, user)
       user.write_lists.filter do |l_list|
