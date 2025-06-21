@@ -1,6 +1,20 @@
 class UpdateListItems < ActiveRecord::Migration[8.0]
   def up
     puts "Starting"
+    
+    # Add position column if it doesn't exist
+    unless column_exists?(:list_item_field_configurations, :position)
+      puts "Adding position column to list_item_field_configurations"
+      add_column :list_item_field_configurations, :position, :integer, null: false, default: 0
+      
+      # Set positions for existing records
+      ListItemConfiguration.find_each do |config|
+        config.list_item_field_configurations.order(:created_at).each_with_index do |field_config, index|
+          field_config.update_column(:position, index + 1)
+        end
+      end
+    end
+    
     # create "templates" for each user
     User.all.each do |user|
       puts "#{user.email} configurations"
