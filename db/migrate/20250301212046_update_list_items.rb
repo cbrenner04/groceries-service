@@ -6,42 +6,42 @@ class UpdateListItems < ActiveRecord::Migration[8.0]
       puts "#{user.email} configurations"
       puts "book list configuration"
       item_config = user.list_item_configurations.find_or_create_by!(name: "book list template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "author", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "title", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "number_in_series", data_type: "number")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "read", data_type: "boolean")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "author", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "title", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "number_in_series", data_type: "number", position: 3)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text", position: 4)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "read", data_type: "boolean", position: 5)
 
       puts "grocery list configuration"
       item_config = user.list_item_configurations.find_or_create_by!(name: "grocery list template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "product", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "quantity", data_type: "free_text")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "product", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "quantity", data_type: "free_text", position: 3)
 
 
       puts "music list configuration"
       item_config = user.list_item_configurations.find_or_create_by!(name: "music list template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "title", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "artist", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "album", data_type: "free_text")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "title", data_type: "free_text", position: 2)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "artist", data_type: "free_text", position: 3)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "album", data_type: "free_text", position: 4)
 
       puts "simple list configurations"
       # create a template for simple list with no category
       item_config = user.list_item_configurations.find_or_create_by!(name: "simple list template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "content", data_type: "free_text")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "content", data_type: "free_text", position: 1)
 
       # the current simple list is with category
       item_config = user.list_item_configurations.find_or_create_by!(name: "simple list with category template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "content", data_type: "free_text")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "content", data_type: "free_text", position: 2)
 
       puts "to do list configuration"
       item_config = user.list_item_configurations.find_or_create_by!(name: "to do list template")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "due_by", data_type: "date_time")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "task", data_type: "free_text")
-      item_config.list_item_field_configurations.find_or_create_by!(label: "assignee", data_type: "free_text")
+      item_config.list_item_field_configurations.find_or_create_by!(label: "category", data_type: "free_text", position: 1)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "due_by", data_type: "date_time", position: 2)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "task", data_type: "free_text", position: 3)
+      item_config.list_item_field_configurations.find_or_create_by!(label: "assignee", data_type: "free_text", position: 4)
     end
 
     # add data for all existing book lists
