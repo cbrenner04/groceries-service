@@ -11,7 +11,7 @@ class Users::InvitationsController < Devise::InvitationsController
       head :ok
     elsif list_id
       # if sharing a list, current user must have write permissions
-      if current_user_has_write_access
+      if current_user_has_write_access?
         # if the user exists, just create the users list otherwise do the inviting and create the users list
         invited_user ? share_list(invited_user) : invite_user_with_list
       end
@@ -78,7 +78,7 @@ class Users::InvitationsController < Devise::InvitationsController
     UsersList.create!(user_id: user.id, list_id: list_id)
   end
 
-  def current_user_has_write_access
+  def current_user_has_write_access?
     list = List.find(params[:list_id])
     users_list = UsersList.find_by(list: list, user: current_user)
     users_list&.permissions == "write"
