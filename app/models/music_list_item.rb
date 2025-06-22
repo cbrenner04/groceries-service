@@ -45,6 +45,6 @@ class MusicListItem < ApplicationRecord
   end
 
   def archive
-    update archived_at: Time.zone.now
+    update! archived_at: Time.zone.now
   end
 end

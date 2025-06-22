@@ -147,9 +147,13 @@ describe "/v2/lists", type: :request do
     describe "with valid params" do
       it "creates a new list" do
         expect do
-          post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } }, headers: auth_params
-        end.to change(List, :count).by 1
-        expect(List.last.owner).to eq user
+          post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } },
+                              headers: auth_params
+        end.not_to raise_error
+        expect(response).to have_http_status(:success)
+        json = JSON.parse(response.body)
+        expect(json["name"]).to eq("foo")
+        expect(List.find_by(id: json["id"]).owner).to eq user
       end
     end
 

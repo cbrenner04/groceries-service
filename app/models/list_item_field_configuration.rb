@@ -12,6 +12,7 @@ class ListItemFieldConfiguration < ApplicationRecord
             inclusion: { in: %w[boolean date_time free_text number],
                          message: I18n.t("list_item_field_configuration_data_type_error") }
 
+  # set position prior to validation on create in order to avoid validation errors
   before_validation :set_position, on: :create
 
   def archive

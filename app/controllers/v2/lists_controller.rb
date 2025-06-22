@@ -34,8 +34,11 @@ class V2::ListsController < ProtectedRouteController
 
   # PUT /:id
   def update
-    V2::ListsService.update_previous_and_next_list(users_list) if list_params[:completed]
-    if list.update(list_params)
+    update_attrs = prepare_update_attributes(list_params.to_h)
+
+    V2::ListsService.update_previous_and_next_list(users_list) if update_attrs["completed"]
+
+    if list.update(update_attrs)
       render json: list
     else
       render json: list.errors, status: :unprocessable_entity
@@ -57,7 +60,7 @@ class V2::ListsController < ProtectedRouteController
   end
 
   def list_params
-    @list_params ||= params.expect(list: %i[user name completed refreshed list_item_configuration_id])
+    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id])
   end
 
   def users_list
@@ -80,5 +83,10 @@ class V2::ListsController < ProtectedRouteController
     return if list.owner == current_user
 
     head :forbidden
+  end
+
+  def prepare_update_attributes(attrs)
+    attrs["completed"] = ActiveModel::Type::Boolean.new.cast(attrs["completed"]) if attrs.key?("completed")
+    attrs
   end
 end

@@ -11,7 +11,7 @@ describe "/v2/lists/:list_id/refresh_list", type: :request do
   describe "POST /" do
     context "when list does not exist" do
       it "responds with 404" do
-        post v2_list_refresh_list_path("foobar"), headers: auth_params
+        post v2_list_refresh_list_path("foobar"), headers: auth_params.merge("Accept" => "application/json")
 
         expect(response).to have_http_status :not_found
       end
@@ -20,7 +20,7 @@ describe "/v2/lists/:list_id/refresh_list", type: :request do
     context "when list does exist" do
       context "when user is not owner" do
         it "responds with forbidden" do
-          post v2_list_refresh_list_path(list.id), headers: auth_params
+          post v2_list_refresh_list_path(list.id), headers: auth_params.merge("Accept" => "application/json")
 
           expect(response).to have_http_status :forbidden
         end
@@ -39,7 +39,7 @@ describe "/v2/lists/:list_id/refresh_list", type: :request do
                                              list_item_field_configuration: list_item_field_config)
 
           expect do
-            post v2_list_refresh_list_path(list.id), headers: auth_params
+            post v2_list_refresh_list_path(list.id), headers: auth_params.merge("Accept" => "application/json")
           end.to change(List, :count).by(1).and change(ListItem, :count).by(1)
           new_list_item_field = ListItem.last.list_item_fields.first
           expect(new_list_item_field[:data]).to eq "foo"

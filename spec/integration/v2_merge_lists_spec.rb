@@ -25,8 +25,9 @@ describe "v2/lists/merge_lists", type: :request do
                                                 list_item_field_configuration: list_item_field_config)
       expect do
         post v2_merge_lists_path,
-             params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
-             headers: auth_params
+             params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}",
+                                      new_list_name: "foobar" } }.to_json,
+             headers: auth_params.merge("Content-Type" => "application/json", "Accept" => "application/json")
       end.to change(List, :count).by(1).and change(ListItem, :count).by(2).and change(UsersList, :count).by(1)
     end
   end
