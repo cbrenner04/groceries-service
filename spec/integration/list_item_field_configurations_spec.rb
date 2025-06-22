@@ -255,36 +255,6 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
             end
           end
 
-          describe "when position is not a blank" do
-            it "auto-assigns position and creates successfully" do
-              post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
-                   headers: auth_params,
-                   params: {
-                     list_item_field_configuration: {
-                       label: "foo",
-                       data_type: "free_text"
-                     }
-                   }
-
-              new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
-
-              expect(response).to have_http_status :ok
-              expect(JSON.parse(response.body)).to eq(
-                {
-                  "archived_at" => nil,
-                  "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
-                  "data_type" => "free_text",
-                  "id" => new_list_item_field_configuration[:id],
-                  "label" => "foo",
-                  "list_item_configuration_id" => list_item_configuration[:id],
-                  "position" => new_list_item_field_configuration[:position],
-                  "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
-                }
-              )
-              expect(new_list_item_field_configuration[:position]).to be > 0
-            end
-          end
-
           describe "when data_type is not one of the options" do
             it "returns 422" do
               post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
@@ -362,9 +332,6 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      data_type: "free_text"
                    }
                  }
-
-            puts "Response status: #{response.status}"
-            puts "Response body: #{response.body}"
 
             new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
 
