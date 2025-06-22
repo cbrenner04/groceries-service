@@ -46,6 +46,8 @@ class V1::ListsController < ProtectedRouteController
     update_previous_and_next_list
     list.archive
     head :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors.messages, status: :unprocessable_entity
   end
 
   private

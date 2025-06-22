@@ -194,12 +194,43 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: nil,
-                       data_type: "free_text"
+                       data_type: "free_text",
+                       position: 1
                      }
                    }
 
               expect(response).to have_http_status :unprocessable_entity
               expect(JSON.parse(response.body)).to eq({ "label" => ["can't be blank"] })
+            end
+
+            describe "when position is blank" do
+              it "auto-assigns position and creates successfully" do
+                post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                     headers: auth_params,
+                     params: {
+                       list_item_field_configuration: {
+                         label: "foo",
+                         data_type: "free_text"
+                       }
+                     }
+
+                new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
+
+                expect(response).to have_http_status :ok
+                expect(JSON.parse(response.body)).to eq(
+                  {
+                    "archived_at" => nil,
+                    "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
+                    "data_type" => "free_text",
+                    "id" => new_list_item_field_configuration[:id],
+                    "label" => "foo",
+                    "list_item_configuration_id" => list_item_configuration[:id],
+                    "position" => new_list_item_field_configuration[:position],
+                    "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
+                  }
+                )
+                expect(new_list_item_field_configuration[:position]).to be > 0
+              end
             end
           end
 
@@ -210,7 +241,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: "foo",
-                       data_type: nil
+                       data_type: nil,
+                       position: 1
                      }
                    }
 
@@ -230,7 +262,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                    params: {
                      list_item_field_configuration: {
                        label: "foo",
-                       data_type: "bar"
+                       data_type: "bar",
+                       position: 1
                      }
                    }
 
@@ -242,6 +275,23 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               )
             end
           end
+
+          describe "when position is not a number" do
+            it "returns 422" do
+              post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                   headers: auth_params,
+                   params: {
+                     list_item_field_configuration: {
+                       label: "foo",
+                       data_type: "free_text",
+                       position: "bar"
+                     }
+                   }
+
+              expect(response).to have_http_status :unprocessable_entity
+              expect(JSON.parse(response.body)).to eq({ "position" => ["is not a number"] })
+            end
+          end
         end
 
         context "with good params" do
@@ -251,7 +301,8 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                  params: {
                    list_item_field_configuration: {
                      label: "foo",
-                     data_type: "free_text"
+                     data_type: "free_text",
+                     position: 1
                    }
                  }
 
@@ -478,6 +529,24 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
 
             expect(response).to have_http_status :no_content
             expect(list_item_field_configuration.archived_at).to be_truthy
+          end
+
+          context "when archive fails due to validation errors" do
+            it "returns 422 unprocessable_entity" do
+              # Mock the archive method to raise validation error
+              allow(ListItemFieldConfiguration).to receive(:find).with(list_item_field_configuration.id.to_s)
+                                                                 .and_return(list_item_field_configuration)
+              allow(list_item_field_configuration).to receive(:archive).and_raise(
+                ActiveRecord::RecordInvalid.new(list_item_field_configuration)
+              )
+
+              delete list_item_configuration_list_item_field_configuration_path(
+                list_item_configuration.id,
+                list_item_field_configuration.id
+              ), headers: auth_params
+
+              expect(response).to have_http_status :unprocessable_entity
+            end
           end
         end
       end

@@ -32,7 +32,7 @@ class List < ApplicationRecord
   validates :name, presence: true
 
   def archive
-    update archived_at: Time.zone.now
+    update! archived_at: Time.zone.now
   end
 
   def as_json(options = {})
