@@ -225,6 +225,22 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
           expect(list_item_class.not_archived).not_to include delete_item
           expect(delete_item.archived_at).not_to be_nil
         end
+
+        context "when archive fails due to validation errors" do
+          it "returns 422 unprocessable_entity" do
+            delete_item = create(:"#{list_type}_item", required_attrs[0].to_sym => "foo", list: list)
+
+            # Mock the archive method to raise validation error
+            allow(list_item_class).to receive(:find).with(delete_item.id.to_s).and_return(delete_item)
+            allow(delete_item).to receive(:archive).and_raise(
+              ActiveRecord::RecordInvalid.new(delete_item)
+            )
+
+            delete v1_list_list_item_path(list.id, delete_item.id), headers: auth_params
+
+            expect(response).to have_http_status :unprocessable_entity
+          end
+        end
       end
     end
   end

@@ -424,6 +424,20 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                 expect(response).to have_http_status :no_content
                 expect(item_field[:archived_at]).to be_truthy
               end
+
+              context "when archive fails due to validation errors" do
+                it "returns 422 unprocessable_entity" do
+                  # Mock the archive method to raise validation error
+                  allow(ListItemField).to receive(:find).with(item_field.id.to_s).and_return(item_field)
+                  allow(item_field).to receive(:archive).and_raise(
+                    ActiveRecord::RecordInvalid.new(item_field)
+                  )
+
+                  delete v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+
+                  expect(response).to have_http_status :unprocessable_entity
+                end
+              end
             end
           end
         end

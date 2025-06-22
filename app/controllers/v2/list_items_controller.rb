@@ -42,6 +42,8 @@ class V2::ListItemsController < ProtectedRouteController
   def destroy
     item.archive
     head :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors.messages, status: :unprocessable_entity
   end
 
   private
