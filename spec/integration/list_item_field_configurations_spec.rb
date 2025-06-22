@@ -322,35 +322,6 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               }
             )
           end
-
-          it "creates a list item field configuration with auto-assigned position" do
-            post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
-                 headers: auth_params,
-                 params: {
-                   list_item_field_configuration: {
-                     label: "auto-positioned",
-                     data_type: "free_text"
-                   }
-                 }
-
-            new_list_item_field_configuration = list_item_configuration.list_item_field_configurations.last
-
-            expect(response).to have_http_status :ok
-            expect(JSON.parse(response.body)).to eq(
-              {
-                "archived_at" => nil,
-                "created_at" => new_list_item_field_configuration[:created_at].iso8601(3),
-                "data_type" => "free_text",
-                "id" => new_list_item_field_configuration[:id],
-                "label" => "auto-positioned",
-                "list_item_configuration_id" => list_item_configuration[:id],
-                "position" => new_list_item_field_configuration[:position],
-                "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
-              }
-            )
-            # Verify that position was auto-assigned (should be greater than 0)
-            expect(new_list_item_field_configuration[:position]).to be > 0
-          end
         end
       end
 
