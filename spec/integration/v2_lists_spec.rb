@@ -142,7 +142,7 @@ describe "/v2/lists", type: :request do
         expect do
           post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } },
                               headers: auth_params
-        end.not_to raise_error
+        end.to change(List, :count).by(1)
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
         expect(json["name"]).to eq("foo")
