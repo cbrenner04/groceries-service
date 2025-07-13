@@ -367,6 +367,33 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 expect(new_items.first.list_item_fields.map(&:data)).to eq %w[NewFieldData1 NewFieldData2]
                 expect(new_items.last.list_item_fields.map(&:data)).to eq ["NewFieldData1"]
               end
+
+              it "creates new items with original field data when fields_to_update is not provided" do
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+
+                # Remove fields_to_update to test the uncovered line
+                update_params[:list_items].delete(:fields_to_update)
+                update_params[:list_items][:new_list_name] = "bulk update list no fields"
+
+                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                    headers: auth_params,
+                    params: update_params,
+                    as: :json
+
+                item.reload
+                other_item.reload
+                new_list = List.find_by(name: "bulk update list no fields")
+                new_items = ListItem.where(list_id: new_list.id)
+
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+                expect(new_list).to be_truthy
+                expect(new_items.count).to eq 2
+                # Should use original field data when fields_to_update is not provided
+                expect(new_items.first.list_item_fields.map(&:data)).to eq %w[MyString MyString]
+                expect(new_items.last.list_item_fields.map(&:data)).to eq ["MyString"]
+              end
             end
 
             describe "when existing list is requested" do

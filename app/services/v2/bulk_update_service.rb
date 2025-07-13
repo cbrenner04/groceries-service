@@ -23,8 +23,6 @@ class V2::BulkUpdateService
     end
   end
 
-  # TODO: split this up
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def create_new_items
     # TODO: this won't haunt me. nope nope nope
     # should we just have an explicit param for whether or not to create a new list?
@@ -32,15 +30,9 @@ class V2::BulkUpdateService
     items.each do |item|
       list_item = ListItem.create!(list_id: list_id, user: @current_user)
       fields_to_update = @params[:list_items][:fields_to_update]
-      item[:fields].each do |field_to_create|
-        field_config = field_to_create.list_item_field_configuration
-        field_to_update = fields_to_update.find { |f| f[:list_item_field_ids].include?(field_to_create.id) }
-        data = field_to_update ? field_to_update[:data] : field_to_create.data
-        list_item.list_item_fields.create!(data: data, user: @current_user, list_item_field_configuration: field_config)
-      end
+      item[:fields].each { |field_to_create| update_new_items(list_item, field_to_create, fields_to_update) }
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def items
     return @items if @items
@@ -71,10 +63,20 @@ class V2::BulkUpdateService
   end
 
   def create_new_list
-    list_item_config = List.find(@item_params[:existing_list_id]).list_item_configuration_id
     new_list = List.create!(name: @item_params[:new_list_name], owner: @current_user,
-                            list_item_configuration_id: list_item_config)
+                            list_item_configuration_id: list.list_item_configuration_id, type: list.type)
     UsersList.create!(user: @current_user, list: new_list, has_accepted: true)
     new_list.id
+  end
+
+  def update_new_items(list_item, field_to_create, fields_to_update)
+    field_config = field_to_create.list_item_field_configuration
+    if fields_to_update
+      field_to_update = fields_to_update.find { |f| f[:list_item_field_ids].include?(field_to_create.id) }
+      data = field_to_update[:data]
+    else
+      data = field_to_create.data
+    end
+    list_item.list_item_fields.create!(data: data, user: @current_user, list_item_field_configuration: field_config)
   end
 end
