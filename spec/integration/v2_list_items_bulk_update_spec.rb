@@ -115,16 +115,14 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           expect(response_body["items"]).to eq(
             [
               {
-                "item" => {
-                  "id" => item[:id],
-                  "archived_at" => nil,
-                  "refreshed" => false,
-                  "completed" => false,
-                  "user_id" => user[:id],
-                  "list_id" => list[:id],
-                  "created_at" => item[:created_at].iso8601(3),
-                  "updated_at" => item[:updated_at].iso8601(3)
-                },
+                "id" => item[:id],
+                "archived_at" => nil,
+                "refreshed" => false,
+                "completed" => false,
+                "user_id" => user[:id],
+                "list_id" => list[:id],
+                "created_at" => item[:created_at].iso8601(3),
+                "updated_at" => item[:updated_at].iso8601(3),
                 "fields" => [
                   {
                     "id" => first_field[:id],
@@ -134,7 +132,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => item[:id],
                     "created_at" => first_field[:created_at].iso8601(3),
-                    "updated_at" => first_field[:updated_at].iso8601(3)
+                    "updated_at" => first_field[:updated_at].iso8601(3),
+                    "label" => "MyString"
                   },
                   {
                     "id" => second_field[:id],
@@ -144,21 +143,20 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => item[:id],
                     "created_at" => second_field[:created_at].iso8601(3),
-                    "updated_at" => second_field[:updated_at].iso8601(3)
+                    "updated_at" => second_field[:updated_at].iso8601(3),
+                    "label" => "MyString"
                   }
                 ]
               },
               {
-                "item" => {
-                  "id" => other_item[:id],
-                  "archived_at" => nil,
-                  "refreshed" => false,
-                  "completed" => false,
-                  "user_id" => user[:id],
-                  "list_id" => list[:id],
-                  "created_at" => other_item[:created_at].iso8601(3),
-                  "updated_at" => other_item[:updated_at].iso8601(3)
-                },
+                "id" => other_item[:id],
+                "archived_at" => nil,
+                "refreshed" => false,
+                "completed" => false,
+                "user_id" => user[:id],
+                "list_id" => list[:id],
+                "created_at" => other_item[:created_at].iso8601(3),
+                "updated_at" => other_item[:updated_at].iso8601(3),
                 "fields" => [
                   {
                     "id" => other_field[:id],
@@ -168,7 +166,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => other_item[:id],
                     "created_at" => other_field[:created_at].iso8601(3),
-                    "updated_at" => other_field[:updated_at].iso8601(3)
+                    "updated_at" => other_field[:updated_at].iso8601(3),
+                    "label" => "MyString"
                   }
                 ]
               }

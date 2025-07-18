@@ -8,6 +8,11 @@ Rails.application.routes.draw do
       resource :bulk_update, only: %i[show update], controller: "list_items_bulk_update", as: :list_items_bulk_update
     end
   end
+  v2_bulk_update_routes = lambda do
+    collection do
+      resource :bulk_update, only: %i[show update], controller: "list_items_bulk_update", as: :list_items_bulk_update
+    end
+  end
   users_lists_routes = lambda { resources :users_lists, only: %i[index create update destroy] }
 
   mount_devise_token_auth_for "User", at: "auth", skip: %i[invitations]
@@ -31,7 +36,7 @@ Rails.application.routes.draw do
       refresh_list_routes[]
       merge_list_routes[]
       resources :list_items, only: %i[index show create edit update destroy] do
-        bulk_update_routes[]
+        v2_bulk_update_routes[]
         resources :list_item_fields, only: %i[index show create edit update destroy]
       end
       users_lists_routes[]
