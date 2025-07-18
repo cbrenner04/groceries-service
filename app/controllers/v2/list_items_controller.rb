@@ -20,7 +20,13 @@ class V2::ListItemsController < ProtectedRouteController
 
   # GET /:id/edit
   def edit
-    render json: { item: item, list: list, list_users: V2::UsersListsService.list_users(params[:list_id]) }
+    render json: {
+      item: V2::ListsService.build_item_response(item),
+      list: list,
+      list_users: V2::UsersListsService.list_users(params[:list_id]),
+      list_item_configuration: list.list_item_configuration,
+      list_item_field_configurations: list.list_item_configuration.list_item_field_configurations.order(:position)
+    }
   end
 
   # POST /
@@ -53,7 +59,7 @@ class V2::ListItemsController < ProtectedRouteController
   end
 
   def item
-    @item ||= ListItem.find(params[:id])
+    @item ||= ListItem.includes(list_item_fields: :list_item_field_configuration).find(params[:id])
   end
 
   def item_params

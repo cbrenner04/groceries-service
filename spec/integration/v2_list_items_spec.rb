@@ -263,6 +263,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
                   "archived_at" => nil,
                   "completed" => item[:completed],
                   "created_at" => item[:created_at].iso8601(3),
+                  "fields" => [],
                   "id" => item[:id],
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
@@ -353,7 +354,9 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
             context "when archive fails due to validation errors" do
               it "returns 422 unprocessable_entity" do
-                # Mock the archive method to raise validation error
+                # Mock the includes chain to return our test item and then mock archive to raise validation error
+                allow(ListItem)
+                  .to receive(:includes).with(list_item_fields: :list_item_field_configuration).and_return(ListItem)
                 allow(ListItem).to receive(:find).with(item.id.to_s).and_return(item)
                 allow(item).to receive(:archive).and_raise(
                   ActiveRecord::RecordInvalid.new(item)
