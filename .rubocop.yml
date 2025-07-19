@@ -44,6 +44,17 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Exclude:
     - spec/**/*
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - spec/**/*
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - spec/**/*
+  Max: 10
 
 RSpec/NestedGroups:
   Enabled: false

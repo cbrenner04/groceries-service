@@ -15,8 +15,9 @@ class V2::BulkUpdateService
       list: list,
       lists: lists,
       list_users: V2::UsersListsService.list_users(list.id),
-      list_item_configuration: list.list_item_configuration,
-      list_item_field_configurations: list.list_item_configuration.list_item_field_configurations.order(:position),
+      list_item_configuration: list.list_item_configuration || nil,
+      list_item_field_configurations:
+        list.list_item_configuration&.list_item_field_configurations&.order(:position) || [],
       categories: list.categories
     }
   end
@@ -42,16 +43,29 @@ class V2::BulkUpdateService
     raise ArgumentError, "Either new_list_name or existing_list_id must be provided when copying or moving items"
   end
 
+  # rubocop:disable Metrics/AbcSize
   def update_current_items
-    return unless update_current_items?
-    return if fields_to_update.blank?
+    return unless update_current_items? && list.list_item_configuration_id && fields_to_update.any?
 
     fields_to_update.each do |field_update|
-      field_update[:list_item_field_ids].each do |field_id|
-        ListItemField.find(field_id).update!(data: field_update[:data])
+      field_config = list.list_item_configuration.list_item_field_configurations.find_by(label: field_update[:label])
+      next unless field_config
+
+      items = ListItem.where(id: field_update[:item_ids])
+
+      items.each do |item|
+        existing_field = item.list_item_fields.find_by(list_item_field_configuration: field_config)
+
+        existing_field&.update!(data: field_update[:data])
+
+        unless existing_field
+          item.list_item_fields.create!(data: field_update[:data], user: @current_user,
+                                        list_item_field_configuration: field_config)
+        end
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def create_new_items
     target_list_id = determine_target_list_id
@@ -77,8 +91,12 @@ class V2::BulkUpdateService
   def determine_field_data(field_data, fields_to_update)
     return field_data["data"] if fields_to_update.blank?
 
+    # Find the field configuration to get the label
+    field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
+
+    # Look for a matching update by label
     matching_update = fields_to_update.find do |update|
-      update[:list_item_field_ids].include?(field_data["id"])
+      update[:label] == field_config.label
     end
 
     matching_update ? matching_update[:data] : field_data["data"]

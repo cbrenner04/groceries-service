@@ -24,8 +24,9 @@ class V2::ListItemsController < ProtectedRouteController
       item: V2::ListsService.build_item_response(item),
       list: list,
       list_users: V2::UsersListsService.list_users(params[:list_id]),
-      list_item_configuration: list.list_item_configuration,
-      list_item_field_configurations: list.list_item_configuration.list_item_field_configurations.order(:position)
+      list_item_configuration: list.list_item_configuration || nil,
+      list_item_field_configurations:
+        list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
     }
   end
 

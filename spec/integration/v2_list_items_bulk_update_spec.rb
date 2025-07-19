@@ -20,7 +20,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
   end
   let(:second_list_item_field_configuration) do
     create(:list_item_field_configuration,
-           list_item_configuration: list_item_configuration)
+           list_item_configuration: list_item_configuration,
+           label: "SecondLabel")
   end
   let!(:first_field) do
     create(:list_item_field, user: user, list_item: item,
@@ -144,7 +145,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => item[:id],
                     "created_at" => second_field[:created_at].iso8601(3),
                     "updated_at" => second_field[:updated_at].iso8601(3),
-                    "label" => "MyString"
+                    "label" => "SecondLabel"
                   }
                 ]
               },
@@ -190,10 +191,12 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           existing_list_id: list[:id],
           update_current_items: false,
           fields_to_update: [{
-            list_item_field_ids: [first_field[:id], other_field[:id]],
+            label: "MyString",
+            item_ids: [item[:id], other_item[:id]],
             data: "NewFieldData1"
           }, {
-            list_item_field_ids: [second_field[:id]],
+            label: "SecondLabel",
+            item_ids: [item[:id]],
             data: "NewFieldData2"
           }]
         }
@@ -230,6 +233,34 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
           expect(response).to have_http_status :not_found
           expect(response.body).to eq "One or more items were not found"
+        end
+      end
+
+      context "when updating a field that doesn't exist on an item" do
+        it "creates a new field for that item" do
+          # Create an item without a specific field
+          item_without_field = create(:list_item, user: user, list: list)
+          # Don't create a field for second_list_item_field_configuration for this item
+
+          update_params[:list_items][:update_current_items] = true
+          update_params[:list_items][:fields_to_update] = [{
+            label: "SecondLabel",
+            item_ids: [item_without_field.id],
+            data: "NewFieldData"
+          }]
+
+          expect do
+            put v2_list_list_items_bulk_update_path(list.id).to_s,
+                headers: auth_params,
+                params: update_params,
+                as: :json
+          end.to change(ListItemField, :count).by(1)
+
+          new_field = item_without_field.list_item_fields.find_by(
+            list_item_field_configuration: second_list_item_field_configuration
+          )
+          expect(new_field).to be_present
+          expect(new_field.data).to eq "NewFieldData"
         end
       end
 

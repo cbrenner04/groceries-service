@@ -24,9 +24,7 @@ class V2::ListsService
         list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
-        # TODO: why are we sending this?
-        # list_item_configurations: user.list_item_configurations,
-        list_item_configuration: list.list_item_configuration
+        list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil
       }
     end
 
@@ -37,6 +35,14 @@ class V2::ListsService
 
     def build_new_list(params, user)
       new_list_params = params.except(:user_id).merge!(owner: user)
+
+      # If no configuration is provided, assign one based on list type
+      unless params[:list_item_configuration_id]
+        list_type = params[:type] || "GroceryList"
+        configuration = V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, list_type)
+        new_list_params[:list_item_configuration_id] = configuration.id
+      end
+
       List.new(new_list_params)
     end
 
