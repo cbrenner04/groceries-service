@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       end
       users_lists_routes[]
     end
+    resources :completed_lists, only: :index
   end
   resources :completed_lists, only: :index
   resources :list_item_configurations, only: %i[index show create edit update destroy] do

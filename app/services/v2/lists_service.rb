@@ -48,7 +48,7 @@ class V2::ListsService
 
     def create_new_list_from(old_list)
       List.create!(name: old_list[:name], owner_id: old_list[:owner_id],
-                   list_item_configuration_id: old_list[:list_item_configuration_id])
+                   list_item_configuration_id: old_list[:list_item_configuration_id], type: old_list[:type])
     end
 
     def create_new_list_items(old_list, new_list, user)
