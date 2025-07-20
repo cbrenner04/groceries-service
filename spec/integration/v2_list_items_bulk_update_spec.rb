@@ -289,6 +289,29 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
               expect(other_field.data).to eq "NewFieldData1"
               expect(second_field.data).to eq "NewFieldData2"
             end
+
+            it "clears fields when data is empty string" do
+              update_params[:list_items][:update_current_items] = true
+              update_params[:list_items][:fields_to_update] = [{
+                label: "MyString",
+                item_ids: [item[:id], other_item[:id]],
+                data: "" # Empty data should clear the field
+              }]
+
+              expect(first_field.data).to eq "MyString"
+              expect(other_field.data).to eq "MyString"
+
+              put v2_list_list_items_bulk_update_path(list.id).to_s,
+                  headers: auth_params,
+                  params: update_params,
+                  as: :json
+
+              # The fields should be destroyed when cleared
+              expect { first_field.reload }.to raise_error(ActiveRecord::RecordNotFound)
+              expect { other_field.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+              expect(response).to have_http_status :no_content
+            end
           end
 
           context "when update current items is not requested" do

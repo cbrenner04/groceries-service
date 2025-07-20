@@ -43,7 +43,7 @@ class V2::BulkUpdateService
     raise ArgumentError, "Either new_list_name or existing_list_id must be provided when copying or moving items"
   end
 
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength
   def update_current_items
     return unless update_current_items? && list.list_item_configuration_id && fields_to_update.any?
 
@@ -56,16 +56,20 @@ class V2::BulkUpdateService
       items.each do |item|
         existing_field = item.list_item_fields.find_by(list_item_field_configuration: field_config)
 
-        existing_field&.update!(data: field_update[:data])
-
-        unless existing_field
+        if field_update[:data].blank?
+          # Clear the field by deleting it or setting data to nil
+          existing_field&.destroy
+        elsif existing_field
+          # Update or create the field with the new data
+          existing_field.update!(data: field_update[:data])
+        else
           item.list_item_fields.create!(data: field_update[:data], user: @current_user,
                                         list_item_field_configuration: field_config)
         end
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength
 
   def create_new_items
     target_list_id = determine_target_list_id
@@ -81,7 +85,7 @@ class V2::BulkUpdateService
       field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
       data = determine_field_data(field_data, fields_to_update)
 
-      # Only create the field if data is present
+      # Only create the field if data is present (not nil or blank)
       next if data.blank?
 
       new_item.list_item_fields.create!(
@@ -103,8 +107,10 @@ class V2::BulkUpdateService
       update[:label] == field_config.label && update[:item_ids].include?(field_data["list_item_id"])
     end
 
-    # If the update data is present and not empty, use it; otherwise fall back to original data
-    matching_update ? matching_update[:data].presence || field_data["data"] : field_data["data"]
+    # If there's a matching update, use its data
+    # For copy operations, if the update data is blank, preserve the original data
+    # For update operations, blank data means clear the field
+    matching_update[:data].presence || field_data["data"]
   end
 
   def determine_target_list_id
