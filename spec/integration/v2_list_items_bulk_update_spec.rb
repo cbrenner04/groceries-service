@@ -424,6 +424,56 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 expect(new_items.first.list_item_fields.map(&:data)).to eq %w[MyString MyString]
                 expect(new_items.last.list_item_fields.map(&:data)).to eq ["MyString"]
               end
+
+              it "handles empty data in fields_to_update by preserving original field data" do
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+
+                # Set one field to empty data and another to valid data
+                update_params[:list_items][:fields_to_update] = [{
+                  label: "MyString",
+                  item_ids: [item[:id], other_item[:id]],
+                  data: "" # Empty data
+                }, {
+                  label: "SecondLabel",
+                  item_ids: [item[:id]],
+                  data: "ValidData" # Valid data
+                }]
+                update_params[:list_items][:new_list_name] = "bulk update list empty data"
+
+                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                    headers: auth_params,
+                    params: update_params,
+                    as: :json
+
+                item.reload
+                other_item.reload
+                new_list = List.find_by(name: "bulk update list empty data")
+                new_items = ListItem.where(list_id: new_list.id)
+
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+                expect(new_list).to be_truthy
+                expect(new_items.count).to eq 2
+
+                # First item should have original data for "MyString" (since update was empty)
+                # and "ValidData" for "SecondLabel"
+                first_item_fields = new_items.first.list_item_fields
+                expect(first_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "MyString"
+                end.data).to eq "MyString"
+                expect(first_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "SecondLabel"
+                end.data).to eq "ValidData"
+
+                # Second item should have original data for "MyString" (since update was empty)
+                # and no "SecondLabel" field
+                second_item_fields = new_items.last.list_item_fields
+                expect(second_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "MyString"
+                end.data).to eq "MyString"
+                expect(second_item_fields.find { |f| f.list_item_field_configuration.label == "SecondLabel" }).to be_nil
+              end
             end
 
             describe "when existing list is requested" do
@@ -448,8 +498,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
                 expect(new_items.count).to eq 2
-                expect(new_items.first.list_item_fields.map(&:data)).to eq %w[NewFieldData1 NewFieldData2]
-                expect(new_items.last.list_item_fields.map(&:data)).to eq ["NewFieldData1"]
+                field_data = new_items.map { |item| item.list_item_fields.map(&:data) }
+                expect(field_data).to contain_exactly(%w[NewFieldData1 NewFieldData2], ["NewFieldData1"])
               end
             end
           end

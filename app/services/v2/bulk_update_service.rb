@@ -80,6 +80,10 @@ class V2::BulkUpdateService
     item_data[:fields].each do |field_data|
       field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
       data = determine_field_data(field_data, fields_to_update)
+
+      # Only create the field if data is present
+      next if data.blank?
+
       new_item.list_item_fields.create!(
         data: data,
         user: @current_user,
@@ -94,12 +98,13 @@ class V2::BulkUpdateService
     # Find the field configuration to get the label
     field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
 
-    # Look for a matching update by label
+    # Look for a matching update by label and check if this item is in the item_ids
     matching_update = fields_to_update.find do |update|
-      update[:label] == field_config.label
+      update[:label] == field_config.label && update[:item_ids].include?(field_data["list_item_id"])
     end
 
-    matching_update ? matching_update[:data] : field_data["data"]
+    # If the update data is present and not empty, use it; otherwise fall back to original data
+    matching_update ? matching_update[:data].presence || field_data["data"] : field_data["data"]
   end
 
   def determine_target_list_id

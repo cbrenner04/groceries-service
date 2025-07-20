@@ -11,6 +11,13 @@ AllCops:
     - config/**/*
     - db/**/*
     - vendor/**/*
+    - tmp/**/*
+    - coverage/**/*
+    - log/**/*
+    - public/**/*
+    - .github/**/*
+    - .git/**/*
+    - .ruby-lsp/**/*
   TargetRubyVersion: 3.4
   DisplayCopNames: true
   NewCops: enable
