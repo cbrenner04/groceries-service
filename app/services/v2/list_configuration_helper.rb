@@ -28,7 +28,7 @@ module V2::ListConfigurationHelper
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def create_field_configurations_for_list_type(configuration, list_type)
       case list_type
       when "BookList"
@@ -56,7 +56,7 @@ module V2::ListConfigurationHelper
         create_field_config_if_missing(configuration, "quantity", "free_text", 3)
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     def create_field_config_if_missing(configuration, label, data_type, position)
       # First, try to find an existing field config with this label

@@ -57,6 +57,9 @@ class V2::ListsService
         new_item = new_list.list_items.create!(user: user)
         item.list_item_fields.each do |list_item_field|
           field_config = list_item_field.list_item_field_configuration
+          # Only create field if data is present
+          next if list_item_field.data.blank?
+
           new_item
             .list_item_fields
             .create!(user: user, data: list_item_field.data, list_item_field_configuration: field_config)

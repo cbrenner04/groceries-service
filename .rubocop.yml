@@ -34,6 +34,12 @@ Style/StringLiterals:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/AbcSize:
+  Max: 20
+
 # Spec-related overrides below
 
 Style/Documentation:
