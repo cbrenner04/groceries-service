@@ -54,7 +54,7 @@ This document outlines the development standards, patterns, and guardrails for t
 
 ### Test Structure
 
-```
+```text
 spec/
 ├── controllers/           # Controller specs
 ├── models/               # Model specs
@@ -266,4 +266,4 @@ FactoryBot.define do
 end
 ```
 
-This document should be updated as the backend codebase evolves and new patterns emerge. 
+This document should be updated as the backend codebase evolves and new patterns emerge.

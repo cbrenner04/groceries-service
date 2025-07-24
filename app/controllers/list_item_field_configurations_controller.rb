@@ -64,8 +64,28 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
       params.expect(list_item_field_configuration: %i[label data_type position])
   end
 
+  def lists_using_config
+    @lists_using_config ||= List.where(list_item_configuration_id: list_item_configuration.id)
+  end
+
+  # TODO: This is a hack to check if the user has write permission on any of the lists that use the configuration.
+  # We should probably have a more robust way to check this. This controller should probably be nested under the list
+  # item configurations controller. Which should probably be nested under the lists controller.
+  def write_permission?
+    lists_using_config.any? do |list|
+      users_list = UsersList.find_by(list: list, user: current_user)
+      users_list&.permissions == "write"
+    end
+  end
+
   def require_item_configuration_existence
-    head :forbidden unless list_item_configuration&.user == current_user
+    # If configuration is associated with lists, check if user has write permissions on any of them
+    if lists_using_config.any?
+      head :forbidden unless write_permission?
+    else
+      # If configuration is not associated with any list, fall back to checking if user owns the configuration
+      head :forbidden unless list_item_configuration.user == current_user
+    end
   rescue ActiveRecord::RecordNotFound
     head :not_found
   end

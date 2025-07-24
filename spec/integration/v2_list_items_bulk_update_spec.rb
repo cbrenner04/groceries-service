@@ -20,7 +20,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
   end
   let(:second_list_item_field_configuration) do
     create(:list_item_field_configuration,
-           list_item_configuration: list_item_configuration)
+           list_item_configuration: list_item_configuration,
+           label: "SecondLabel")
   end
   let!(:first_field) do
     create(:list_item_field, user: user, list_item: item,
@@ -115,16 +116,14 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           expect(response_body["items"]).to eq(
             [
               {
-                "item" => {
-                  "id" => item[:id],
-                  "archived_at" => nil,
-                  "refreshed" => false,
-                  "completed" => false,
-                  "user_id" => user[:id],
-                  "list_id" => list[:id],
-                  "created_at" => item[:created_at].iso8601(3),
-                  "updated_at" => item[:updated_at].iso8601(3)
-                },
+                "id" => item[:id],
+                "archived_at" => nil,
+                "refreshed" => false,
+                "completed" => false,
+                "user_id" => user[:id],
+                "list_id" => list[:id],
+                "created_at" => item[:created_at].iso8601(3),
+                "updated_at" => item[:updated_at].iso8601(3),
                 "fields" => [
                   {
                     "id" => first_field[:id],
@@ -134,7 +133,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => item[:id],
                     "created_at" => first_field[:created_at].iso8601(3),
-                    "updated_at" => first_field[:updated_at].iso8601(3)
+                    "updated_at" => first_field[:updated_at].iso8601(3),
+                    "label" => "MyString"
                   },
                   {
                     "id" => second_field[:id],
@@ -144,21 +144,20 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => item[:id],
                     "created_at" => second_field[:created_at].iso8601(3),
-                    "updated_at" => second_field[:updated_at].iso8601(3)
+                    "updated_at" => second_field[:updated_at].iso8601(3),
+                    "label" => "SecondLabel"
                   }
                 ]
               },
               {
-                "item" => {
-                  "id" => other_item[:id],
-                  "archived_at" => nil,
-                  "refreshed" => false,
-                  "completed" => false,
-                  "user_id" => user[:id],
-                  "list_id" => list[:id],
-                  "created_at" => other_item[:created_at].iso8601(3),
-                  "updated_at" => other_item[:updated_at].iso8601(3)
-                },
+                "id" => other_item[:id],
+                "archived_at" => nil,
+                "refreshed" => false,
+                "completed" => false,
+                "user_id" => user[:id],
+                "list_id" => list[:id],
+                "created_at" => other_item[:created_at].iso8601(3),
+                "updated_at" => other_item[:updated_at].iso8601(3),
                 "fields" => [
                   {
                     "id" => other_field[:id],
@@ -168,7 +167,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                     "user_id" => user[:id],
                     "list_item_id" => other_item[:id],
                     "created_at" => other_field[:created_at].iso8601(3),
-                    "updated_at" => other_field[:updated_at].iso8601(3)
+                    "updated_at" => other_field[:updated_at].iso8601(3),
+                    "label" => "MyString"
                   }
                 ]
               }
@@ -191,10 +191,12 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           existing_list_id: list[:id],
           update_current_items: false,
           fields_to_update: [{
-            list_item_field_ids: [first_field[:id], other_field[:id]],
+            label: "MyString",
+            item_ids: [item[:id], other_item[:id]],
             data: "NewFieldData1"
           }, {
-            list_item_field_ids: [second_field[:id]],
+            label: "SecondLabel",
+            item_ids: [item[:id]],
             data: "NewFieldData2"
           }]
         }
@@ -234,6 +236,34 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
         end
       end
 
+      context "when updating a field that doesn't exist on an item" do
+        it "creates a new field for that item" do
+          # Create an item without a specific field
+          item_without_field = create(:list_item, user: user, list: list)
+          # Don't create a field for second_list_item_field_configuration for this item
+
+          update_params[:list_items][:update_current_items] = true
+          update_params[:list_items][:fields_to_update] = [{
+            label: "SecondLabel",
+            item_ids: [item_without_field.id],
+            data: "NewFieldData"
+          }]
+
+          expect do
+            put v2_list_list_items_bulk_update_path(list.id).to_s,
+                headers: auth_params,
+                params: update_params,
+                as: :json
+          end.to change(ListItemField, :count).by(1)
+
+          new_field = item_without_field.list_item_fields.find_by(
+            list_item_field_configuration: second_list_item_field_configuration
+          )
+          expect(new_field).to be_present
+          expect(new_field.data).to eq "NewFieldData"
+        end
+      end
+
       context "when all items exist" do
         describe "with valid params" do
           context "when update current items is requested" do
@@ -258,6 +288,29 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
               expect(first_field.data).to eq "NewFieldData1"
               expect(other_field.data).to eq "NewFieldData1"
               expect(second_field.data).to eq "NewFieldData2"
+            end
+
+            it "clears fields when data is empty string" do
+              update_params[:list_items][:update_current_items] = true
+              update_params[:list_items][:fields_to_update] = [{
+                label: "MyString",
+                item_ids: [item[:id], other_item[:id]],
+                data: "" # Empty data should clear the field
+              }]
+
+              expect(first_field.data).to eq "MyString"
+              expect(other_field.data).to eq "MyString"
+
+              put v2_list_list_items_bulk_update_path(list.id).to_s,
+                  headers: auth_params,
+                  params: update_params,
+                  as: :json
+
+              # The fields should be destroyed when cleared
+              expect { first_field.reload }.to raise_error(ActiveRecord::RecordNotFound)
+              expect { other_field.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+              expect(response).to have_http_status :no_content
             end
           end
 
@@ -367,6 +420,83 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 expect(new_items.first.list_item_fields.map(&:data)).to eq %w[NewFieldData1 NewFieldData2]
                 expect(new_items.last.list_item_fields.map(&:data)).to eq ["NewFieldData1"]
               end
+
+              it "creates new items with original field data when fields_to_update is not provided" do
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+
+                # Remove fields_to_update to test the uncovered line
+                update_params[:list_items].delete(:fields_to_update)
+                update_params[:list_items][:new_list_name] = "bulk update list no fields"
+
+                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                    headers: auth_params,
+                    params: update_params,
+                    as: :json
+
+                item.reload
+                other_item.reload
+                new_list = List.find_by(name: "bulk update list no fields")
+                new_items = ListItem.where(list_id: new_list.id)
+
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+                expect(new_list).to be_truthy
+                expect(new_items.count).to eq 2
+                # Should use original field data when fields_to_update is not provided
+                expect(new_items.first.list_item_fields.map(&:data)).to eq %w[MyString MyString]
+                expect(new_items.last.list_item_fields.map(&:data)).to eq ["MyString"]
+              end
+
+              it "handles empty data in fields_to_update by preserving original field data" do
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+
+                # Set one field to empty data and another to valid data
+                update_params[:list_items][:fields_to_update] = [{
+                  label: "MyString",
+                  item_ids: [item[:id], other_item[:id]],
+                  data: "" # Empty data
+                }, {
+                  label: "SecondLabel",
+                  item_ids: [item[:id]],
+                  data: "ValidData" # Valid data
+                }]
+                update_params[:list_items][:new_list_name] = "bulk update list empty data"
+
+                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                    headers: auth_params,
+                    params: update_params,
+                    as: :json
+
+                item.reload
+                other_item.reload
+                new_list = List.find_by(name: "bulk update list empty data")
+                new_items = ListItem.where(list_id: new_list.id)
+
+                expect(item.archived_at).to be_nil
+                expect(other_item.archived_at).to be_nil
+                expect(new_list).to be_truthy
+                expect(new_items.count).to eq 2
+
+                # First item should have original data for "MyString" (since update was empty)
+                # and "ValidData" for "SecondLabel"
+                first_item_fields = new_items.first.list_item_fields
+                expect(first_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "MyString"
+                end.data).to eq "MyString"
+                expect(first_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "SecondLabel"
+                end.data).to eq "ValidData"
+
+                # Second item should have original data for "MyString" (since update was empty)
+                # and no "SecondLabel" field
+                second_item_fields = new_items.last.list_item_fields
+                expect(second_item_fields.find do |f|
+                  f.list_item_field_configuration.label == "MyString"
+                end.data).to eq "MyString"
+                expect(second_item_fields.find { |f| f.list_item_field_configuration.label == "SecondLabel" }).to be_nil
+              end
             end
 
             describe "when existing list is requested" do
@@ -391,8 +521,8 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
                 expect(new_items.count).to eq 2
-                expect(new_items.first.list_item_fields.map(&:data)).to eq %w[NewFieldData1 NewFieldData2]
-                expect(new_items.last.list_item_fields.map(&:data)).to eq ["NewFieldData1"]
+                field_data = new_items.map { |item| item.list_item_fields.map(&:data) }
+                expect(field_data).to contain_exactly(%w[NewFieldData1 NewFieldData2], ["NewFieldData1"])
               end
             end
           end

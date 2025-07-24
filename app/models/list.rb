@@ -40,6 +40,8 @@ class List < ApplicationRecord
   end
 
   def list_item_configuration
+    return nil unless list_item_configuration_id
+
     ListItemConfiguration.find(list_item_configuration_id)
   end
 end

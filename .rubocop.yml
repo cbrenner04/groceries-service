@@ -11,6 +11,13 @@ AllCops:
     - config/**/*
     - db/**/*
     - vendor/**/*
+    - tmp/**/*
+    - coverage/**/*
+    - log/**/*
+    - public/**/*
+    - .github/**/*
+    - .git/**/*
+    - .ruby-lsp/**/*
   TargetRubyVersion: 3.4
   DisplayCopNames: true
   NewCops: enable
@@ -26,6 +33,12 @@ Style/StringLiterals:
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/AbcSize:
+  Max: 20
 
 # Spec-related overrides below
 
@@ -44,6 +57,17 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Exclude:
     - spec/**/*
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - spec/**/*
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - spec/**/*
+  Max: 10
 
 RSpec/NestedGroups:
   Enabled: false

@@ -79,11 +79,17 @@ describe "/v2/lists", type: :request do
           response_body = JSON.parse(response.body)
           expect(response_body["current_user_id"]).to eq user.id
           expect(response_body["list"]).to include("id" => list.id, "name" => list.name)
+          expect(response_body["list_users"]).to eq [user.email]
+          expect(response_body["permissions"]).to eq "write"
           expect(response_body["lists_to_update"]).to eq []
 
+          # Check that not_completed_items contains the non-completed item
+          expect(response_body["not_completed_items"].length).to eq 1
           first_not_completed_item = ListItem.where(list: list).not_archived.ordered.not_completed.first.id
           expect(response_body["not_completed_items"].first["id"]).to eq(first_not_completed_item)
 
+          # Check that completed_items contains the completed item
+          expect(response_body["completed_items"].length).to eq 1
           first_completed_item = ListItem.where(list: list).not_archived.ordered.completed.first.id
           expect(response_body["completed_items"].first["id"]).to eq(first_completed_item)
 
@@ -91,6 +97,27 @@ describe "/v2/lists", type: :request do
           fields = response_body["not_completed_items"].first["fields"]
           expect(fields.map { |f| f["label"] }).to eq %w[B A]
           expect(fields.map { |f| f["position"] }).to eq [1, 2]
+        end
+
+        context "when list was created via V1 API (no list_item_configuration_id)" do
+          let(:v1_list) { List.create!(name: "v1 list", owner: user, list_item_configuration_id: nil) }
+
+          before do
+            create(:users_list, user: user, list: v1_list)
+          end
+
+          it "responds with success and handles nil list_item_configuration" do
+            get v2_list_path(v1_list.id), headers: auth_params
+
+            expect(response).to be_successful
+
+            response_body = JSON.parse(response.body)
+            expect(response_body["current_user_id"]).to eq user.id
+            expect(response_body["list"]).to include("id" => v1_list.id, "name" => v1_list.name)
+            expect(response_body["list_item_configuration"]).to be_nil
+            expect(response_body["not_completed_items"]).to eq []
+            expect(response_body["completed_items"]).to eq []
+          end
         end
       end
     end

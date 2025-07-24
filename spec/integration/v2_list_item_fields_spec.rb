@@ -13,7 +13,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
     create(:list_item_field_configuration, list_item_configuration: list_item_configuration)
   end
   let(:other_list_item_field_configuration) do
-    create(:list_item_field_configuration, list_item_configuration: list_item_configuration)
+    create(:list_item_field_configuration, list_item_configuration: list_item_configuration, label: "OtherLabel")
   end
   let!(:item_field) do
     create(:list_item_field, user: user, list_item: item, list_item_field_configuration: list_item_field_configuration)

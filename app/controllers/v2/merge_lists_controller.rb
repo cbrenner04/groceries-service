@@ -20,9 +20,13 @@ class V2::MergeListsController < ProtectedRouteController
     @lists ||= List.where(id: merge_list_params[:list_ids].split(","))
   end
 
+  def list_type
+    # the client is filtering to make sure all lists have the same type
+    @list_type ||= lists.first[:type]
+  end
+
   def create_new_list
-    # TODO: NEED ALL LISTS TO HAVE THE SAME CONFIGURATION?
     List.create(name: merge_list_params[:new_list_name], owner_id: current_user.id,
-                list_item_configuration_id: lists.first.list_item_configuration_id)
+                list_item_configuration_id: lists.first.list_item_configuration_id, type: list_type)
   end
 end
