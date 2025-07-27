@@ -28,6 +28,7 @@ module V2::ListConfigurationHelper
       end
     end
 
+    # This is for parity with the v1 lists and list items
     # rubocop:disable Metrics/MethodLength
     def create_field_configurations_for_list_type(configuration, list_type)
       case list_type
@@ -35,25 +36,26 @@ module V2::ListConfigurationHelper
         create_field_config_if_missing(configuration, "author", "free_text", 1)
         create_field_config_if_missing(configuration, "title", "free_text", 2)
         create_field_config_if_missing(configuration, "number_in_series", "number", 3)
-        create_field_config_if_missing(configuration, "category", "free_text", 4)
-        create_field_config_if_missing(configuration, "read", "boolean", 5)
+        create_field_config_if_missing(configuration, "read", "boolean", 4)
+        create_field_config_if_missing(configuration, "category", "free_text", 5)
       when "MusicList"
-        create_field_config_if_missing(configuration, "category", "free_text", 1)
-        create_field_config_if_missing(configuration, "title", "free_text", 2)
-        create_field_config_if_missing(configuration, "artist", "free_text", 3)
-        create_field_config_if_missing(configuration, "album", "free_text", 4)
+        create_field_config_if_missing(configuration, "title", "free_text", 1)
+        create_field_config_if_missing(configuration, "artist", "free_text", 2)
+        create_field_config_if_missing(configuration, "album", "free_text", 3)
+        create_field_config_if_missing(configuration, "category", "free_text", 4)
       when "SimpleList"
-        create_field_config_if_missing(configuration, "category", "free_text", 1)
-        create_field_config_if_missing(configuration, "content", "free_text", 2)
+        create_field_config_if_missing(configuration, "content", "free_text", 1)
+        create_field_config_if_missing(configuration, "category", "free_text", 2)
       when "ToDoList"
-        create_field_config_if_missing(configuration, "category", "free_text", 1)
-        create_field_config_if_missing(configuration, "due_by", "date_time", 2)
-        create_field_config_if_missing(configuration, "task", "free_text", 3)
-        create_field_config_if_missing(configuration, "assignee", "free_text", 4)
+        create_field_config_if_missing(configuration, "task", "free_text", 1)
+        create_field_config_if_missing(configuration, "assignee", "free_text", 2)
+        create_field_config_if_missing(configuration, "due_by", "date_time", 3)
+        create_field_config_if_missing(configuration, "category", "free_text", 4)
       else # Default to GroceryList field configurations
-        create_field_config_if_missing(configuration, "category", "free_text", 1)
-        create_field_config_if_missing(configuration, "product", "free_text", 2)
-        create_field_config_if_missing(configuration, "quantity", "free_text", 3)
+        create_field_config_if_missing(configuration, "product", "free_text", 1)
+        # this is how the quantity field is used in the v1 grocery list
+        create_field_config_if_missing(configuration, "quantity", "free_text", 2)
+        create_field_config_if_missing(configuration, "category", "free_text", 3)
       end
     end
     # rubocop:enable Metrics/MethodLength

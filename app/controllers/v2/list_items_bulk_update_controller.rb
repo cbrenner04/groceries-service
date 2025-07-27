@@ -15,23 +15,6 @@ class V2::ListItemsBulkUpdateController < ProtectedRouteController
     render json: "One or more items were not found", status: :not_found
   end
 
-  #   request body for PUT /
-  #   {
-  #     item_ids: string[],
-  #     list_id: string,
-  #     list_items: {
-  #       copy: boolean,
-  #       move: boolean,
-  #       existing_list_id: string,
-  #       new_list_name: string,
-  #       update_current_items: boolean,
-  #       fields_to_update: {
-  #         list_item_field_ids: string[],
-  #         data: string,
-  #       }[]
-  #     }
-  #   }
-
   # PUT /
   def update
     service = V2::BulkUpdateService.new(params, item_params, current_user)

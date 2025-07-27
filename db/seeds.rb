@@ -27,10 +27,9 @@ def create_list_item_configurations(user)
     name: "grocery list template"
   )
   grocery_config.list_item_field_configurations.create!([
-    { label: "quantity", data_type: "free_text", position: 1 },
-    { label: "product", data_type: "free_text", position: 2 },
-    { label: "category", data_type: "free_text", position: 3 },
-    { label: "purchased", data_type: "boolean", position: 4 }
+    { label: "product", data_type: "free_text", position: 1 },
+    { label: "quantity", data_type: "free_text", position: 2 },
+    { label: "category", data_type: "free_text", position: 3 }
   ])
 
   # Music list configuration
@@ -41,8 +40,7 @@ def create_list_item_configurations(user)
     { label: "title", data_type: "free_text", position: 1 },
     { label: "artist", data_type: "free_text", position: 2 },
     { label: "album", data_type: "free_text", position: 3 },
-    { label: "category", data_type: "free_text", position: 4 },
-    { label: "purchased", data_type: "boolean", position: 5 }
+    { label: "category", data_type: "free_text", position: 4 }
   ])
 
   # ToDo list configuration
@@ -51,10 +49,9 @@ def create_list_item_configurations(user)
   )
   todo_config.list_item_field_configurations.create!([
     { label: "task", data_type: "free_text", position: 1 },
-    { label: "assignee_id", data_type: "free_text", position: 2 },
+    { label: "assignee", data_type: "free_text", position: 2 },
     { label: "due_by", data_type: "date_time", position: 3 },
-    { label: "category", data_type: "free_text", position: 4 },
-    { label: "completed", data_type: "boolean", position: 5 }
+    { label: "category", data_type: "free_text", position: 4 }
   ])
 
   # Simple list configuration
@@ -63,8 +60,7 @@ def create_list_item_configurations(user)
   )
   simple_config.list_item_field_configurations.create!([
     { label: "content", data_type: "free_text", position: 1 },
-    { label: "category", data_type: "free_text", position: 2 },
-    { label: "completed", data_type: "boolean", position: 3 }
+    { label: "category", data_type: "free_text", position: 2 }
   ])
 
   [book_config, grocery_config, music_config, todo_config, simple_config]
