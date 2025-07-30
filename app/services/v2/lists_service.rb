@@ -13,7 +13,6 @@ class V2::ListsService
       }
     end
 
-    # rubocop:disable Metrics/MethodLength
     def show_response(list, user)
       {
         current_user_id: user.id,
@@ -25,11 +24,9 @@ class V2::ListsService
         list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
-        list_item_configurations: user.list_item_configurations,
-        list_item_configuration: list.list_item_configuration
+        list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil
       }
     end
-    # rubocop:enable Metrics/MethodLength
 
     def ordered_items(list, additional_scope)
       items = fetch_items_with_fields(list, additional_scope)
@@ -38,12 +35,20 @@ class V2::ListsService
 
     def build_new_list(params, user)
       new_list_params = params.except(:user_id).merge!(owner: user)
+
+      # If no configuration is provided, assign one based on list type
+      unless params[:list_item_configuration_id]
+        list_type = params[:type] || "GroceryList"
+        configuration = V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, list_type)
+        new_list_params[:list_item_configuration_id] = configuration.id
+      end
+
       List.new(new_list_params)
     end
 
     def create_new_list_from(old_list)
       List.create!(name: old_list[:name], owner_id: old_list[:owner_id],
-                   list_item_configuration_id: old_list[:list_item_configuration_id])
+                   list_item_configuration_id: old_list[:list_item_configuration_id], type: old_list[:type])
     end
 
     def create_new_list_items(old_list, new_list, user)
@@ -52,6 +57,9 @@ class V2::ListsService
         new_item = new_list.list_items.create!(user: user)
         item.list_item_fields.each do |list_item_field|
           field_config = list_item_field.list_item_field_configuration
+          # Only create field if data is present
+          next if list_item_field.data.blank?
+
           new_item
             .list_item_fields
             .create!(user: user, data: list_item_field.data, list_item_field_configuration: field_config)
@@ -89,6 +97,10 @@ class V2::ListsService
       users_list.update!(prev_id: nil, next_id: nil)
     end
 
+    def build_item_response(item)
+      item.attributes.merge(fields: build_fields_response(item.list_item_fields))
+    end
+
     private
 
     def fetch_items_with_fields(list, additional_scope)
@@ -99,15 +111,12 @@ class V2::ListsService
           .includes(list_item_fields: :list_item_field_configuration)
     end
 
-    def build_item_response(item)
-      item.attributes.merge(fields: build_fields_response(item.list_item_fields))
-    end
-
     def build_fields_response(fields)
-      all_fields = fields.map do |field|
+      all_fields = fields.not_archived.map do |field|
         field.attributes.merge(
           label: field.list_item_field_configuration.label,
-          position: field.list_item_field_configuration.position
+          position: field.list_item_field_configuration.position,
+          data_type: field.list_item_field_configuration.data_type
         )
       end
       all_fields.sort_by { |field| field[:position] }

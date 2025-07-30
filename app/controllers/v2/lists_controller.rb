@@ -2,8 +2,8 @@
 
 # /v2/lists
 class V2::ListsController < ProtectedRouteController
-  before_action :require_list_access, only: %i[show]
   before_action :require_list_existence, only: %i[show edit update destroy]
+  before_action :require_list_access, only: %i[show]
   before_action :require_list_owner, only: %i[edit update destroy]
 
   # GET /
@@ -62,7 +62,7 @@ class V2::ListsController < ProtectedRouteController
   end
 
   def list_params
-    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id])
+    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id type])
   end
 
   def users_list

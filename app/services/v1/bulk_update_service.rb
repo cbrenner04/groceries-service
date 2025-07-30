@@ -60,7 +60,6 @@ class V1::BulkUpdateService
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   def update_item_attributes
     list_attrs = [%i[category clear_category]]
 
@@ -77,7 +76,6 @@ class V1::BulkUpdateService
       list_attrs.push(%i[assignee_id clear_assignee], %i[due_by clear_due_by])
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def new_item_attributes
     {
