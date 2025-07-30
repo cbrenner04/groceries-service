@@ -45,6 +45,8 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
   def destroy
     list_item_field_configuration.archive
     head :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors.messages, status: :unprocessable_entity
   end
 
   private
@@ -58,7 +60,8 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
   end
 
   def list_item_field_configuration_params
-    @list_item_field_configuration_params ||= params.expect(list_item_field_configuration: %i[label data_type])
+    @list_item_field_configuration_params ||=
+      params.expect(list_item_field_configuration: %i[label data_type position])
   end
 
   def require_item_configuration_existence

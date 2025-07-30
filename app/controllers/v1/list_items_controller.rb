@@ -45,6 +45,8 @@ class V1::ListItemsController < ProtectedRouteController
     head :no_content
   rescue ActiveRecord::RecordNotFound
     head :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors.messages, status: :unprocessable_entity
   end
 
   private

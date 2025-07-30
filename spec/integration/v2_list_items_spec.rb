@@ -350,6 +350,20 @@ describe "/v2/lists/:list_id/list_items", type: :request do
               expect(response).to have_http_status :no_content
               expect(item.archived_at).to be_truthy
             end
+
+            context "when archive fails due to validation errors" do
+              it "returns 422 unprocessable_entity" do
+                # Mock the archive method to raise validation error
+                allow(ListItem).to receive(:find).with(item.id.to_s).and_return(item)
+                allow(item).to receive(:archive).and_raise(
+                  ActiveRecord::RecordInvalid.new(item)
+                )
+
+                delete v2_list_list_item_path(list.id, item.id), headers: auth_params
+
+                expect(response).to have_http_status :unprocessable_entity
+              end
+            end
           end
         end
       end

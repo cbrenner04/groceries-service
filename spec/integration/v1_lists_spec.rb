@@ -454,6 +454,23 @@ describe "/v1/lists", type: :request do
           expect(delete_list.archived_at).not_to be_nil
         end
       end
+
+      context "when archive fails due to validation errors" do
+        it "returns 422 unprocessable_entity" do
+          delete_list = create(:list, name: "foo", owner: user)
+          create(:users_list, list: delete_list, user: user)
+
+          # Mock the archive method to raise validation error
+          allow(List).to receive(:find).with(delete_list.id.to_s).and_return(delete_list)
+          allow(delete_list).to receive(:archive).and_raise(
+            ActiveRecord::RecordInvalid.new(delete_list)
+          )
+
+          delete v1_list_path(delete_list.id), headers: auth_params
+
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
     end
   end
 end

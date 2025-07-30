@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_212046) do
     t.uuid "list_item_configuration_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", null: false
     t.index ["list_item_configuration_id"], name: "idx_on_list_item_configuration_id_0c41bb26c8"
   end
 

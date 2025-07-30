@@ -61,8 +61,17 @@ describe "/v2/lists", type: :request do
         end
 
         it "responds with success and correct payload" do
-          ListItem.create!(user: user, list: list, completed: false)
           ListItem.create!(user: user, list: list, completed: true)
+
+          # Create a list item with fields to test field sorting
+          list_item = ListItem.create!(user: user, list: list, completed: false)
+          config1 = ListItemFieldConfiguration.create!(label: "A", data_type: "free_text", position: 2,
+                                                       list_item_configuration: list.list_item_configuration)
+          config2 = ListItemFieldConfiguration.create!(label: "B", data_type: "free_text", position: 1,
+                                                       list_item_configuration: list.list_item_configuration)
+          list_item.list_item_fields.create!(user: user, data: "foo", list_item_field_configuration: config1)
+          list_item.list_item_fields.create!(user: user, data: "bar", list_item_field_configuration: config2)
+
           get v2_list_path(list.id), headers: auth_params
 
           expect(response).to be_successful
@@ -77,8 +86,11 @@ describe "/v2/lists", type: :request do
 
           first_completed_item = ListItem.where(list: list).not_archived.ordered.completed.first.id
           expect(response_body["completed_items"].first["id"]).to eq(first_completed_item)
-          # TODO: still need to decide on this
-          # expect(response_body["categories"]).to include "foo"
+
+          # Test that fields are sorted by position in not_completed_items
+          fields = response_body["not_completed_items"].first["fields"]
+          expect(fields.map { |f| f["label"] }).to eq %w[B A]
+          expect(fields.map { |f| f["position"] }).to eq [1, 2]
         end
       end
     end
@@ -128,9 +140,13 @@ describe "/v2/lists", type: :request do
     describe "with valid params" do
       it "creates a new list" do
         expect do
-          post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } }, headers: auth_params
-        end.to change(List, :count).by 1
-        expect(List.last.owner).to eq user
+          post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } },
+                              headers: auth_params
+        end.to change(List, :count).by(1)
+        expect(response).to have_http_status(:success)
+        json = JSON.parse(response.body)
+        expect(json["name"]).to eq("foo")
+        expect(List.find_by(id: json["id"]).owner).to eq user
       end
     end
 
@@ -294,6 +310,23 @@ describe "/v2/lists", type: :request do
 
           expect(List.not_archived).not_to include delete_list
           expect(delete_list.archived_at).not_to be_nil
+        end
+      end
+
+      context "when archive fails due to validation errors" do
+        it "returns 422 unprocessable_entity" do
+          delete_list = create(:list, name: "foo", owner: user)
+          create(:users_list, list: delete_list, user: user)
+
+          # Mock the archive method to raise validation error
+          allow(List).to receive(:find).with(delete_list.id.to_s).and_return(delete_list)
+          allow(delete_list).to receive(:archive).and_raise(
+            ActiveRecord::RecordInvalid.new(delete_list)
+          )
+
+          delete v2_list_path(delete_list.id), headers: auth_params
+
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end

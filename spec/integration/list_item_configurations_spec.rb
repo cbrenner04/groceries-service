@@ -234,7 +234,8 @@ describe "/list_item_configurations", type: :request do
       describe "DELETE /:id" do
         it "archives the list item configuration and its related list item field configurations" do
           list_item_field_configuration =
-            list_item_configuration.list_item_field_configurations.create!(label: "foo", data_type: "free_text")
+            list_item_configuration.list_item_field_configurations.create!(label: "foo", data_type: "free_text",
+                                                                           position: 1)
 
           expect(list_item_configuration.archived_at).to be_falsy
           expect(list_item_field_configuration.archived_at).to be_falsy
@@ -247,6 +248,21 @@ describe "/list_item_configurations", type: :request do
           expect(response).to have_http_status :no_content
           expect(list_item_configuration.archived_at).to be_truthy
           expect(list_item_field_configuration.archived_at).to be_truthy
+        end
+
+        context "when archive fails due to validation errors" do
+          it "returns 422 unprocessable_entity" do
+            # Mock the archive method to raise validation error
+            allow(ListItemConfiguration).to receive(:find).with(list_item_configuration.id.to_s)
+                                                          .and_return(list_item_configuration)
+            allow(list_item_configuration).to receive(:archive).and_raise(
+              ActiveRecord::RecordInvalid.new(list_item_configuration)
+            )
+
+            delete list_item_configuration_path(list_item_configuration.id), headers: auth_params
+
+            expect(response).to have_http_status :unprocessable_entity
+          end
         end
       end
     end
