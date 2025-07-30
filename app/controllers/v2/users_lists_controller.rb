@@ -18,7 +18,7 @@ class V2::UsersListsController < ProtectedRouteController
   end
 
   # POST /
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def create
     # given the manipulation before `.create`, we need to check for required params
     unless users_list_params[:user_id].present? && users_list_params[:list_id].present?
@@ -42,7 +42,7 @@ class V2::UsersListsController < ProtectedRouteController
       # :nocov:
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   # PUT /:id
   def update
