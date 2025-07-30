@@ -3,6 +3,7 @@
 # override invitations controller
 class Users::InvitationsController < Devise::InvitationsController
   include InvitableMethods
+
   before_action :authenticate_user!, only: :create
 
   def create
