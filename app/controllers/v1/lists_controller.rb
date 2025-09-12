@@ -73,7 +73,9 @@ class V1::ListsController < ProtectedRouteController
   end
 
   def users_list
-    @users_list ||= UsersList.find_by(list: list, user: current_user)
+    return @users_list if defined?(@users_list)
+
+    @users_list = UsersList.find_by(list: list, user: current_user)
   end
 
   def update_previous_list

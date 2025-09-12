@@ -57,7 +57,9 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def invited_user
-    @invited_user ||= User.find_by(email: params[:email])
+    return @invited_user if defined?(@invited_user)
+
+    @invited_user = User.find_by(email: params[:email])
   end
 
   def existing_users_list(user)
