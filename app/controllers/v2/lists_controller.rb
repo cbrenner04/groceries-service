@@ -66,7 +66,9 @@ class V2::ListsController < ProtectedRouteController
   end
 
   def users_list
-    @users_list ||= UsersList.find_by(list: list, user: current_user)
+    return @users_list if defined?(@users_list)
+
+    @users_list = UsersList.find_by(list: list, user: current_user)
   end
 
   def require_list_existence

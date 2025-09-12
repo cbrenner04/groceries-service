@@ -76,7 +76,9 @@ class V1::UsersListsController < ProtectedRouteController
   end
 
   def users_list_by_list_and_user
-    @users_list_by_list_and_user ||= UsersList.find_by(list: list, user: current_user)
+    return @users_list_by_list_and_user if defined?(@users_list_by_list_and_user)
+
+    @users_list_by_list_and_user = UsersList.find_by(list: list, user: current_user)
   end
 
   def require_list_access

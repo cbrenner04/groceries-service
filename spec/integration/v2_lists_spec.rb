@@ -95,8 +95,8 @@ describe "/v2/lists", type: :request do
 
           # Test that fields are sorted by position in not_completed_items
           fields = response_body["not_completed_items"].first["fields"]
-          expect(fields.map { |f| f["label"] }).to eq %w[B A]
-          expect(fields.map { |f| f["position"] }).to eq [1, 2]
+          expect(fields.pluck("label")).to eq %w[B A]
+          expect(fields.pluck("position")).to eq [1, 2]
         end
 
         context "when list was created via V1 API (no list_item_configuration_id)" do
