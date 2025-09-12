@@ -370,7 +370,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma (~> 6.4, >= 6.4.3)
   rack-cors (~> 3.0, >= 3.0.0)
-  rails (~> 8.0.0, >= 8.0.2.1)
+  rails (~> 8.0.2, >= 8.0.2.1)
   rails_12factor (~> 0.0.3)
   rspec-rails (~> 8.0, >= 8.0.1)
   rubocop (~> 1.65, >= 1.65.1)
