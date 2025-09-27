@@ -20,7 +20,7 @@ Warden.test_mode!
 ActiveRecord::Migration.maintain_test_schema!
 
 # Load shared examples
-Dir[Rails.root.join("spec/integration/shared_examples/**/*.rb")].each { |f| require f }
+Rails.root.glob("spec/integration/shared_examples/**/*.rb").each { |f| require f }
 
 RSpec.configure do |config|
   include Warden::Test::Helpers
