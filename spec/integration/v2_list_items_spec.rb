@@ -241,6 +241,30 @@ describe "/v2/lists/:list_id/list_items", type: :request do
               }
             )
           end
+
+          it "creates list item with completed status" do
+            post v2_list_list_items_path(list.id),
+                 params: { list_item: { completed: true } },
+                 headers: auth_params
+
+            list.reload
+            response_body = JSON.parse(response.body)
+            new_item = list.list_items.last
+
+            expect(response).to have_http_status :ok
+            expect(response_body).to eq(
+              {
+                "archived_at" => nil,
+                "completed" => true,
+                "created_at" => new_item[:created_at].iso8601(3),
+                "id" => new_item[:id],
+                "list_id" => list.id,
+                "refreshed" => false,
+                "updated_at" => new_item[:updated_at].iso8601(3),
+                "user_id" => user.id
+              }
+            )
+          end
         end
 
         describe "GET /:id/edit" do

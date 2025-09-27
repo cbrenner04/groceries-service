@@ -71,10 +71,6 @@ class V2::ListsService
       lists.each { |old_list| create_new_list_items(old_list, new_list, user) }
     end
 
-    def create_new_items(old_list, new_list, user)
-      create_new_list_items(old_list, new_list, user)
-    end
-
     def list_response(list, users_list, user)
       list.attributes.merge!(has_accepted: true, user_id: user.id, users_list_id: users_list.id)
     end
