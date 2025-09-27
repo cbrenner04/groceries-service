@@ -24,7 +24,8 @@ class V2::ListsService
         list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
-        list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil
+        list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil,
+        list_item_field_configurations: list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
       }
     end
 
