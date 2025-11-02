@@ -32,8 +32,7 @@ class V2::ListItemsController < ProtectedRouteController
 
   # POST /
   def create
-    # given no user supplied params, no reason to catch unprocessable entity
-    render json: list.list_items.create!(user: current_user)
+    render json: list.list_items.create!(item_params.merge(user: current_user))
   end
 
   # PUT /:id
@@ -64,7 +63,7 @@ class V2::ListItemsController < ProtectedRouteController
   end
 
   def item_params
-    @item_params ||= params.expect(list_item: %i[refreshed completed])
+    @item_params ||= params.key?(:list_item) ? params.expect(list_item: %i[refreshed completed]) : {}
   end
 
   def users_list
