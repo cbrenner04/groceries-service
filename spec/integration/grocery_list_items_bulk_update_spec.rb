@@ -11,9 +11,8 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
     let(:item) { create(:grocery_list_item, list: list) }
     let(:other_item) { create(:grocery_list_item, list: list) }
     let(:item_ids) { [item.id, other_item.id].join(",") }
-
-    new_item_attrs = %w[quantity product]
-    update_attrs = ["quantity"]
+    let(:new_item_attrs) { %w[quantity product] }
+    let(:update_attrs) { ["quantity"] }
 
     it_behaves_like "a list items bulk update", "grocery_list", new_item_attrs, update_attrs
   end

@@ -538,7 +538,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 params: update_params,
                 as: :json
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
           end
         end
       end

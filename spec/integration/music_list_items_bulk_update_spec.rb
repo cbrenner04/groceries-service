@@ -11,9 +11,8 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
     let(:item) { create(:music_list_item, list: list) }
     let(:other_item) { create(:music_list_item, list: list) }
     let(:item_ids) { [item.id, other_item.id].join(",") }
-
-    new_item_attrs = %w[artist album title]
-    update_attrs = %w[artist album]
+    let(:new_item_attrs) { %w[artist album title] }
+    let(:update_attrs) { %w[artist album] }
 
     it_behaves_like "a list items bulk update", "music_list", new_item_attrs, update_attrs
   end

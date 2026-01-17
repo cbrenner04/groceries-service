@@ -37,7 +37,7 @@ describe "/list_item_configurations", type: :request do
       it "returns 422" do
         post list_item_configurations_path, headers: auth_params, params: { list_item_configuration: { name: nil } }
 
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
         expect(JSON.parse(response.body)).to eq({ "name" => ["can't be blank"] })
       end
     end
@@ -196,7 +196,7 @@ describe "/list_item_configurations", type: :request do
                   }
                 }
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(JSON.parse(response.body)).to eq({ "name" => ["can't be blank"] })
           end
         end
@@ -261,7 +261,7 @@ describe "/list_item_configurations", type: :request do
 
             delete list_item_configuration_path(list_item_configuration.id), headers: auth_params
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
           end
         end
       end

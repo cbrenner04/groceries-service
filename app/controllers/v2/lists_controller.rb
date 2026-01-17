@@ -28,7 +28,7 @@ class V2::ListsController < ProtectedRouteController
       users_list = V2::UsersListsService.create_users_list(current_user, new_list)
       render json: V2::ListsService.list_response(new_list, users_list, current_user)
     else
-      render json: new_list.errors, status: :unprocessable_entity
+      render json: new_list.errors, status: :unprocessable_content
     end
   end
 
@@ -41,7 +41,7 @@ class V2::ListsController < ProtectedRouteController
     if list.update(update_attrs)
       render json: list
     else
-      render json: list.errors, status: :unprocessable_entity
+      render json: list.errors, status: :unprocessable_content
     end
   end
 
@@ -52,7 +52,7 @@ class V2::ListsController < ProtectedRouteController
     list.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private

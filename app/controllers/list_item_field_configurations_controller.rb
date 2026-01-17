@@ -28,7 +28,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
     if new_field_config.save
       render json: new_field_config
     else
-      render json: new_field_config.errors, status: :unprocessable_entity
+      render json: new_field_config.errors, status: :unprocessable_content
     end
   end
 
@@ -37,7 +37,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
     if list_item_field_configuration.update(list_item_field_configuration_params)
       render json: list_item_field_configuration
     else
-      render json: list_item_field_configuration.errors, status: :unprocessable_entity
+      render json: list_item_field_configuration.errors, status: :unprocessable_content
     end
   end
 
@@ -46,7 +46,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
     list_item_field_configuration.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private
