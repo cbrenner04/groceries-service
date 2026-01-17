@@ -101,11 +101,9 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
     let(:update_params) { {} }
 
     before do
-      update_params = {
-        list_items: {
-          category: "updated category",
-          clear_category: true
-        }
+      update_params[:list_items] = {
+        category: "updated category",
+        clear_category: true
       }
       update_attrs.each do |attr|
         update_params[:list_items][attr.to_sym] = case attr

@@ -8,9 +8,9 @@ describe "/lists/:list_id/list_items", type: :request do
     let(:list) { create(:music_list, owner: user) }
     let(:users_list) { create(:users_list, user: user, list: list) }
     let(:item) { create(:music_list_item, list: list) }
-    let(:required_attrs) { %w[title artist album] }
-    let(:item_attrs) { %w[title artist album] }
 
-    it_behaves_like "a list item", "music_list", required_attrs, item_attrs
+    it_behaves_like "a list item", "music_list", %w[title artist album], %w[title artist album] do
+      # let variables are inherited from parent context
+    end
   end
 end
