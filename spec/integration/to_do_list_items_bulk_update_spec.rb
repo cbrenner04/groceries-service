@@ -13,9 +13,8 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
     let(:other_user) { create(:user) }
     let(:item_ids) { [item.id, other_item.id].join(",") }
 
-    new_item_attrs = %w[assignee_id due_by task]
-    update_attrs = %w[assignee_id due_by]
-
-    it_behaves_like "a list items bulk update", "to_do_list", new_item_attrs, update_attrs
+    it_behaves_like "a list items bulk update", "to_do_list", %w[assignee_id due_by task], %w[assignee_id due_by] do
+      # let variables are inherited from parent context
+    end
   end
 end

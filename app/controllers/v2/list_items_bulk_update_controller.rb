@@ -27,7 +27,7 @@ class V2::ListItemsBulkUpdateController < ProtectedRouteController
   rescue ActiveRecord::RecordNotFound
     render json: "One or more items were not found", status: :not_found
   rescue ArgumentError => e
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { error: e.message }, status: :unprocessable_content
   end
 
   private

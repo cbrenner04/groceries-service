@@ -25,7 +25,7 @@ class V1::ListItemsBulkUpdateController < ProtectedRouteController
   rescue ActiveRecord::RecordNotFound
     render json: "One or more items were not found", status: :not_found
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
   # rubocop:enable Metrics/AbcSize
 

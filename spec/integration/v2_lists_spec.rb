@@ -353,7 +353,7 @@ describe "/v2/lists", type: :request do
 
           delete v2_list_path(delete_list.id), headers: auth_params
 
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
         end
       end
     end

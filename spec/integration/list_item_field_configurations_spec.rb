@@ -343,7 +343,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(JSON.parse(response.body)).to eq({ "label" => ["can't be blank"] })
             end
 
@@ -390,7 +390,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(JSON.parse(response.body)).to eq(
                 {
                   "data_type" => ["can't be blank", " is not one of [boolean, data_time, free_text, number]"]
@@ -411,7 +411,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(JSON.parse(response.body)).to eq(
                 {
                   "data_type" => ["bar is not one of [boolean, data_time, free_text, number]"]
@@ -432,7 +432,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(JSON.parse(response.body)).to eq({ "position" => ["is not a number"] })
             end
           end
@@ -575,7 +575,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-                expect(response).to have_http_status :unprocessable_entity
+                expect(response).to have_http_status :unprocessable_content
                 expect(JSON.parse(response.body)).to eq({ "label" => ["can't be blank"] })
               end
             end
@@ -593,7 +593,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-                expect(response).to have_http_status :unprocessable_entity
+                expect(response).to have_http_status :unprocessable_content
                 expect(JSON.parse(response.body)).to eq(
                   {
                     "data_type" => ["can't be blank", " is not one of [boolean, data_time, free_text, number]"]
@@ -615,7 +615,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                      }
                    }
 
-                expect(response).to have_http_status :unprocessable_entity
+                expect(response).to have_http_status :unprocessable_content
                 expect(JSON.parse(response.body)).to eq(
                   {
                     "data_type" => ["bar is not one of [boolean, data_time, free_text, number]"]
@@ -689,7 +689,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                 list_item_field_configuration.id
               ), headers: auth_params
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
             end
           end
         end

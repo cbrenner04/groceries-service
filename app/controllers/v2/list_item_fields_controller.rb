@@ -28,7 +28,7 @@ class V2::ListItemFieldsController < ProtectedRouteController
     if new_field.save
       render json: new_field
     else
-      render json: new_field.errors, status: :unprocessable_entity
+      render json: new_field.errors, status: :unprocessable_content
     end
   end
 
@@ -37,7 +37,7 @@ class V2::ListItemFieldsController < ProtectedRouteController
     if item_field.update(item_field_params)
       render json: item_field
     else
-      render json: item_field.errors, status: :unprocessable_entity
+      render json: item_field.errors, status: :unprocessable_content
     end
   end
 
@@ -46,7 +46,7 @@ class V2::ListItemFieldsController < ProtectedRouteController
     item_field.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private

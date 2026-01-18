@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.5"
+ruby "3.4.8"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -14,7 +14,7 @@ gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 7.0", ">= 7.1.0"
 gem "rack-cors", "~> 3.0", ">= 3.0.0"
-gem "rails", "~> 8.0.2", ">= 8.0.2.1"
+gem "rails", "~> 8.1.0", ">= 8.1.2"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 7.0", ">= 7.0.0"
 gem "sentry-rails", "~> 5.19", ">= 5.19.0"
