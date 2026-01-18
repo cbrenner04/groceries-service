@@ -29,7 +29,7 @@ class Users::InvitationsController < Devise::InvitationsController
     if user.errors.empty?
       render json: { success: ["User updated."] }, status: :accepted
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -49,7 +49,7 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def render_password_error
-    render json: { errors: "password and password confirmation must be the same" }, status: :unprocessable_entity
+    render json: { errors: "password and password confirmation must be the same" }, status: :unprocessable_content
   end
 
   def list_id
@@ -94,7 +94,7 @@ class Users::InvitationsController < Devise::InvitationsController
       render json: { user: user, users_list: { id: users_list.id, permissions: users_list.permissions } },
              status: :created
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_content
     end
   end
 
@@ -103,7 +103,7 @@ class Users::InvitationsController < Devise::InvitationsController
     if user.valid?
       render json: { user: user }, status: :created
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_content
     end
   end
 end

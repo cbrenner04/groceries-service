@@ -20,7 +20,7 @@ class V1::UsersListsController < ProtectedRouteController
   def create
     # given the manipulation before `.create`, we need to check for required params
     unless users_list_params[:user_id].present? && users_list_params[:list_id].present?
-      return head :unprocessable_entity
+      return head :unprocessable_content
     end
 
     user = User.find(users_list_params[:user_id])
@@ -36,7 +36,7 @@ class V1::UsersListsController < ProtectedRouteController
     else
       # this is a catch all in case something goes wrong on `save` but unlikely to get here
       # :nocov:
-      render json: new_users_list.errors, status: :unprocessable_entity
+      render json: new_users_list.errors, status: :unprocessable_content
       # :nocov:
     end
   end
@@ -51,7 +51,7 @@ class V1::UsersListsController < ProtectedRouteController
     users_list.update(users_list_params)
     render json: users_list
   rescue ArgumentError => e
-    render json: e, status: :unprocessable_entity
+    render json: e, status: :unprocessable_content
   end
 
   # DELETE /:id

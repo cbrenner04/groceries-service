@@ -202,7 +202,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                          }
                        }
 
-                  expect(response).to have_http_status :unprocessable_entity
+                  expect(response).to have_http_status :unprocessable_content
                   expect(JSON.parse(response.body)).to eq({ "list_item_field_configuration" => ["must exist"] })
                 end
               end
@@ -218,7 +218,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                          }
                        }
 
-                  expect(response).to have_http_status :unprocessable_entity
+                  expect(response).to have_http_status :unprocessable_content
                   expect(JSON.parse(response.body)).to eq({ "data" => ["can't be blank"] })
                 end
               end
@@ -359,7 +359,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                           }
                         }
 
-                    expect(response).to have_http_status :unprocessable_entity
+                    expect(response).to have_http_status :unprocessable_content
                     expect(JSON.parse(response.body)).to eq({ "list_item_field_configuration" => ["must exist"] })
                   end
                 end
@@ -375,7 +375,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                           }
                         }
 
-                    expect(response).to have_http_status :unprocessable_entity
+                    expect(response).to have_http_status :unprocessable_content
                     expect(JSON.parse(response.body)).to eq({ "data" => ["can't be blank"] })
                   end
                 end
@@ -435,7 +435,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
                   delete v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
-                  expect(response).to have_http_status :unprocessable_entity
+                  expect(response).to have_http_status :unprocessable_content
                 end
               end
             end

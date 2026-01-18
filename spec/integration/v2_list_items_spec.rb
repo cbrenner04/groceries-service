@@ -331,7 +331,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
                     params: { list_item: { refreshed: nil } },
                     as: :json
 
-                expect(response).to have_http_status :unprocessable_entity
+                expect(response).to have_http_status :unprocessable_content
               end
             end
 
@@ -388,7 +388,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
                 delete v2_list_list_item_path(list.id, item.id), headers: auth_params
 
-                expect(response).to have_http_status :unprocessable_entity
+                expect(response).to have_http_status :unprocessable_content
               end
             end
           end

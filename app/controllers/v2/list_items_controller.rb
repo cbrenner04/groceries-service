@@ -40,7 +40,7 @@ class V2::ListItemsController < ProtectedRouteController
     if item.update(item_params)
       render json: item
     else
-      render json: item.errors, status: :unprocessable_entity
+      render json: item.errors, status: :unprocessable_content
     end
   end
 
@@ -49,7 +49,7 @@ class V2::ListItemsController < ProtectedRouteController
     item.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private

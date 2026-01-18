@@ -89,7 +89,7 @@ describe "/v1/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
             end
           end
         end
@@ -153,7 +153,7 @@ describe "/v1/lists/:list_id/users_lists", type: :request do
                     params: { users_list: { permissions: "foo" } },
                     headers: auth_params
 
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
             end
           end
         end
@@ -215,7 +215,7 @@ describe "/v1/lists/:list_id/users_lists", type: :request do
         it "returns unprocessible entity" do
           post v1_list_users_lists_path(list.id), params: { users_list: { user_id: nil } }, headers: auth_params
 
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
         end
       end
     end

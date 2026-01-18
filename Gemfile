@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.5"
+ruby "3.4.8"
 
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
@@ -12,13 +12,13 @@ gem "devise_token_auth", "~> 1.2", ">= 1.2.6"
 gem "lograge", "~> 0.14.0"
 gem "newrelic_rpm", "~> 9.0", ">= 9.0.0"
 gem "pg", ">= 0.18", "< 2.0"
-gem "puma", "~> 6.4", ">= 6.4.3"
+gem "puma", "~> 7.0", ">= 7.1.0"
 gem "rack-cors", "~> 3.0", ">= 3.0.0"
-gem "rails", "~> 8.0.2", ">= 8.0.2.1"
+gem "rails", "~> 8.1.0", ">= 8.1.2"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 7.0", ">= 7.0.0"
-gem "sentry-rails", "~> 5.19", ">= 5.19.0"
-gem "sentry-ruby", "~> 5.0"
+gem "sentry-rails", "~> 6.0", ">= 6.3.0"
+gem "sentry-ruby", "~> 6.0"
 gem "sprockets", "~> 4.2", ">= 4.2.1"
 
 # some ruby v3 issue?
@@ -40,7 +40,7 @@ group :development, :test do
   gem "rubocop", "~> 1.65", ">= 1.65.1"
   gem "rubocop-factory_bot", "~> 2.26", ">= 2.26.1"
   gem "rubocop-performance", "~> 1.21", ">= 1.21.0"
-  gem "rubocop-rails", "~> 2.26", ">= 2.26.0"
+  gem "rubocop-rails", "~> 2.33", ">= 2.33.4"
   gem "rubocop-rspec", "~> 3.0", ">= 3.0.3"
   gem "rubocop-rspec_rails", "~> 2.30"
   gem "simplecov", "~> 0.22.0"

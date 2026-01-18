@@ -24,7 +24,7 @@ class V1::ListItemsController < ProtectedRouteController
     if new_item.save
       render json: new_item
     else
-      render json: new_item.errors, status: :unprocessable_entity
+      render json: new_item.errors, status: :unprocessable_content
     end
   end
 
@@ -33,7 +33,7 @@ class V1::ListItemsController < ProtectedRouteController
     if item.update(item_params)
       render json: @item
     else
-      render json: @item.errors, status: :unprocessable_entity
+      render json: @item.errors, status: :unprocessable_content
     end
   rescue ActiveRecord::RecordNotFound
     head :not_found
@@ -46,7 +46,7 @@ class V1::ListItemsController < ProtectedRouteController
   rescue ActiveRecord::RecordNotFound
     head :not_found
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private

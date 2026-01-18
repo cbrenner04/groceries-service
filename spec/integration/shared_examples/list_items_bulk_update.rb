@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, update_attrs|
-  list_item_class = {
-    book_list: BookListItem,
-    grocery_list: GroceryListItem,
-    music_list: MusicListItem,
-    simple_list: SimpleListItem,
-    to_do_list: ToDoListItem
-  }[list_type.to_sym]
+  let(:list_item_class) do
+    {
+      book_list: BookListItem,
+      grocery_list: GroceryListItem,
+      music_list: MusicListItem,
+      simple_list: SimpleListItem,
+      to_do_list: ToDoListItem
+    }[list_type.to_sym]
+  end
 
   before { login user }
 
@@ -95,15 +97,13 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
   end
 
   describe "PUT /" do
-    update_params = {}
-    due_by_date = DateTime.new(2020, 0o2, 0o2)
+    let(:due_by_date) { DateTime.new(2020, 0o2, 0o2) }
+    let(:update_params) { {} }
 
     before do
-      update_params = {
-        list_items: {
-          category: "updated category",
-          clear_category: true
-        }
+      update_params[:list_items] = {
+        category: "updated category",
+        clear_category: true
       }
       update_attrs.each do |attr|
         update_params[:list_items][attr.to_sym] = case attr
@@ -145,8 +145,6 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
               headers: auth_params,
               params: update_params,
               as: :json
-
-          puts response.body
 
           expect(response).to have_http_status :not_found
           expect(response.body).to eq "One or more items were not found"
@@ -442,7 +440,7 @@ RSpec.shared_examples "a list items bulk update" do |list_type, new_item_attrs, 
                 params: update_params,
                 as: :json
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
           end
         end
       end
