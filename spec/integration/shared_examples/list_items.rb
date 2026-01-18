@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
-  list_item_class = {
-    book_list: BookListItem,
-    grocery_list: GroceryListItem,
-    music_list: MusicListItem,
-    simple_list: SimpleListItem,
-    to_do_list: ToDoListItem
-  }[list_type.to_sym]
+  let(:list_item_class) do
+    {
+      book_list: BookListItem,
+      grocery_list: GroceryListItem,
+      music_list: MusicListItem,
+      simple_list: SimpleListItem,
+      to_do_list: ToDoListItem
+    }[list_type.to_sym]
+  end
 
   before { login user }
 
@@ -128,7 +130,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
                  params: { list_item: { list_id: list.id, required_attrs[0].to_sym => nil } },
                  headers: auth_params
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(response.body).not_to be_blank
           end
         end
@@ -185,7 +187,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
                 params: { list_item: params },
                 headers: auth_params
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(response.body).not_to be_blank
           end
         end
@@ -238,7 +240,7 @@ RSpec.shared_examples "a list item" do |list_type, required_attrs, item_attrs|
 
             delete v1_list_list_item_path(list.id, delete_item.id), headers: auth_params
 
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
           end
         end
       end

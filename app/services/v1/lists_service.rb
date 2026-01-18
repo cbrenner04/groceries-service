@@ -41,10 +41,6 @@ class V1::ListsService
       List.create!(name: old_list[:name], owner_id: old_list[:owner_id], type: list_type)
     end
 
-    def create_new_items(old_list, new_list, user)
-      create_new_list_items(old_list, new_list, user)
-    end
-
     def create_new_items_from_multiple_lists(lists, new_list, user)
       lists.each { |old_list| create_new_list_items(old_list, new_list, user) }
     end

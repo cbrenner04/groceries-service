@@ -32,8 +32,7 @@ class V2::ListItemsController < ProtectedRouteController
 
   # POST /
   def create
-    # given no user supplied params, no reason to catch unprocessable entity
-    render json: list.list_items.create!(user: current_user)
+    render json: list.list_items.create!(item_params.merge(user: current_user))
   end
 
   # PUT /:id
@@ -41,7 +40,7 @@ class V2::ListItemsController < ProtectedRouteController
     if item.update(item_params)
       render json: item
     else
-      render json: item.errors, status: :unprocessable_entity
+      render json: item.errors, status: :unprocessable_content
     end
   end
 
@@ -50,7 +49,7 @@ class V2::ListItemsController < ProtectedRouteController
     item.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_entity
+    render json: e.record.errors.messages, status: :unprocessable_content
   end
 
   private
@@ -64,7 +63,7 @@ class V2::ListItemsController < ProtectedRouteController
   end
 
   def item_params
-    @item_params ||= params.expect(list_item: %i[refreshed completed])
+    @item_params ||= params.key?(:list_item) ? params.expect(list_item: %i[refreshed completed]) : {}
   end
 
   def users_list
