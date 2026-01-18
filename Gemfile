@@ -17,8 +17,8 @@ gem "rack-cors", "~> 3.0", ">= 3.0.0"
 gem "rails", "~> 8.1.0", ">= 8.1.2"
 gem "scenic", "~> 1.8", ">= 1.8.0"
 gem "secure_headers", "~> 7.0", ">= 7.0.0"
-gem "sentry-rails", "~> 5.27", ">= 5.27.1"
-gem "sentry-ruby", "~> 5.0"
+gem "sentry-rails", "~> 6.0", ">= 6.3.0"
+gem "sentry-ruby", "~> 6.0"
 gem "sprockets", "~> 4.2", ">= 4.2.1"
 
 # some ruby v3 issue?
