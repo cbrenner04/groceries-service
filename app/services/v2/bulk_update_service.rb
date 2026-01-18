@@ -43,34 +43,43 @@ class V2::BulkUpdateService
     raise ArgumentError, "Either new_list_name or existing_list_id must be provided when copying or moving items"
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
   def update_current_items
     return unless update_current_items? && list.list_item_configuration_id && fields_to_update.present?
 
-    fields_to_update.each do |field_update|
-      field_config = list.list_item_configuration.list_item_field_configurations.find_by(label: field_update[:label])
-      next unless field_config
+    fields_to_update.each { |field_update| apply_field_update(field_update) }
+  end
 
-      update_item_ids = Array(field_update[:item_ids]).map(&:to_s)
-      items = ListItem.where(id: update_item_ids)
+  def apply_field_update(field_update)
+    field_config = list_item_field_configuration_for(field_update[:label])
+    return unless field_config
 
-      items.each do |item|
-        existing_field = item.list_item_fields.find_by(list_item_field_configuration: field_config)
-
-        if field_update[:data].blank?
-          # Clear the field by deleting it or setting data to nil
-          existing_field&.destroy
-        elsif existing_field
-          # Update or create the field with the new data
-          existing_field.update!(data: field_update[:data])
-        else
-          item.list_item_fields.create!(data: field_update[:data], user: @current_user,
-                                        list_item_field_configuration: field_config)
-        end
-      end
+    ListItem.where(id: update_item_ids(field_update)).find_each do |item|
+      upsert_item_field(item, field_config, field_update[:data])
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
+
+  def list_item_field_configuration_for(label)
+    list.list_item_configuration.list_item_field_configurations.find_by(label: label)
+  end
+
+  def update_item_ids(field_update)
+    Array(field_update[:item_ids]).map(&:to_s)
+  end
+
+  def upsert_item_field(item, field_config, data)
+    existing_field = item.list_item_fields.find_by(list_item_field_configuration: field_config)
+
+    if data.blank?
+      # Clear the field by deleting it or setting data to nil
+      existing_field&.destroy
+    elsif existing_field
+      # Update or create the field with the new data
+      existing_field.update!(data: data)
+    else
+      item.list_item_fields.create!(data: data, user: @current_user,
+                                    list_item_field_configuration: field_config)
+    end
+  end
 
   def create_new_items
     target_list_id = determine_target_list_id
@@ -166,7 +175,6 @@ class V2::BulkUpdateService
     @items_with_fields ||= fetch_items_with_fields
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def fetch_items_with_fields
     # items call ensures @item_ids_order is set via fetch_items
     # Eager load fields and their configurations to avoid N+1 queries
@@ -174,26 +182,28 @@ class V2::BulkUpdateService
     items_hash = items_with_associations.index_by(&:id)
 
     # Preserve the order from item_ids parameter
-    item_ids_order.map do |item_id|
-      item = items_hash[item_id]
-      # Get all fields for this item - ensure we get all fields by reloading association if needed
-      # Convert to array to ensure we have all fields loaded
-      all_fields = if item.association(:list_item_fields).loaded?
-                     item.list_item_fields.to_a
-                   else
-                     item.list_item_fields.includes(:list_item_field_configuration).to_a
-                   end
+    item_ids_order.map { |item_id| item_with_fields(items_hash[item_id]) }
+  end
 
-      fields = all_fields.map do |field|
-        field.attributes.symbolize_keys.merge(
-          label: field.list_item_field_configuration.label,
-          list_item_id: item.id
-        )
-      end
-      item.attributes.symbolize_keys.merge(fields: fields)
+  def item_with_fields(item)
+    item.attributes.symbolize_keys.merge(fields: build_item_fields(item))
+  end
+
+  def build_item_fields(item)
+    # Get all fields for this item - ensure we get all fields loaded
+    fields = if item.association(:list_item_fields).loaded?
+               item.list_item_fields.to_a
+             else
+               item.list_item_fields.includes(:list_item_field_configuration).to_a
+             end
+
+    fields.map do |field|
+      field.attributes.symbolize_keys.merge(
+        label: field.list_item_field_configuration.label,
+        list_item_id: item.id
+      )
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def item_ids_order
     @item_ids_order ||= begin
@@ -273,12 +283,7 @@ class V2::BulkUpdateService
   def normalize_params(params)
     return {} if params.blank?
 
-    raw_params = if params.respond_to?(:to_unsafe_h)
-                   params.to_unsafe_h
-                 else
-                   params.to_h
-                 end
-
+    raw_params = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params.to_h
     raw_params.deep_symbolize_keys
   end
 end
