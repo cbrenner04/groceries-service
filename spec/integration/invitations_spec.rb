@@ -44,7 +44,7 @@ describe "/auth/invitation", type: :request do
         it "responds with errors" do
           post auth_invitation_path, params: { email: nil, list_id: list.id }, headers: auth_params
 
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
           expect(response.body).to eq("{\"email\":[\"can't be blank\"]}")
         end
       end
@@ -141,7 +141,7 @@ describe "/auth/invitation", type: :request do
         it "responds with errors" do
           post auth_invitation_path, params: { email: nil }, headers: auth_params
 
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
           expect(response.body).to eq("{\"email\":[\"can't be blank\"]}")
         end
       end
@@ -160,7 +160,7 @@ describe "/auth/invitation", type: :request do
               invitation_token: "foobar"
             }
 
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
         expect(response.body).to eq("{\"errors\":[\"Invitation token is invalid\"]}")
       end
     end
@@ -189,7 +189,7 @@ describe "/auth/invitation", type: :request do
                 invitation_token: new_user.raw_invitation_token
               }
 
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
           expect(response.body).to eq("{\"errors\":\"password and password confirmation must be the same\"}")
         end
       end
