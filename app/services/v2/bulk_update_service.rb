@@ -4,8 +4,8 @@
 # rubocop:disable Metrics/ClassLength
 class V2::BulkUpdateService
   def initialize(params, item_params, current_user)
-    @params = params
-    @item_params = item_params
+    @params = normalize_params(params)
+    @item_params = normalize_params(item_params)
     @current_user = current_user
   end
 
@@ -45,7 +45,7 @@ class V2::BulkUpdateService
 
   # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
   def update_current_items
-    return unless update_current_items? && list.list_item_configuration_id && fields_to_update.any?
+    return unless update_current_items? && list.list_item_configuration_id && fields_to_update.present?
 
     fields_to_update.each do |field_update|
       field_config = list.list_item_configuration.list_item_field_configurations.find_by(label: field_update[:label])
@@ -82,11 +82,10 @@ class V2::BulkUpdateService
   def create_new_item_with_fields(item_data, target_list_id)
     new_item = ListItem.create!(list_id: target_list_id, user: @current_user)
 
-    # Handle both symbol and string keys for fields
-    fields = item_data[:fields] || item_data["fields"] || []
+    fields = item_data[:fields] || []
 
     fields.each do |field_data|
-      field_config_id = field_data["list_item_field_configuration_id"] || field_data[:list_item_field_configuration_id]
+      field_config_id = field_data[:list_item_field_configuration_id]
       field_config = ListItemFieldConfiguration.find(field_config_id)
       data = determine_field_data(field_data, fields_to_update)
 
@@ -101,18 +100,16 @@ class V2::BulkUpdateService
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def determine_field_data(field_data, fields_to_update)
-    # Handle both string and symbol keys for data
-    original_data = field_data["data"] || field_data[:data]
+    original_data = field_data[:data]
     return original_data if fields_to_update.blank?
 
     # Find the field configuration to get the label
-    field_config_id = field_data["list_item_field_configuration_id"] || field_data[:list_item_field_configuration_id]
+    field_config_id = field_data[:list_item_field_configuration_id]
     field_config = ListItemFieldConfiguration.find(field_config_id)
 
     # Look for a matching update by label and check if this item is in the item_ids
-    list_item_id = field_data["list_item_id"] || field_data[:list_item_id]
+    list_item_id = field_data[:list_item_id]
     list_item_id = list_item_id.to_s
     matching_update = fields_to_update.find do |update|
       update_item_ids = Array(update[:item_ids]).map(&:to_s)
@@ -126,7 +123,6 @@ class V2::BulkUpdateService
 
     matching_update[:data].presence || original_data
   end
-  # rubocop:enable Metrics/AbcSize
 
   def determine_target_list_id
     if new_list_name?
@@ -189,19 +185,19 @@ class V2::BulkUpdateService
                    end
 
       fields = all_fields.map do |field|
-        field.attributes.merge(
+        field.attributes.symbolize_keys.merge(
           label: field.list_item_field_configuration.label,
           list_item_id: item.id
         )
       end
-      item.attributes.merge(fields: fields)
+      item.attributes.symbolize_keys.merge(fields: fields)
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def item_ids_order
     @item_ids_order ||= begin
-      ids = @params[:item_ids] || @params["item_ids"]
+      ids = @params[:item_ids]
       raise ActiveRecord::RecordNotFound if ids.blank?
 
       ids.to_s.split(",").map(&:strip).compact_blank
@@ -217,8 +213,7 @@ class V2::BulkUpdateService
     fields = @params.dig(:list_items, :fields_to_update)
     return nil if fields.blank?
 
-    # Convert ActionController::Parameters to regular hashes
-    fields.map(&:to_unsafe_h)
+    fields
   end
 
   # Helper methods for cleaner conditionals
@@ -273,6 +268,18 @@ class V2::BulkUpdateService
   def lists
     list_item_config_id = list.list_item_configuration_id
     @current_user.write_lists.filter { |l| l.list_item_configuration_id == list_item_config_id }
+  end
+
+  def normalize_params(params)
+    return {} if params.blank?
+
+    raw_params = if params.respond_to?(:to_unsafe_h)
+                   params.to_unsafe_h
+                 else
+                   params.to_h
+                 end
+
+    raw_params.deep_symbolize_keys
   end
 end
 # rubocop:enable Metrics/ClassLength
