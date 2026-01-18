@@ -43,7 +43,7 @@ class V2::BulkUpdateService
     raise ArgumentError, "Either new_list_name or existing_list_id must be provided when copying or moving items"
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
   def update_current_items
     return unless update_current_items? && list.list_item_configuration_id && fields_to_update.any?
 
@@ -51,7 +51,8 @@ class V2::BulkUpdateService
       field_config = list.list_item_configuration.list_item_field_configurations.find_by(label: field_update[:label])
       next unless field_config
 
-      items = ListItem.where(id: field_update[:item_ids])
+      update_item_ids = Array(field_update[:item_ids]).map(&:to_s)
+      items = ListItem.where(id: update_item_ids)
 
       items.each do |item|
         existing_field = item.list_item_fields.find_by(list_item_field_configuration: field_config)
@@ -69,7 +70,7 @@ class V2::BulkUpdateService
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
 
   def create_new_items
     target_list_id = determine_target_list_id
@@ -81,8 +82,12 @@ class V2::BulkUpdateService
   def create_new_item_with_fields(item_data, target_list_id)
     new_item = ListItem.create!(list_id: target_list_id, user: @current_user)
 
-    item_data[:fields].each do |field_data|
-      field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
+    # Handle both symbol and string keys for fields
+    fields = item_data[:fields] || item_data["fields"] || []
+
+    fields.each do |field_data|
+      field_config_id = field_data["list_item_field_configuration_id"] || field_data[:list_item_field_configuration_id]
+      field_config = ListItemFieldConfiguration.find(field_config_id)
       data = determine_field_data(field_data, fields_to_update)
 
       # Only create the field if data is present (not nil or blank)
@@ -96,22 +101,32 @@ class V2::BulkUpdateService
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def determine_field_data(field_data, fields_to_update)
-    return field_data["data"] if fields_to_update.blank?
+    # Handle both string and symbol keys for data
+    original_data = field_data["data"] || field_data[:data]
+    return original_data if fields_to_update.blank?
 
     # Find the field configuration to get the label
-    field_config = ListItemFieldConfiguration.find(field_data["list_item_field_configuration_id"])
+    field_config_id = field_data["list_item_field_configuration_id"] || field_data[:list_item_field_configuration_id]
+    field_config = ListItemFieldConfiguration.find(field_config_id)
 
     # Look for a matching update by label and check if this item is in the item_ids
+    list_item_id = field_data["list_item_id"] || field_data[:list_item_id]
+    list_item_id = list_item_id.to_s
     matching_update = fields_to_update.find do |update|
-      update[:label] == field_config.label && update[:item_ids].include?(field_data["list_item_id"])
+      update_item_ids = Array(update[:item_ids]).map(&:to_s)
+      update[:label] == field_config.label && update_item_ids.include?(list_item_id)
     end
 
     # If there's a matching update, use its data
     # For copy operations, if the update data is blank, preserve the original data
     # For update operations, blank data means clear the field
-    matching_update[:data].presence || field_data["data"]
+    return original_data unless matching_update
+
+    matching_update[:data].presence || original_data
   end
+  # rubocop:enable Metrics/AbcSize
 
   def determine_target_list_id
     if new_list_name?
@@ -135,28 +150,61 @@ class V2::BulkUpdateService
   def archive_original_items
     return unless move_requested?
 
-    items.each { |item| ListItem.find(item["id"]).archive }
+    items.each(&:archive)
   end
 
   def fetch_items
-    item_ids = @params[:item_ids].split(",")
-    items = ListItem.where(id: item_ids)
+    item_ids = item_ids_order
+    items_relation = ListItem.where(id: item_ids)
 
-    raise ActiveRecord::RecordNotFound unless item_ids.count == items.count
+    # Load items to verify they all exist
+    loaded_items = items_relation.to_a
 
-    items
+    raise ActiveRecord::RecordNotFound unless item_ids.count == loaded_items.count
+
+    # Return relation for use in other methods
+    items_relation
   end
 
   def items_with_fields
     @items_with_fields ||= fetch_items_with_fields
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def fetch_items_with_fields
-    items.includes(list_item_fields: :list_item_field_configuration).map do |item|
-      fields = item.list_item_fields.map do |field|
-        field.attributes.merge(label: field.list_item_field_configuration.label)
+    # items call ensures @item_ids_order is set via fetch_items
+    # Eager load fields and their configurations to avoid N+1 queries
+    items_with_associations = items.includes(list_item_fields: :list_item_field_configuration)
+    items_hash = items_with_associations.index_by(&:id)
+
+    # Preserve the order from item_ids parameter
+    item_ids_order.map do |item_id|
+      item = items_hash[item_id]
+      # Get all fields for this item - ensure we get all fields by reloading association if needed
+      # Convert to array to ensure we have all fields loaded
+      all_fields = if item.association(:list_item_fields).loaded?
+                     item.list_item_fields.to_a
+                   else
+                     item.list_item_fields.includes(:list_item_field_configuration).to_a
+                   end
+
+      fields = all_fields.map do |field|
+        field.attributes.merge(
+          label: field.list_item_field_configuration.label,
+          list_item_id: item.id
+        )
       end
       item.attributes.merge(fields: fields)
+    end
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+  def item_ids_order
+    @item_ids_order ||= begin
+      ids = @params[:item_ids] || @params["item_ids"]
+      raise ActiveRecord::RecordNotFound if ids.blank?
+
+      ids.to_s.split(",").map(&:strip).compact_blank
     end
   end
 

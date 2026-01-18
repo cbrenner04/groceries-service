@@ -437,15 +437,19 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 item.reload
                 other_item.reload
                 new_list = List.find_by(name: "bulk update list no fields")
-                new_items = ListItem.where(list_id: new_list.id)
+                new_items = ListItem.where(list_id: new_list.id).includes(:list_item_fields)
 
                 expect(item.archived_at).to be_nil
                 expect(other_item.archived_at).to be_nil
                 expect(new_list).to be_truthy
                 expect(new_items.count).to eq 2
                 # Should use original field data when fields_to_update is not provided
-                expect(new_items.first.list_item_fields.map(&:data)).to eq %w[MyString MyString]
-                expect(new_items.last.list_item_fields.map(&:data)).to eq ["MyString"]
+                # Items are created in the order specified by item_ids: [item.id, other_item.id]
+                # Find items by field count to avoid ordering issues
+                item_with_two_fields = new_items.find { |i| i.list_item_fields.count == 2 }
+                item_with_one_field = new_items.find { |i| i.list_item_fields.one? }
+                expect(item_with_two_fields.list_item_fields.map(&:data)).to eq %w[MyString MyString]
+                expect(item_with_one_field.list_item_fields.map(&:data)).to eq ["MyString"]
               end
 
               it "handles empty data in fields_to_update by preserving original field data" do
