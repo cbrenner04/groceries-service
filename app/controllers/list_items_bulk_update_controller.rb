@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-# TODO: should this be rethought?
-
-# /v2/lists/:list_id/list_items/bulk_update
+# /lists/:list_id/list_items/bulk_update
 # controller for bulk updating list items
-class V2::ListItemsBulkUpdateController < ProtectedRouteController
+class ListItemsBulkUpdateController < ProtectedRouteController
   before_action :require_write_access
 
   # GET /
   def show
-    service = V2::BulkUpdateService.new(params, {}, current_user)
+    service = BulkUpdateService.new(params, {}, current_user)
     render json: service.show_body
   rescue ActiveRecord::RecordNotFound
     render json: "One or more items were not found", status: :not_found
@@ -17,7 +15,7 @@ class V2::ListItemsBulkUpdateController < ProtectedRouteController
 
   # PUT /
   def update
-    service = V2::BulkUpdateService.new(params, item_params, current_user)
+    service = BulkUpdateService.new(params, item_params, current_user)
 
     # Validate items exist before proceeding
     service.items

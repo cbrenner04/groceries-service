@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# /v2/lists/:list_id/list_items/:list_item_id/list_item_fields
+# /lists/:list_id/list_items/:list_item_id/list_item_fields
 # controller for list item fields
-class V2::ListItemFieldsController < ProtectedRouteController
+class ListItemFieldsController < ProtectedRouteController
   before_action :require_list_access
   before_action :require_write_access, only: %i[create edit update destroy]
   before_action :require_field_existence, only: %i[show edit update destroy]
@@ -19,7 +19,7 @@ class V2::ListItemFieldsController < ProtectedRouteController
 
   # GET /:id/edit
   def edit
-    render json: { item_field: item_field, list_users: V2::UsersListsService.list_users(list.id) }
+    render json: { item_field: item_field, list_users: UsersListsService.list_users(list.id) }
   end
 
   # POST /

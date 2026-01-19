@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "v2/lists/merge_lists", type: :request do
+describe "lists/merge_lists", type: :request do
   let(:user) { create(:user_with_lists) }
 
   before { login user }
@@ -24,7 +24,7 @@ describe "v2/lists/merge_lists", type: :request do
       second_list_item.list_item_fields.create!(user: user, data: "bar",
                                                 list_item_field_configuration: list_item_field_config)
       expect do
-        post v2_merge_lists_path,
+        post merge_lists_path,
              params: { merge_lists: { list_ids: "#{first_list.id},#{second_list.id}", new_list_name: "foobar" } },
              headers: auth_params
       end.to change(List, :count).by(1).and change(ListItem, :count).by(2).and change(UsersList, :count).by(1)

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe V2::BulkUpdateService do
+describe BulkUpdateService do
   let(:user) { create(:user) }
   let(:list) { create(:list, owner: user) }
   let(:list_item_configuration) { create(:list_item_configuration, user: user) }

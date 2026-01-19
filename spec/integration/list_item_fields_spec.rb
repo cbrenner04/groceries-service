@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :request do
+describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :request do
   let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
@@ -26,7 +26,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
   context "when list does not exist" do
     it "returns 404" do
-      get v2_list_list_item_list_item_fields_path("foobar", item.id), headers: auth_params
+      get list_list_item_list_item_fields_path("foobar", item.id), headers: auth_params
 
       expect(response).to have_http_status :not_found
     end
@@ -35,7 +35,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
   context "when list does exist" do
     context "when list item does not exist" do
       it "returns 404" do
-        get v2_list_list_item_list_item_fields_path(list.id, "foobar"), headers: auth_params
+        get list_list_item_list_item_fields_path(list.id, "foobar"), headers: auth_params
 
         expect(response).to have_http_status :not_found
       end
@@ -46,7 +46,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
         describe "when users list does not exist" do
           it "returns 404" do
             UsersList.find_by(list: list, user: user).destroy!
-            get v2_list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
+            get list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :not_found
           end
@@ -55,7 +55,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
         describe "when user has not accepted" do
           it "returns 404" do
             UsersList.find_by(list: list, user: user).update!(has_accepted: nil)
-            get v2_list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
+            get list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :not_found
           end
@@ -64,7 +64,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
         describe "when user has declined" do
           it "returns 404" do
             UsersList.find_by(list: list, user: user).update!(has_accepted: false)
-            get v2_list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
+            get list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :not_found
           end
@@ -77,7 +77,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "GET /" do
             it "returns the list items fields" do
-              get v2_list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
+              get list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -99,7 +99,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "GET /:id" do
             it "returns list item field" do
-              get v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+              get list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -121,7 +121,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "GET /:id/edit" do
             it "returns 403" do
-              get edit_v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+              get edit_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
               expect(response).to have_http_status :forbidden
             end
@@ -129,7 +129,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "POST /" do
             it "returns 403" do
-              post v2_list_list_item_list_item_fields_path(list.id, item.id),
+              post list_list_item_list_item_fields_path(list.id, item.id),
                    headers: auth_params,
                    params: {
                      list_item_field: {
@@ -144,7 +144,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "PUT /:id" do
             it "returns 403" do
-              put v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id),
+              put list_list_item_list_item_field_path(list.id, item.id, item_field.id),
                   headers: auth_params,
                   params: {
                     list_item_field: {
@@ -159,7 +159,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
           describe "DELETE /:id" do
             it "returns 403" do
-              delete v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+              delete list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
               expect(response).to have_http_status :forbidden
             end
@@ -169,7 +169,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
         context "when user has write access" do
           describe "GET /" do
             it "returns the list items fields" do
-              get v2_list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
+              get list_list_item_list_item_fields_path(list.id, item.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -193,7 +193,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
             context "with bad params" do
               describe "with bad list item field configuration" do
                 it "returns unprocessable entity" do
-                  post v2_list_list_item_list_item_fields_path(list.id, item.id),
+                  post list_list_item_list_item_fields_path(list.id, item.id),
                        headers: auth_params,
                        params: {
                          list_item_field: {
@@ -209,7 +209,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
               describe "with bad data" do
                 it "returns unprocessable entity" do
-                  post v2_list_list_item_list_item_fields_path(list.id, item.id),
+                  post list_list_item_list_item_fields_path(list.id, item.id),
                        headers: auth_params,
                        params: {
                          list_item_field: {
@@ -226,7 +226,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             context "with good params" do
               it "create list item field" do
-                post v2_list_list_item_list_item_fields_path(list.id, item.id),
+                post list_list_item_list_item_fields_path(list.id, item.id),
                      headers: auth_params,
                      params: {
                        list_item_field: {
@@ -259,7 +259,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
           context "when field does not exist" do
             describe "GET /:id" do
               it "returns 404" do
-                get v2_list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
+                get list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
 
                 expect(response).to have_http_status :not_found
                 expect(response.body).to eq ""
@@ -268,7 +268,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             describe "GET /:id/edit" do
               it "returns 404" do
-                get edit_v2_list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
+                get edit_list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
 
                 expect(response).to have_http_status :not_found
                 expect(response.body).to eq ""
@@ -277,7 +277,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             describe "PUT /:id" do
               it "returns 404" do
-                put v2_list_list_item_list_item_field_path(list.id, item.id, "foobar"),
+                put list_list_item_list_item_field_path(list.id, item.id, "foobar"),
                     headers: auth_params,
                     params: {
                       list_item_field: {
@@ -293,7 +293,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             describe "DELETE /:id" do
               it "returns 404" do
-                delete v2_list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
+                delete list_list_item_list_item_field_path(list.id, item.id, "foobar"), headers: auth_params
 
                 expect(response).to have_http_status :not_found
               end
@@ -303,7 +303,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
           context "when field does exist" do
             describe "GET /:id" do
               it "returns list item field" do
-                get v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+                get list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
                 response_body = JSON.parse(response.body)
 
@@ -325,7 +325,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             describe "GET /:id/edit" do
               it "returns field" do
-                get edit_v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+                get edit_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
                 response_body = JSON.parse(response.body)
 
@@ -350,7 +350,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
               context "with bad params" do
                 describe "with bad list item field configuration" do
                   it "returns unprocessable entity" do
-                    put v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id),
+                    put list_list_item_list_item_field_path(list.id, item.id, item_field.id),
                         headers: auth_params,
                         params: {
                           list_item_field: {
@@ -366,7 +366,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
                 describe "with bad data" do
                   it "returns unprocessable entity" do
-                    put v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id),
+                    put list_list_item_list_item_field_path(list.id, item.id, item_field.id),
                         headers: auth_params,
                         params: {
                           list_item_field: {
@@ -386,7 +386,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                   expect(item_field[:list_item_field_configuration_id]).to eq list_item_field_configuration.id
                   expect(item_field[:data]).to eq "MyString"
 
-                  put v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id),
+                  put list_list_item_list_item_field_path(list.id, item.id, item_field.id),
                       headers: auth_params,
                       params: {
                         list_item_field: {
@@ -417,7 +417,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
 
             describe "DELETE /:id" do
               it "archives item field" do
-                delete v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+                delete list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
                 item_field.reload
 
@@ -433,7 +433,7 @@ describe "/v2/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :
                     ActiveRecord::RecordInvalid.new(item_field)
                   )
 
-                  delete v2_list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
+                  delete list_list_item_list_item_field_path(list.id, item.id, item_field.id), headers: auth_params
 
                   expect(response).to have_http_status :unprocessable_content
                 end

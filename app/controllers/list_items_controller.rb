@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# /v2/lists/:list_id/list_items
+# /lists/:list_id/list_items
 # controller for accessing and manipulating list items
 # NOTE: fields have their own controller
-class V2::ListItemsController < ProtectedRouteController
+class ListItemsController < ProtectedRouteController
   before_action :require_list_access
   before_action :require_write_access, only: %i[create edit update destroy]
   before_action :require_item_existence, only: %i[show edit update destroy]
@@ -21,9 +21,9 @@ class V2::ListItemsController < ProtectedRouteController
   # GET /:id/edit
   def edit
     render json: {
-      item: V2::ListsService.build_item_response(item),
+      item: ListsService.build_item_response(item),
       list: list,
-      list_users: V2::UsersListsService.list_users(params[:list_id]),
+      list_users: UsersListsService.list_users(params[:list_id]),
       list_item_configuration: list.list_item_configuration || nil,
       list_item_field_configurations:
         list.list_item_configuration&.list_item_field_configurations&.order(:position) || []

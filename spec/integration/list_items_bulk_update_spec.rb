@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
+describe "/lists/:list_id/list_items/bulk_update", type: :request do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
 
@@ -46,7 +46,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
       before { users_list.update!(permissions: "read") }
 
       it "responds with forbidden" do
-        get "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
+        get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -54,7 +54,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
     describe "when list does not exist" do
       it "responds with 403" do
-        get "#{v2_list_list_items_bulk_update_path('fake_id')}?item_ids=#{item_ids}", headers: auth_params
+        get "#{list_list_items_bulk_update_path('fake_id')}?item_ids=#{item_ids}", headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -65,7 +65,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
       context "when one item does not exist" do
         it "response with not found" do
-          get "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params
 
           expect(response).to have_http_status :not_found
@@ -79,7 +79,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           # in order to get two list_users
           create(:users_list, user: other_user, list: list)
 
-          get "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
+          get "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}", headers: auth_params
 
           response_body = JSON.parse(response.body).to_h
 
@@ -210,7 +210,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
       end
 
       it "responds with forbidden" do
-        put v2_list_list_items_bulk_update_path(list.id).to_s,
+        put list_list_items_bulk_update_path(list.id).to_s,
             headers: auth_params,
             params: update_params,
             as: :json
@@ -226,7 +226,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
         it "responds with not found" do
           update_params[:list_items][:copy] = true
           update_params[:list_items][:new_list_name] = "bulk update list"
-          put "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
+          put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{[item.id, 'fake_id'].join(',')}",
               headers: auth_params,
               params: update_params,
               as: :json
@@ -250,7 +250,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
           }]
 
           expect do
-            put v2_list_list_items_bulk_update_path(list.id).to_s,
+            put list_list_items_bulk_update_path(list.id).to_s,
                 headers: auth_params,
                 params: update_params,
                 as: :json
@@ -275,7 +275,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
               expect(other_field.data).to eq "MyString"
               expect(second_field.data).to eq "MyString"
 
-              put v2_list_list_items_bulk_update_path(list.id).to_s,
+              put list_list_items_bulk_update_path(list.id).to_s,
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -301,7 +301,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
               expect(first_field.data).to eq "MyString"
               expect(other_field.data).to eq "MyString"
 
-              put v2_list_list_items_bulk_update_path(list.id).to_s,
+              put list_list_items_bulk_update_path(list.id).to_s,
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -320,7 +320,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
               update_params[:list_items][:update_current_items] = false
               update_params[:list_items][:new_list_name] = "bulk update list"
 
-              put "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+              put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                   headers: auth_params,
                   params: update_params,
                   as: :json
@@ -345,7 +345,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 update_params[:list_items][:new_list_name] = "bulk update list"
                 update_params[:list_items][:update_current_items] = false
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -374,7 +374,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
                 update_params[:list_items][:existing_list_id] = other_list.id
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -403,7 +403,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
                 update_params[:list_items][:new_list_name] = "bulk update list"
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -429,7 +429,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 update_params[:list_items].delete(:fields_to_update)
                 update_params[:list_items][:new_list_name] = "bulk update list no fields"
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -468,7 +468,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
                 }]
                 update_params[:list_items][:new_list_name] = "bulk update list empty data"
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -513,7 +513,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
 
                 update_params[:list_items][:existing_list_id] = other_list.id
 
-                put v2_list_list_items_bulk_update_path(list.id).to_s,
+                put list_list_items_bulk_update_path(list.id).to_s,
                     headers: auth_params,
                     params: update_params,
                     as: :json
@@ -537,7 +537,7 @@ describe "/v2/lists/:list_id/list_items/bulk_update", type: :request do
             update_params[:list_items][:copy] = true
             update_params[:list_items][:existing_list_id] = nil
 
-            put "#{v2_list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
+            put "#{list_list_items_bulk_update_path(list.id)}?item_ids=#{item_ids}",
                 headers: auth_params,
                 params: update_params,
                 as: :json

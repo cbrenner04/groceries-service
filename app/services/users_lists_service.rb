@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for UsersLists
-class V2::UsersListsService
+class UsersListsService
   class << self
     def list_users_by_status(list_id, status)
       users_lists = UsersList.where(list_id: list_id).public_send(status)

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/v2/lists/:list_id/list_items", type: :request do
+describe "/lists/:list_id/list_items", type: :request do
   let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
@@ -17,7 +17,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
   context "when list does not exist" do
     it "returns 404" do
-      get v2_list_list_items_path("foobar"), headers: auth_params
+      get list_list_items_path("foobar"), headers: auth_params
 
       expect(response).to have_http_status :not_found
     end
@@ -28,7 +28,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
       describe "when users list does not exist" do
         it "returns 404" do
           UsersList.find_by(list: list, user: user).destroy!
-          get v2_list_list_items_path(list.id), headers: auth_params
+          get list_list_items_path(list.id), headers: auth_params
 
           expect(response).to have_http_status :not_found
         end
@@ -37,7 +37,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
       describe "when user has not accepted" do
         it "returns 404" do
           UsersList.find_by(list: list, user: user).update!(has_accepted: nil)
-          get v2_list_list_items_path(list.id), headers: auth_params
+          get list_list_items_path(list.id), headers: auth_params
 
           expect(response).to have_http_status :not_found
         end
@@ -46,7 +46,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
       describe "when user has declined" do
         it "returns 404" do
           UsersList.find_by(list: list, user: user).update!(has_accepted: false)
-          get v2_list_list_items_path(list.id), headers: auth_params
+          get list_list_items_path(list.id), headers: auth_params
 
           expect(response).to have_http_status :not_found
         end
@@ -59,7 +59,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "GET /" do
           it "returns list items" do
-            get v2_list_list_items_path(list.id), headers: auth_params
+            get list_list_items_path(list.id), headers: auth_params
 
             response_body = JSON.parse(response.body)
 
@@ -93,7 +93,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
         describe "GET /;id" do
           context "when item does not exist" do
             it "returns 404" do
-              get v2_list_list_item_path(list.id, "foobar"), headers: auth_params
+              get list_list_item_path(list.id, "foobar"), headers: auth_params
 
               expect(response).to have_http_status :not_found
             end
@@ -101,7 +101,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
           context "when item does exist" do
             it "returns item" do
-              get v2_list_list_item_path(list.id, item.id), headers: auth_params
+              get list_list_item_path(list.id, item.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -123,7 +123,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "POST /" do
           it "returns 403" do
-            post v2_list_list_items_path(list.id), headers: auth_params
+            post list_list_items_path(list.id), headers: auth_params
 
             expect(response).to have_http_status :forbidden
           end
@@ -131,7 +131,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "GET /:id/edit" do
           it "returns 403" do
-            get edit_v2_list_list_item_path(list.id, item.id), headers: auth_params
+            get edit_list_list_item_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :forbidden
           end
@@ -139,7 +139,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "PUT /:id" do
           it "returns 403" do
-            put v2_list_list_item_path(list.id, item.id), headers: auth_params
+            put list_list_item_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :forbidden
           end
@@ -147,7 +147,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "DELETE /:id" do
           it "returns 403" do
-            delete v2_list_list_item_path(list.id, item.id), headers: auth_params
+            delete list_list_item_path(list.id, item.id), headers: auth_params
 
             expect(response).to have_http_status :forbidden
           end
@@ -157,7 +157,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
       context "when user has write access" do
         describe "GET /" do
           it "returns list items" do
-            get v2_list_list_items_path(list.id), headers: auth_params
+            get list_list_items_path(list.id), headers: auth_params
 
             response_body = JSON.parse(response.body)
 
@@ -191,7 +191,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
         describe "GET /:id" do
           context "when item does not exist" do
             it "returns 404" do
-              get v2_list_list_item_path(list.id, "foobar"), headers: auth_params
+              get list_list_item_path(list.id, "foobar"), headers: auth_params
 
               expect(response).to have_http_status :not_found
             end
@@ -199,7 +199,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
           context "when item does exist" do
             it "returns item" do
-              get v2_list_list_item_path(list.id, item.id), headers: auth_params
+              get list_list_item_path(list.id, item.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -221,7 +221,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
         describe "POST /" do
           it "creates list item" do
-            post v2_list_list_items_path(list.id), headers: auth_params
+            post list_list_items_path(list.id), headers: auth_params
 
             list.reload
             response_body = JSON.parse(response.body)
@@ -243,7 +243,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
           end
 
           it "creates list item with completed status" do
-            post v2_list_list_items_path(list.id),
+            post list_list_items_path(list.id),
                  params: { list_item: { completed: true } },
                  headers: auth_params
 
@@ -270,7 +270,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
         describe "GET /:id/edit" do
           context "when item does not exist" do
             it "returns 404" do
-              get edit_v2_list_list_item_path(list.id, "foobar"), headers: auth_params
+              get edit_list_list_item_path(list.id, "foobar"), headers: auth_params
 
               expect(response).to have_http_status :not_found
             end
@@ -278,7 +278,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
 
           context "when item does exist" do
             it "returns item" do
-              get edit_v2_list_list_item_path(list.id, item.id), headers: auth_params
+              get edit_list_list_item_path(list.id, item.id), headers: auth_params
 
               response_body = JSON.parse(response.body)
 
@@ -317,7 +317,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
         describe "PUT /:id" do
           context "when item does not exist" do
             it "returns 404" do
-              put v2_list_list_item_path(list.id, "foobar"), headers: auth_params
+              put list_list_item_path(list.id, "foobar"), headers: auth_params
 
               expect(response).to have_http_status :not_found
             end
@@ -326,7 +326,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
           context "when item does exist" do
             context "when params are not valid" do
               it "returns 422" do
-                put v2_list_list_item_path(list.id, item.id),
+                put list_list_item_path(list.id, item.id),
                     headers: auth_params,
                     params: { list_item: { refreshed: nil } },
                     as: :json
@@ -340,7 +340,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
                 expect(item.completed).to be false
                 expect(item.refreshed).to be false
 
-                put v2_list_list_item_path(list.id, item.id),
+                put list_list_item_path(list.id, item.id),
                     headers: auth_params,
                     params: { list_item: { refreshed: true, completed: true } },
                     as: :json
@@ -358,7 +358,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
         describe "DELETE /:id" do
           context "when item does not exist" do
             it "returns 404" do
-              delete v2_list_list_item_path(list.id, "foobar"), headers: auth_params
+              delete list_list_item_path(list.id, "foobar"), headers: auth_params
 
               expect(response).to have_http_status :not_found
             end
@@ -368,7 +368,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
             it "archives list item" do
               expect(item.archived_at).to be_falsy
 
-              delete v2_list_list_item_path(list.id, item.id), headers: auth_params
+              delete list_list_item_path(list.id, item.id), headers: auth_params
 
               item.reload
 
@@ -386,7 +386,7 @@ describe "/v2/lists/:list_id/list_items", type: :request do
                   ActiveRecord::RecordInvalid.new(item)
                 )
 
-                delete v2_list_list_item_path(list.id, item.id), headers: auth_params
+                delete list_list_item_path(list.id, item.id), headers: auth_params
 
                 expect(response).to have_http_status :unprocessable_content
               end

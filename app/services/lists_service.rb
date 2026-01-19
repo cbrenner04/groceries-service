@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for Lists
-class V2::ListsService
+class ListsService
   class << self
     def index_response(user)
       {
@@ -19,7 +19,7 @@ class V2::ListsService
         list: list,
         not_completed_items: ordered_items(list, :not_completed),
         completed_items: ordered_items(list, :completed),
-        list_users: V2::UsersListsService.list_users(list.id),
+        list_users: UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
         list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil,
@@ -39,7 +39,7 @@ class V2::ListsService
       # If no configuration is provided, assign one based on list type
       unless params[:list_item_configuration_id]
         list_type = params[:type] || "GroceryList"
-        configuration = V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, list_type)
+        configuration = ListConfigurationHelper.find_or_create_configuration_for_list_type(user, list_type)
         new_list_params[:list_item_configuration_id] = configuration.id
       end
 

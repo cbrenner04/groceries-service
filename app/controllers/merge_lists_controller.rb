@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-# /v2/lists/_merge_lists
-class V2::MergeListsController < ProtectedRouteController
+# /lists/_merge_lists
+class MergeListsController < ProtectedRouteController
   # POST /
   def create
     new_list = create_new_list
-    users_list = V2::UsersListsService.create_users_list(current_user, new_list)
-    V2::ListsService.create_new_items_from_multiple_lists(lists, new_list, current_user)
-    render json: V2::ListsService.list_response(new_list, users_list, current_user)
+    users_list = UsersListsService.create_users_list(current_user, new_list)
+    ListsService.create_new_items_from_multiple_lists(lists, new_list, current_user)
+    render json: ListsService.list_response(new_list, users_list, current_user)
   end
 
   private

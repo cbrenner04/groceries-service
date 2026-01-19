@@ -2,7 +2,7 @@
 
 # service object for list item bulk updates
 # rubocop:disable Metrics/ClassLength
-class V2::BulkUpdateService
+class BulkUpdateService
   def initialize(params, item_params, current_user)
     @params = normalize_params(params)
     @item_params = normalize_params(item_params)
@@ -14,7 +14,7 @@ class V2::BulkUpdateService
       items: items_with_fields,
       list: list,
       lists: lists,
-      list_users: V2::UsersListsService.list_users(list.id),
+      list_users: UsersListsService.list_users(list.id),
       list_item_configuration: list.list_item_configuration || nil,
       list_item_field_configurations:
         list.list_item_configuration&.list_item_field_configurations&.order(:position) || []

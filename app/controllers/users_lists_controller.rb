@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-# TODO: are we handling record not found?
-
-# /v2/lists/:list_id/users_lists
-class V2::UsersListsController < ProtectedRouteController
+# /lists/:list_id/users_lists
+class UsersListsController < ProtectedRouteController
   before_action :require_list_access, only: %i[index update]
   before_action :require_write_access, only: %i[create]
 
@@ -96,15 +94,15 @@ class V2::UsersListsController < ProtectedRouteController
   end
 
   def accepted_lists
-    V2::UsersListsService.list_users_by_status(params[:list_id], "accepted")
+    UsersListsService.list_users_by_status(params[:list_id], "accepted")
   end
 
   def pending_lists
-    V2::UsersListsService.list_users_by_status(params[:list_id], "pending")
+    UsersListsService.list_users_by_status(params[:list_id], "pending")
   end
 
   def refused_lists
-    V2::UsersListsService.list_users_by_status(params[:list_id], "refused")
+    UsersListsService.list_users_by_status(params[:list_id], "refused")
   end
 
   def accept_list_share

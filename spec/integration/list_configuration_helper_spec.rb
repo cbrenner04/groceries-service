@@ -3,7 +3,7 @@
 require "rails_helper"
 
 # TODO: this is not an integration test. I would prefer to cover this in integration tests.
-describe "V2::ListConfigurationHelper", type: :request do
+describe "ListConfigurationHelper", type: :request do
   let(:user) { create(:user) }
 
   before { login user }
@@ -12,7 +12,7 @@ describe "V2::ListConfigurationHelper", type: :request do
     context "when creating a new configuration" do
       it "creates configuration for BookList type" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.to change(ListItemConfiguration, :count).by(1)
                                                     .and change(ListItemFieldConfiguration, :count).by(5)
 
@@ -40,7 +40,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "creates configuration for MusicList type" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "MusicList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "MusicList")
         end.to change(ListItemConfiguration, :count).by(1)
                                                     .and change(ListItemFieldConfiguration, :count).by(4)
 
@@ -65,7 +65,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "creates configuration for SimpleList type" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "SimpleList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "SimpleList")
         end.to change(ListItemConfiguration, :count).by(1)
                                                     .and change(ListItemFieldConfiguration, :count).by(2)
 
@@ -84,7 +84,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "creates configuration for ToDoList type" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "ToDoList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "ToDoList")
         end.to change(ListItemConfiguration, :count).by(1)
                                                     .and change(ListItemFieldConfiguration, :count).by(4)
 
@@ -109,7 +109,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "creates configuration for unknown type (defaults to GroceryList)" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "UnknownList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "UnknownList")
         end.to change(ListItemConfiguration, :count).by(1) # Defaults to GroceryList field configs
                                                     .and change(ListItemFieldConfiguration, :count).by(3)
 
@@ -131,7 +131,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "creates configuration for nil type (defaults to GroceryList)" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, nil)
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, nil)
         end.to change(ListItemConfiguration, :count).by(1) # Defaults to GroceryList field configs
                                                     .and change(ListItemFieldConfiguration, :count).by(3)
 
@@ -160,7 +160,7 @@ describe "V2::ListConfigurationHelper", type: :request do
       it "returns existing configuration without creating new one" do
         expect(user.list_item_configurations.count).to eq(1)
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.to change(ListItemFieldConfiguration, :count).by(5)
 
         # no change
@@ -169,7 +169,7 @@ describe "V2::ListConfigurationHelper", type: :request do
       end
 
       it "creates field configurations for existing configuration" do
-        V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+        ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
 
         field_configs = existing_configuration.list_item_field_configurations.order(:position)
         expect(field_configs.count).to eq(5)
@@ -196,7 +196,7 @@ describe "V2::ListConfigurationHelper", type: :request do
         # Change the existing field config to have different values
         existing_field_config.update!(data_type: "number", position: 5)
 
-        V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+        ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
 
         existing_field_config.reload
         expect(existing_field_config.data_type).to eq("free_text")
@@ -205,7 +205,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
       it "does not create duplicate field configurations" do
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.to change(ListItemFieldConfiguration, :count).by(4) # Only creates the 4 missing ones
 
         field_configs = existing_configuration.list_item_field_configurations.order(:position)
@@ -237,7 +237,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
         # This should not raise an error and should handle the duplicate gracefully
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.not_to raise_error
 
         # Verify that the field configurations are still correct
@@ -265,7 +265,7 @@ describe "V2::ListConfigurationHelper", type: :request do
 
         # This should trigger the rescue block in create_field_config_if_missing
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.not_to raise_error
 
         # Verify that the field configurations are still correct
@@ -278,7 +278,7 @@ describe "V2::ListConfigurationHelper", type: :request do
         # Create a scenario where the create! call would fail due to a database constraint
         # This test ensures the rescue block is covered
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.not_to raise_error
 
         # Verify that the method completed without errors
@@ -299,7 +299,7 @@ describe "V2::ListConfigurationHelper", type: :request do
         end
 
         expect do
-          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+          ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
         end.not_to raise_error
       end
     end
@@ -311,7 +311,7 @@ describe "V2::ListConfigurationHelper", type: :request do
       list_params = { user_id: user.id, name: "Test List", type: "BookList" }
 
       expect do
-        new_list = V2::ListsService.build_new_list(list_params, user)
+        new_list = ListsService.build_new_list(list_params, user)
         new_list.save!
       end.to change(ListItemConfiguration, :count).by(1)
                                                   .and change(ListItemFieldConfiguration, :count).by(5)
@@ -324,7 +324,7 @@ describe "V2::ListConfigurationHelper", type: :request do
     it "uses existing configuration when creating a list of the same type" do
       # Create first list
       list_params = { user_id: user.id, name: "First List", type: "BookList" }
-      first_list = V2::ListsService.build_new_list(list_params, user)
+      first_list = ListsService.build_new_list(list_params, user)
       first_list.save!
 
       first_configuration_id = first_list.list_item_configuration.id
@@ -332,7 +332,7 @@ describe "V2::ListConfigurationHelper", type: :request do
       # Create second list of same type
       list_params2 = { user_id: user.id, name: "Second List", type: "BookList" }
       expect do
-        second_list = V2::ListsService.build_new_list(list_params2, user)
+        second_list = ListsService.build_new_list(list_params2, user)
         second_list.save!
       end.not_to change(ListItemConfiguration, :count)
 
@@ -343,14 +343,14 @@ describe "V2::ListConfigurationHelper", type: :request do
     it "creates different configurations for different list types" do
       # Create BookList
       book_params = { user_id: user.id, name: "Book List", type: "BookList" }
-      book_list = V2::ListsService.build_new_list(book_params, user)
+      book_list = ListsService.build_new_list(book_params, user)
       book_list.save!
 
       book_configuration_id = book_list.list_item_configuration.id
 
       # Create GroceryList
       grocery_params = { user_id: user.id, name: "Grocery List", type: "GroceryList" }
-      grocery_list = V2::ListsService.build_new_list(grocery_params, user)
+      grocery_list = ListsService.build_new_list(grocery_params, user)
       grocery_list.save!
 
       grocery_configuration_id = grocery_list.list_item_configuration.id
@@ -363,14 +363,14 @@ describe "V2::ListConfigurationHelper", type: :request do
     it "creates same configuration for lists of same type" do
       # Create first BookList
       first_params = { user_id: user.id, name: "First Book List", type: "BookList" }
-      first_list = V2::ListsService.build_new_list(first_params, user)
+      first_list = ListsService.build_new_list(first_params, user)
       first_list.save!
 
       first_book_configuration_id = first_list.list_item_configuration.id
 
       # Create second BookList
       second_params = { user_id: user.id, name: "Second Book List", type: "BookList" }
-      second_list = V2::ListsService.build_new_list(second_params, user)
+      second_list = ListsService.build_new_list(second_params, user)
       second_list.save!
 
       second_book_configuration_id = second_list.list_item_configuration.id

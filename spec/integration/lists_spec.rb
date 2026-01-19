@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/v2/lists", type: :request do
+describe "/lists", type: :request do
   let(:user) { create(:user_with_lists) }
   let(:list) { user.lists.last }
 
@@ -10,7 +10,7 @@ describe "/v2/lists", type: :request do
 
   describe "GET /" do
     it "responds with success and correct payload" do
-      get v2_lists_path, headers: auth_params
+      get lists_path, headers: auth_params
 
       response_body = JSON.parse(response.body)
 
@@ -24,7 +24,7 @@ describe "/v2/lists", type: :request do
   describe "GET /:id" do
     describe "when list does not exist" do
       it "responds with 404" do
-        get v2_list_path("foobar"), headers: auth_params
+        get list_path("foobar"), headers: auth_params
 
         expect(response).to have_http_status :not_found
       end
@@ -34,7 +34,7 @@ describe "/v2/lists", type: :request do
       before { list.users_lists.delete_all }
 
       it "responds with forbidden" do
-        get v2_list_path(list.id), headers: auth_params
+        get list_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -45,7 +45,7 @@ describe "/v2/lists", type: :request do
         before { list.users_lists.find_by(user: user).update!(has_accepted: nil) }
 
         it "responds with forbidden" do
-          get v2_list_path(list.id), headers: auth_params
+          get list_path(list.id), headers: auth_params
 
           expect(response).to have_http_status :forbidden
         end
@@ -72,7 +72,7 @@ describe "/v2/lists", type: :request do
           list_item.list_item_fields.create!(user: user, data: "foo", list_item_field_configuration: config1)
           list_item.list_item_fields.create!(user: user, data: "bar", list_item_field_configuration: config2)
 
-          get v2_list_path(list.id), headers: auth_params
+          get list_path(list.id), headers: auth_params
 
           expect(response).to be_successful
 
@@ -107,7 +107,7 @@ describe "/v2/lists", type: :request do
           end
 
           it "responds with success and handles nil list_item_configuration" do
-            get v2_list_path(v1_list.id), headers: auth_params
+            get list_path(v1_list.id), headers: auth_params
 
             expect(response).to be_successful
 
@@ -126,7 +126,7 @@ describe "/v2/lists", type: :request do
   describe "GET /:id/edit" do
     describe "when list does not exist" do
       it "responds with 404" do
-        get edit_v2_list_path("foobar"), headers: auth_params
+        get edit_list_path("foobar"), headers: auth_params
 
         expect(response).to have_http_status :not_found
       end
@@ -134,7 +134,7 @@ describe "/v2/lists", type: :request do
 
     describe "when user is not owner" do
       it "responds with forbidden" do
-        get edit_v2_list_path(list.id), headers: auth_params
+        get edit_list_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -144,7 +144,7 @@ describe "/v2/lists", type: :request do
       before { list.update!(owner: user) }
 
       it "responds with success and correct payload" do
-        get edit_v2_list_path(list.id), headers: auth_params
+        get edit_list_path(list.id), headers: auth_params
         response_body = JSON.parse(response.body).to_h
 
         expect(response_body).to eq(
@@ -167,8 +167,8 @@ describe "/v2/lists", type: :request do
     describe "with valid params" do
       it "creates a new list" do
         expect do
-          post v2_lists_path, params: { list: { user_id: user.id, name: "foo" } },
-                              headers: auth_params
+          post lists_path, params: { list: { user_id: user.id, name: "foo" } },
+                           headers: auth_params
         end.to change(List, :count).by(1)
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -179,7 +179,7 @@ describe "/v2/lists", type: :request do
 
     describe "with invalid params" do
       it "responds with error" do
-        post v2_lists_path, params: { list: { name: nil } }, headers: auth_params
+        post lists_path, params: { list: { name: nil } }, headers: auth_params
 
         expect(JSON.parse(response.body)).to eq("name" => ["can't be blank"])
       end
@@ -189,7 +189,7 @@ describe "/v2/lists", type: :request do
   describe "PUT /:id" do
     describe "when list does not exist" do
       it "responds with 404" do
-        put v2_list_path("foobar"), params: { list: { name: "bar" } }, headers: auth_params
+        put list_path("foobar"), params: { list: { name: "bar" } }, headers: auth_params
 
         expect(response).to have_http_status :not_found
       end
@@ -197,7 +197,7 @@ describe "/v2/lists", type: :request do
 
     context "when user is not owner" do
       it "responds with forbidden" do
-        put v2_list_path(list.id), params: { list: { name: "bar" } }, headers: auth_params
+        put list_path(list.id), params: { list: { name: "bar" } }, headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -221,7 +221,7 @@ describe "/v2/lists", type: :request do
               prev_user_list.update!(next_id: update_users_list.id)
               next_user_list.update!(prev_id: update_users_list.id)
 
-              put v2_list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
+              put list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
 
               update_list.reload
               update_users_list.reload
@@ -241,7 +241,7 @@ describe "/v2/lists", type: :request do
               update_list = create(:list, name: "baz", owner: user)
               create(:users_list, user: user, list: update_list)
 
-              put v2_list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
+              put list_path(update_list.id), params: { list: { completed: true } }, headers: auth_params
 
               update_list.reload
 
@@ -254,7 +254,7 @@ describe "/v2/lists", type: :request do
           it "updates a list" do
             update_list = create(:list, name: "foo", owner: user)
 
-            put v2_list_path(update_list.id), params: { list: { name: "bar" } }, headers: auth_params
+            put list_path(update_list.id), params: { list: { name: "bar" } }, headers: auth_params
 
             update_list.reload
 
@@ -266,7 +266,7 @@ describe "/v2/lists", type: :request do
       describe "with invalid params" do
         it "responds with errors" do
           list = create(:list, owner: user)
-          put v2_list_path(list.id), params: { id: list.id, list: { name: nil } }, headers: auth_params
+          put list_path(list.id), params: { id: list.id, list: { name: nil } }, headers: auth_params
 
           expect(JSON.parse(response.body)).to eq("name" => ["can't be blank"])
         end
@@ -277,7 +277,7 @@ describe "/v2/lists", type: :request do
   describe "DELETE /:id" do
     describe "when list does not exist" do
       it "responds with 404" do
-        delete v2_list_path("foobar"), headers: auth_params
+        delete list_path("foobar"), headers: auth_params
 
         expect(response).to have_http_status :not_found
       end
@@ -285,7 +285,7 @@ describe "/v2/lists", type: :request do
 
     describe "when user is not owner" do
       it "responds with forbidden" do
-        delete v2_list_path(list.id), headers: auth_params
+        delete list_path(list.id), headers: auth_params
 
         expect(response).to have_http_status :forbidden
       end
@@ -308,7 +308,7 @@ describe "/v2/lists", type: :request do
           prev_user_list.update!(next_id: delete_users_list.id)
           next_user_list.update!(prev_id: delete_users_list.id)
 
-          delete v2_list_path(delete_list.id), headers: auth_params
+          delete list_path(delete_list.id), headers: auth_params
 
           delete_list.reload
           delete_list_item.reload
@@ -331,7 +331,7 @@ describe "/v2/lists", type: :request do
           delete_list = create(:list, name: "foo", owner: user)
           create(:users_list, list: delete_list, user: user)
 
-          delete v2_list_path(delete_list.id), headers: auth_params
+          delete list_path(delete_list.id), headers: auth_params
 
           delete_list.reload
 
@@ -351,7 +351,7 @@ describe "/v2/lists", type: :request do
             ActiveRecord::RecordInvalid.new(delete_list)
           )
 
-          delete v2_list_path(delete_list.id), headers: auth_params
+          delete list_path(delete_list.id), headers: auth_params
 
           expect(response).to have_http_status :unprocessable_content
         end
