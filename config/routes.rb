@@ -8,11 +8,6 @@ Rails.application.routes.draw do
       resource :bulk_update, only: %i[show update], controller: "list_items_bulk_update", as: :list_items_bulk_update
     end
   end
-  v2_bulk_update_routes = lambda do
-    collection do
-      resource :bulk_update, only: %i[show update], controller: "list_items_bulk_update", as: :list_items_bulk_update
-    end
-  end
   users_lists_routes = lambda { resources :users_lists, only: %i[index create update destroy] }
 
   mount_devise_token_auth_for "User", at: "auth", skip: %i[invitations]
@@ -21,22 +16,12 @@ Rails.application.routes.draw do
     put "/auth/invitation", to: "users/invitations#update"
     post "/auth/invitation", to: "users/invitations#create"
   end
-  namespace :v1 do
-    resources :lists, only: %i[index show create edit update destroy] do
-      refresh_list_routes[]
-      merge_list_routes[]
-      resources :list_items, only: %i[create edit update destroy] do
-        bulk_update_routes[]
-      end
-      users_lists_routes[]
-    end
-  end
   namespace :v2 do
     resources :lists, only: %i[index show create edit update destroy] do
       refresh_list_routes[]
       merge_list_routes[]
       resources :list_items, only: %i[index show create edit update destroy] do
-        v2_bulk_update_routes[]
+        bulk_update_routes[]
         resources :list_item_fields, only: %i[index show create edit update destroy]
       end
       users_lists_routes[]
@@ -47,6 +32,6 @@ Rails.application.routes.draw do
   resources :list_item_configurations, only: %i[index show create edit update destroy] do
     resources :list_item_field_configurations, only: %i[index show create edit update destroy]
   end
-  root to: "v1/lists#index"
+  root to: "v2/lists#index"
   get "*unmatched_route", to: "application#route_not_found"
 end

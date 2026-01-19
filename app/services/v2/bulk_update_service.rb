@@ -17,8 +17,7 @@ class V2::BulkUpdateService
       list_users: V2::UsersListsService.list_users(list.id),
       list_item_configuration: list.list_item_configuration || nil,
       list_item_field_configurations:
-        list.list_item_configuration&.list_item_field_configurations&.order(:position) || [],
-      categories: list.categories
+        list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
     }
   end
 

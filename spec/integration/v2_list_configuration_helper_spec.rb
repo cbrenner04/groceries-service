@@ -285,6 +285,23 @@ describe "V2::ListConfigurationHelper", type: :request do
         field_configs = existing_configuration.list_item_field_configurations.order(:position)
         expect(field_configs.count).to eq(5) # All BookList fields should be created
       end
+
+      it "rescues record invalid during field creation" do
+        existing_field_config = existing_configuration.list_item_field_configurations.find_by(label: "author")
+        fields_scope = existing_configuration.list_item_field_configurations
+
+        allow(fields_scope).to receive(:find_by).with(label: "author").and_return(nil, existing_field_config)
+        allow(fields_scope).to receive(:create!).and_wrap_original do |method, *args|
+          attrs = args.first || {}
+          raise ActiveRecord::RecordInvalid, existing_field_config if attrs[:label] == "author"
+
+          method.call(*args)
+        end
+
+        expect do
+          V2::ListConfigurationHelper.find_or_create_configuration_for_list_type(user, "BookList")
+        end.not_to raise_error
+      end
     end
   end
 

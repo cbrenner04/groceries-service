@@ -217,6 +217,16 @@ describe "/v2/lists/:list_id/users_lists", type: :request do
 
           expect(response).to have_http_status :unprocessable_content
         end
+
+        it "returns unprocessable content when users list already exists" do
+          create(:users_list, user: other_user, list: list)
+
+          post v2_list_users_lists_path(list.id),
+               params: { users_list: { user_id: other_user.id, list_id: list.id } },
+               headers: auth_params
+
+          expect(response).to have_http_status :unprocessable_content
+        end
       end
     end
   end

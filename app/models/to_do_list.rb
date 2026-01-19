@@ -20,10 +20,4 @@
 #  index_lists_on_owner_id    (owner_id)
 #
 class ToDoList < List
-  has_many :to_do_list_items, foreign_key: "list_id", class_name: "ToDoListItem", inverse_of: :list,
-                              dependent: :destroy
-
-  def categories
-    to_do_list_items.map(&:category).uniq.compact_blank.sort
-  end
 end

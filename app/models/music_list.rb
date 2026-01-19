@@ -20,15 +20,4 @@
 #  index_lists_on_owner_id    (owner_id)
 #
 class MusicList < List
-  has_many :music_list_items, foreign_key: "list_id", class_name: "MusicListItem", inverse_of: :list,
-                              dependent: :destroy
-
-  def categories
-    music_list_items
-      .map(&:category)
-      .push("blues", "comedy", "country", "electronic", "folk", "hip hop", "jazz", "latin", "pop", "r&b", "rock")
-      .uniq
-      .compact_blank
-      .sort
-  end
 end

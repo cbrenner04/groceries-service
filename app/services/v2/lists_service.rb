@@ -19,8 +19,6 @@ class V2::ListsService
         list: list,
         not_completed_items: ordered_items(list, :not_completed),
         completed_items: ordered_items(list, :completed),
-        # TODO: how we handling this moving forward?
-        # categories: list.categories,
         list_users: V2::UsersListsService.list_users(list.id),
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
