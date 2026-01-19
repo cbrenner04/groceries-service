@@ -20,14 +20,4 @@
 #  index_lists_on_owner_id    (owner_id)
 #
 class GroceryList < List
-  has_many :grocery_list_items, foreign_key: "list_id", class_name: "GroceryListItem", inverse_of: :list,
-                                dependent: :destroy
-
-  def categories
-    grocery_list_items.map(&:category).push("alcohol", "baby", "bakery", "baking", "beverages", "canned goods & soups",
-                                            "cereal", "cleaning supplies", "condiments", "dairy", "deli", "flowers",
-                                            "frozen foods", "grains, pasta & sides", "health & beauty", "international",
-                                            "meat & seafood", "paper products", "pet", "pharmacy", "produce", "snacks",
-                                            "spices").uniq.compact_blank.sort
-  end
 end

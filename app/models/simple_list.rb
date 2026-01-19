@@ -20,10 +20,4 @@
 #  index_lists_on_owner_id    (owner_id)
 #
 class SimpleList < List
-  has_many :simple_list_items, foreign_key: "list_id", class_name: "SimpleListItem", inverse_of: :list,
-                               dependent: :destroy
-
-  def categories
-    simple_list_items.map(&:category).uniq.compact_blank.sort
-  end
 end

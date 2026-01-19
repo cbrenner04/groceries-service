@@ -1,19 +1,20 @@
-user_emails = %w(foo@example.com bar@example.com baz@example.com)
+# frozen_string_literal: true
+
+user_emails = %w[foo@example.com bar@example.com baz@example.com]
 foo, bar, baz = user_emails.map do |email|
   User.create!(
     email: email,
-    password: 'asdfasdf',
-    password_confirmation: 'asdfasdf',
+    password: "asdfasdf",
+    password_confirmation: "asdfasdf",
     uid: email
   )
 end
 
-# Create list item configurations for v2 system
+# Create list item configurations
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def create_list_item_configurations(user)
   # Book list configuration
-  book_config = user.list_item_configurations.create!(
-    name: "book list template"
-  )
+  book_config = user.list_item_configurations.create!(name: "book list template")
   book_config.list_item_field_configurations.create!([
     { label: "author", data_type: "free_text", position: 1 },
     { label: "title", data_type: "free_text", position: 2 },
@@ -23,9 +24,7 @@ def create_list_item_configurations(user)
   ])
 
   # Grocery list configuration
-  grocery_config = user.list_item_configurations.create!(
-    name: "grocery list template"
-  )
+  grocery_config = user.list_item_configurations.create!(name: "grocery list template")
   grocery_config.list_item_field_configurations.create!([
     { label: "product", data_type: "free_text", position: 1 },
     { label: "quantity", data_type: "free_text", position: 2 },
@@ -33,9 +32,7 @@ def create_list_item_configurations(user)
   ])
 
   # Music list configuration
-  music_config = user.list_item_configurations.create!(
-    name: "music list template"
-  )
+  music_config = user.list_item_configurations.create!(name: "music list template")
   music_config.list_item_field_configurations.create!([
     { label: "title", data_type: "free_text", position: 1 },
     { label: "artist", data_type: "free_text", position: 2 },
@@ -43,10 +40,8 @@ def create_list_item_configurations(user)
     { label: "category", data_type: "free_text", position: 4 }
   ])
 
-  # ToDo list configuration
-  todo_config = user.list_item_configurations.create!(
-    name: "todo list template"
-  )
+  # TODO: list configuration
+  todo_config = user.list_item_configurations.create!(name: "todo list template")
   todo_config.list_item_field_configurations.create!([
     { label: "task", data_type: "free_text", position: 1 },
     { label: "assignee", data_type: "free_text", position: 2 },
@@ -55,46 +50,38 @@ def create_list_item_configurations(user)
   ])
 
   # Simple list configuration
-  simple_config = user.list_item_configurations.create!(
-    name: "simple list template"
-  )
+  simple_config = user.list_item_configurations.create!(name: "simple list template")
   simple_config.list_item_field_configurations.create!([
-    { label: "content", data_type: "free_text", position: 1 },
-    { label: "category", data_type: "free_text", position: 2 }
-  ])
+      { label: "content", data_type: "free_text", position: 1 },
+      { label: "category", data_type: "free_text", position: 2 }
+    ])
 
   [book_config, grocery_config, music_config, todo_config, simple_config]
 end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 # Create configurations for each user
 foo_configs = create_list_item_configurations(foo)
 bar_configs = create_list_item_configurations(bar)
-baz_configs = create_list_item_configurations(baz)
+create_list_item_configurations(baz)
 
-# Create v1 lists (legacy system)
-v1_lists = %w(BookList GroceryList MusicList ToDoList).map do |list_type|
-  foos = List.create!(name: "foo - #{list_type} (v1)", owner: foo, type: list_type)
-  bars = List.create!(name: "bar - #{list_type} (v1)", owner: bar, type: list_type)
-  completed = List.create!(name: "completed - #{list_type} (v1)", owner: foo, type: list_type, completed: true)
-  [foos, bars, completed]
-end
-
-# Create v2 lists (new system)
-v2_lists = %w(BookList GroceryList MusicList ToDoList).map.with_index do |list_type, index|
+# Create lists (new system)
+list_types = %w[BookList GroceryList MusicList ToDoList SimpleList]
+lists = list_types.map.with_index do |list_type, index|
   foos = List.create!(
-    name: "foo - #{list_type} (v2)",
+    name: "foo - #{list_type}",
     owner: foo,
     type: list_type,
     list_item_configuration_id: foo_configs[index].id
   )
   bars = List.create!(
-    name: "bar - #{list_type} (v2)",
+    name: "bar - #{list_type}",
     owner: bar,
     type: list_type,
     list_item_configuration_id: bar_configs[index].id
   )
   completed = List.create!(
-    name: "completed - #{list_type} (v2)",
+    name: "completed - #{list_type}",
     owner: foo,
     type: list_type,
     completed: true,
@@ -103,37 +90,15 @@ v2_lists = %w(BookList GroceryList MusicList ToDoList).map.with_index do |list_t
   [foos, bars, completed]
 end
 
-# Create UsersList associations for v1 lists
-v1_lists.each do |foos, bars, completed|
-  UsersList.create!(user: foo, list: foos, has_accepted: true)
-  UsersList.create!(user: bar, list: foos, has_accepted: true)
-  UsersList.create!(user: baz, list: foos, has_accepted: true)
-  UsersList.create!(user: foo, list: bars, has_accepted: nil)
-  UsersList.create!(user: bar, list: bars, has_accepted: true)
-  UsersList.create!(user: foo, list: completed, has_accepted: true)
-end
-
-# Create UsersList associations for v2 lists
-v2_lists.each do |foos, bars, completed|
+# Create UsersList associations for lists
+lists.each do |foos, bars, completed|
   UsersList.create!(user: foo, list: foos, has_accepted: true)
   UsersList.create!(user: bar, list: bars, has_accepted: true)
   UsersList.create!(user: foo, list: completed, has_accepted: true)
 end
 
-# Create v1 list items (legacy system)
-item_names = %w(apples bananas oranges chocolate beer)
-
-item_names.each do |item|
-  GroceryListItem.create!(
-    user: foo,
-    list: v1_lists[1][0], # foo's grocery list
-    product: item,
-    quantity: "#{(1..10).to_a.sample} #{%w(bag bunch case).sample}"
-  )
-end
-
-# Create v2 list items (new system)
-def create_v2_list_items(list, user, field_configurations, sample_data)
+# Create list items (new system)
+def create_list_items(list, user, field_configurations, sample_data)
   sample_data.each do |data|
     # Create the list item
     list_item = list.list_items.create!(user: user)
@@ -141,13 +106,13 @@ def create_v2_list_items(list, user, field_configurations, sample_data)
     # Create fields for the item
     data.each do |field_label, field_value|
       field_config = field_configurations.find { |fc| fc.label == field_label }
-      if field_config
-        list_item.list_item_fields.create!(
-          user: user,
-          data: field_value.to_s,
-          list_item_field_configuration: field_config
-        )
-      end
+      next unless field_config
+
+      list_item.list_item_fields.create!(
+        user: user,
+        data: field_value.to_s,
+        list_item_field_configuration: field_config
+      )
     end
   end
 end
@@ -184,26 +149,28 @@ simple_sample_data = [
   { "content" => "Schedule oil change", "category" => "Car", "completed" => "false" }
 ]
 
-# Create v2 list items for each user
-create_v2_list_items(v2_lists[0][0], foo, foo_configs[0].list_item_field_configurations, book_sample_data)
-create_v2_list_items(v2_lists[1][0], foo, foo_configs[1].list_item_field_configurations, grocery_sample_data)
-create_v2_list_items(v2_lists[2][0], foo, foo_configs[2].list_item_field_configurations, music_sample_data)
-create_v2_list_items(v2_lists[3][0], foo, foo_configs[3].list_item_field_configurations, todo_sample_data)
+# Create list items for each user
+create_list_items(lists[0][0], foo, foo_configs[0].list_item_field_configurations, book_sample_data)
+create_list_items(lists[1][0], foo, foo_configs[1].list_item_field_configurations, grocery_sample_data)
+create_list_items(lists[2][0], foo, foo_configs[2].list_item_field_configurations, music_sample_data)
+create_list_items(lists[3][0], foo, foo_configs[3].list_item_field_configurations, todo_sample_data)
+create_list_items(lists[4][0], foo, foo_configs[4].list_item_field_configurations, simple_sample_data)
 
-create_v2_list_items(v2_lists[0][1], bar, bar_configs[0].list_item_field_configurations, book_sample_data.reverse)
-create_v2_list_items(v2_lists[1][1], bar, bar_configs[1].list_item_field_configurations, grocery_sample_data.reverse)
-create_v2_list_items(v2_lists[2][1], bar, bar_configs[2].list_item_field_configurations, music_sample_data.reverse)
-create_v2_list_items(v2_lists[3][1], bar, bar_configs[3].list_item_field_configurations, todo_sample_data.reverse)
+create_list_items(lists[0][1], bar, bar_configs[0].list_item_field_configurations, book_sample_data.reverse)
+create_list_items(lists[1][1], bar, bar_configs[1].list_item_field_configurations, grocery_sample_data.reverse)
+create_list_items(lists[2][1], bar, bar_configs[2].list_item_field_configurations, music_sample_data.reverse)
+create_list_items(lists[3][1], bar, bar_configs[3].list_item_field_configurations, todo_sample_data.reverse)
+create_list_items(lists[4][1], bar, bar_configs[4].list_item_field_configurations, simple_sample_data.reverse)
 
 # Update prev_id and next_id for all users
-User.all.each do |user|
+User.find_each do |user|
   pending = user.pending_lists
   incomplete = user.accepted_lists[:not_completed_lists]
   complete = user.all_completed_lists
 
   [pending, incomplete, complete].each do |lists|
     lists.each_with_index do |list, index|
-      prev_id = index == 0 ? nil : lists[index - 1].users_list_id
+      prev_id = index.zero? ? nil : lists[index - 1].users_list_id
       next_id = index == lists.count - 1 ? nil : lists[index + 1].users_list_id
       UsersList.find_by(user_id: user.id, list: list.id).update!(prev_id: prev_id, next_id: next_id)
     end

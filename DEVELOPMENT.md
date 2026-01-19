@@ -158,7 +158,7 @@ bundle audit                 # Check for vulnerable dependencies
 
 ## Important Notes & Gotchas
 
-- API versioning: v1 for stable endpoints, v2 for new features
+- API versioning: use v2 endpoints for all new work
 - Use Devise Token Auth for API authentication
 - Database migrations must be backward compatible
 - Use proper HTTP status codes in API responses
@@ -181,7 +181,7 @@ bundle audit                 # Check for vulnerable dependencies
 ### Controller Pattern
 
 ```ruby
-class Api::V1::ResourceController < ApplicationController
+class Api::V2::ResourceController < ApplicationController
   def index
     resources = Resource.all
     render json: resources
