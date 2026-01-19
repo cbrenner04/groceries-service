@@ -10,43 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_07_19_154852) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_043445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-
-  create_table "book_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "archived_at", precision: nil
-    t.string "author"
-    t.string "category"
-    t.datetime "created_at", null: false
-    t.uuid "list_id", null: false
-    t.integer "number_in_series"
-    t.boolean "purchased", default: false, null: false
-    t.boolean "read", default: false, null: false
-    t.string "title"
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["created_at"], name: "index_book_list_items_on_created_at"
-    t.index ["list_id"], name: "index_book_list_items_on_list_id"
-    t.index ["user_id"], name: "index_book_list_items_on_user_id"
-  end
-
-  create_table "grocery_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "archived_at", precision: nil
-    t.string "category"
-    t.datetime "created_at", null: false
-    t.uuid "list_id", null: false
-    t.string "product", null: false
-    t.boolean "purchased", default: false, null: false
-    t.string "quantity"
-    t.boolean "refreshed", default: false, null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["created_at"], name: "index_grocery_list_items_on_created_at"
-    t.index ["list_id"], name: "index_grocery_list_items_on_list_id"
-    t.index ["user_id"], name: "index_grocery_list_items_on_user_id"
-  end
 
   create_table "list_item_configurations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "archived_at"
@@ -109,55 +76,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_07_19_154852) do
     t.index ["owner_id"], name: "index_lists_on_owner_id"
   end
 
-  create_table "music_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "album"
-    t.datetime "archived_at", precision: nil
-    t.string "artist"
-    t.string "category"
-    t.datetime "created_at", null: false
-    t.uuid "list_id", null: false
-    t.boolean "purchased", default: false, null: false
-    t.string "title"
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["created_at"], name: "index_music_list_items_on_created_at"
-    t.index ["list_id"], name: "index_music_list_items_on_list_id"
-    t.index ["user_id"], name: "index_music_list_items_on_user_id"
-  end
-
-  create_table "simple_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "archived_at", precision: nil
-    t.string "category"
-    t.boolean "completed", default: false, null: false
-    t.string "content", null: false
-    t.datetime "created_at", null: false
-    t.uuid "list_id", null: false
-    t.boolean "refreshed", default: false, null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["created_at"], name: "index_simple_list_items_on_created_at"
-    t.index ["list_id"], name: "index_simple_list_items_on_list_id"
-    t.index ["user_id"], name: "index_simple_list_items_on_user_id"
-  end
-
-  create_table "to_do_list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "archived_at", precision: nil
-    t.uuid "assignee_id"
-    t.string "category"
-    t.boolean "completed", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "due_by", precision: nil
-    t.uuid "list_id", null: false
-    t.boolean "refreshed", default: false, null: false
-    t.string "task", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["assignee_id"], name: "index_to_do_list_items_on_assignee_id"
-    t.index ["created_at"], name: "index_to_do_list_items_on_created_at"
-    t.index ["list_id"], name: "index_to_do_list_items_on_list_id"
-    t.index ["user_id"], name: "index_to_do_list_items_on_user_id"
-  end
-
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.boolean "allow_password_change", default: false, null: false
     t.datetime "created_at", null: false
@@ -206,10 +124,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_07_19_154852) do
     t.index ["user_id"], name: "index_users_lists_on_user_id"
   end
 
-  add_foreign_key "book_list_items", "lists"
-  add_foreign_key "book_list_items", "users"
-  add_foreign_key "grocery_list_items", "lists"
-  add_foreign_key "grocery_list_items", "users"
   add_foreign_key "list_item_configurations", "users"
   add_foreign_key "list_item_field_configurations", "list_item_configurations"
   add_foreign_key "list_item_fields", "list_item_field_configurations"
@@ -217,12 +131,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_07_19_154852) do
   add_foreign_key "list_item_fields", "users"
   add_foreign_key "list_items", "lists"
   add_foreign_key "list_items", "users"
-  add_foreign_key "music_list_items", "lists"
-  add_foreign_key "music_list_items", "users"
-  add_foreign_key "simple_list_items", "lists"
-  add_foreign_key "simple_list_items", "users"
-  add_foreign_key "to_do_list_items", "lists"
-  add_foreign_key "to_do_list_items", "users"
   add_foreign_key "users_lists", "lists"
   add_foreign_key "users_lists", "users"
 
