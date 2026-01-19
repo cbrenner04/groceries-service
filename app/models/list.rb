@@ -20,6 +20,8 @@
 #  index_lists_on_owner_id    (owner_id)
 #
 class List < ApplicationRecord
+  self.inheritance_column = nil
+
   has_many :users_lists, dependent: :destroy
   has_many :users, through: :users_lists, source: :user, dependent: :destroy
   belongs_to :owner, class_name: "User", inverse_of: :lists
@@ -33,10 +35,6 @@ class List < ApplicationRecord
 
   def archive
     update! archived_at: Time.zone.now
-  end
-
-  def as_json(options = {})
-    super(options.merge(methods: :type))
   end
 
   def list_item_configuration
