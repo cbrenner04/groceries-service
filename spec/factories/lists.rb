@@ -25,5 +25,25 @@ FactoryBot.define do
     owner factory: %i[user]
     type { "GroceryList" }
     list_item_configuration_id { nil }
+
+    trait :book_list do
+      type { "BookList" }
+    end
+
+    trait :grocery_list do
+      type { "GroceryList" }
+    end
+
+    trait :music_list do
+      type { "MusicList" }
+    end
+
+    trait :simple_list do
+      type { "SimpleList" }
+    end
+
+    trait :to_do_list do
+      type { "ToDoList" }
+    end
   end
 end
