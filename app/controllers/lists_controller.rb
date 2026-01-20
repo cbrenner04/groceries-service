@@ -62,7 +62,7 @@ class ListsController < ProtectedRouteController
   end
 
   def list_params
-    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id type])
+    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id])
   end
 
   def users_list

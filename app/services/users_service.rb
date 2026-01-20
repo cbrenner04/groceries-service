@@ -21,7 +21,7 @@ module UsersService
 
   def pending_lists_query(user_id)
     <<-SQL.squish
-      SELECT id, name, completed, type, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at,
+      SELECT id, name, completed, refreshed, owner_id, has_accepted, user_id, users_list_id, created_at,
              prev_id, next_id, list_item_configuration_id
       FROM active_lists
       WHERE user_id = '#{user_id}'
@@ -29,10 +29,9 @@ module UsersService
     SQL
   end
 
-  # rubocop:disable Metrics/MethodLength
   def write_lists_query(user_id)
     <<-SQL.squish
-      SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed", "active_lists"."type",
+      SELECT "active_lists"."id", "active_lists"."name", "active_lists"."completed",
              "active_lists"."refreshed", "active_lists"."owner_id", "active_lists"."has_accepted",
              "active_lists"."user_id", "active_lists"."users_list_id", "active_lists"."created_at",
              "active_lists"."list_item_configuration_id"
@@ -48,6 +47,7 @@ module UsersService
 
   # Find users where they have been shared on the same lists as current user
   # Filter out users that are already shared on the supplied list
+  # rubocop:disable Metrics/MethodLength
   def related_users_query(user_id, list_id)
     <<-SQL.squish
       SELECT DISTINCT "users"."email", "users"."id"
@@ -74,7 +74,7 @@ module UsersService
 
   def accepted_lists_query(user_id)
     <<-SQL.squish
-      SELECT id, name, completed, type, refreshed, owner_id, has_accepted,
+      SELECT id, name, completed, refreshed, owner_id, has_accepted,
              user_id, users_list_id, created_at, prev_id, next_id, list_item_configuration_id
       FROM active_lists
       WHERE user_id = '#{user_id}'

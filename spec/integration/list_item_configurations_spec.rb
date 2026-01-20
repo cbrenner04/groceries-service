@@ -18,8 +18,10 @@ describe "/list_item_configurations", type: :request do
       response_body = JSON.parse(response.body)
 
       expect(response).to have_http_status :ok
-      expect(response_body.count).to eq 1
-      expect(response_body.first).to eq(
+      # User gets 5 default configs + 1 created in this test
+      expect(response_body.count).to eq 6
+      test_config = response_body.find { |c| c["id"] == list_item_configuration[:id] }
+      expect(test_config).to eq(
         {
           "archived_at" => nil,
           "created_at" => list_item_configuration[:created_at].iso8601(3),

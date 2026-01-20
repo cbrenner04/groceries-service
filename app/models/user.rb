@@ -55,6 +55,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true
 
+  after_create :create_default_list_item_configurations
+
   def users_that_list_can_be_shared_with(list)
     User.find_by_sql(related_users_query(id, list.id))
   end
@@ -85,5 +87,11 @@ class User < ApplicationRecord
 
   def write_lists
     List.find_by_sql(write_lists_query(id))
+  end
+
+  private
+
+  def create_default_list_item_configurations
+    ListConfigurationHelper.create_all_default_configurations(self)
   end
 end

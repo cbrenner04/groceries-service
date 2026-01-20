@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_043445) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_195318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -70,7 +70,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_043445) do
     t.string "name", null: false
     t.uuid "owner_id", null: false
     t.boolean "refreshed", default: false, null: false
-    t.string "type"
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_lists_on_created_at"
     t.index ["owner_id"], name: "index_lists_on_owner_id"
@@ -139,7 +138,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_043445) do
       lists.name,
       lists.created_at,
       lists.completed,
-      lists.type,
       lists.refreshed,
       lists.owner_id,
       users_lists.id AS users_list_id,

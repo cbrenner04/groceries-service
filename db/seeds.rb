@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Users are created with default configurations via after_create callback
 user_emails = %w[foo@example.com bar@example.com baz@example.com]
 foo, bar, baz = user_emails.map do |email|
   User.create!(
@@ -10,80 +11,36 @@ foo, bar, baz = user_emails.map do |email|
   )
 end
 
-# Create list item configurations
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def create_list_item_configurations(user)
-  # Book list configuration
-  book_config = user.list_item_configurations.create!(name: "book list template")
-  book_config.list_item_field_configurations.create!([
-    { label: "author", data_type: "free_text", position: 1 },
-    { label: "title", data_type: "free_text", position: 2 },
-    { label: "number_in_series", data_type: "number", position: 3 },
-    { label: "category", data_type: "free_text", position: 4 },
-    { label: "read", data_type: "boolean", position: 5 }
-  ])
-
-  # Grocery list configuration
-  grocery_config = user.list_item_configurations.create!(name: "grocery list template")
-  grocery_config.list_item_field_configurations.create!([
-    { label: "product", data_type: "free_text", position: 1 },
-    { label: "quantity", data_type: "free_text", position: 2 },
-    { label: "category", data_type: "free_text", position: 3 }
-  ])
-
-  # Music list configuration
-  music_config = user.list_item_configurations.create!(name: "music list template")
-  music_config.list_item_field_configurations.create!([
-    { label: "title", data_type: "free_text", position: 1 },
-    { label: "artist", data_type: "free_text", position: 2 },
-    { label: "album", data_type: "free_text", position: 3 },
-    { label: "category", data_type: "free_text", position: 4 }
-  ])
-
-  # TODO: list configuration
-  todo_config = user.list_item_configurations.create!(name: "todo list template")
-  todo_config.list_item_field_configurations.create!([
-    { label: "task", data_type: "free_text", position: 1 },
-    { label: "assignee", data_type: "free_text", position: 2 },
-    { label: "due_by", data_type: "date_time", position: 3 },
-    { label: "category", data_type: "free_text", position: 4 }
-  ])
-
-  # Simple list configuration
-  simple_config = user.list_item_configurations.create!(name: "simple list template")
-  simple_config.list_item_field_configurations.create!([
-      { label: "content", data_type: "free_text", position: 1 },
-      { label: "category", data_type: "free_text", position: 2 }
-    ])
-
-  [book_config, grocery_config, music_config, todo_config, simple_config]
+# Get configurations for each user (created via after_create callback)
+def get_user_configs(user)
+  [
+    user.list_item_configurations.find_by(name: "book list template"),
+    user.list_item_configurations.find_by(name: "grocery list template"),
+    user.list_item_configurations.find_by(name: "music list template"),
+    user.list_item_configurations.find_by(name: "to do list template"),
+    user.list_item_configurations.find_by(name: "simple list with category template")
+  ]
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-# Create configurations for each user
-foo_configs = create_list_item_configurations(foo)
-bar_configs = create_list_item_configurations(bar)
-create_list_item_configurations(baz)
+foo_configs = get_user_configs(foo)
+bar_configs = get_user_configs(bar)
 
-# Create lists (new system)
-list_types = %w[BookList GroceryList MusicList ToDoList SimpleList]
-lists = list_types.map.with_index do |list_type, index|
+# Create lists using configurations
+config_names = %w[book grocery music todo simple]
+lists = config_names.map.with_index do |config_name, index|
   foos = List.create!(
-    name: "foo - #{list_type}",
+    name: "foo - #{config_name} list",
     owner: foo,
-    type: list_type,
     list_item_configuration_id: foo_configs[index].id
   )
   bars = List.create!(
-    name: "bar - #{list_type}",
+    name: "bar - #{config_name} list",
     owner: bar,
-    type: list_type,
     list_item_configuration_id: bar_configs[index].id
   )
   completed = List.create!(
-    name: "completed - #{list_type}",
+    name: "completed - #{config_name} list",
     owner: foo,
-    type: list_type,
     completed: true,
     list_item_configuration_id: foo_configs[index].id
   )

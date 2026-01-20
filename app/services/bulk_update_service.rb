@@ -144,8 +144,7 @@ class BulkUpdateService
     new_list = List.create!(
       name: new_list_name,
       owner: @current_user,
-      list_item_configuration_id: list.list_item_configuration_id,
-      type: list.type
+      list_item_configuration_id: list.list_item_configuration_id
     )
     UsersList.create!(user: @current_user, list: new_list, has_accepted: true)
     new_list.id

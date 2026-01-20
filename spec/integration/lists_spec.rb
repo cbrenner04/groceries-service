@@ -156,8 +156,7 @@ describe "/lists", type: :request do
           "created_at" => list[:created_at].iso8601(3),
           "updated_at" => list[:updated_at].iso8601(3),
           "owner_id" => list[:owner_id],
-          "type" => list[:type],
-          "list_item_configuration_id" => nil
+          "list_item_configuration_id" => list[:list_item_configuration_id]
         )
       end
     end
@@ -166,9 +165,11 @@ describe "/lists", type: :request do
   describe "POST /" do
     describe "with valid params" do
       it "creates a new list" do
+        config = user.list_item_configurations.first
         expect do
-          post lists_path, params: { list: { user_id: user.id, name: "foo" } },
-                           headers: auth_params
+          post lists_path,
+               params: { list: { user_id: user.id, name: "foo", list_item_configuration_id: config.id } },
+               headers: auth_params
         end.to change(List, :count).by(1)
         expect(response).to have_http_status(:success)
         json = JSON.parse(response.body)
@@ -179,7 +180,8 @@ describe "/lists", type: :request do
 
     describe "with invalid params" do
       it "responds with error" do
-        post lists_path, params: { list: { name: nil } }, headers: auth_params
+        config = user.list_item_configurations.first
+        post lists_path, params: { list: { name: nil, list_item_configuration_id: config.id } }, headers: auth_params
 
         expect(JSON.parse(response.body)).to eq("name" => ["can't be blank"])
       end
