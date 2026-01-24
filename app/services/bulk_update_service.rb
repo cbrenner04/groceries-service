@@ -188,19 +188,22 @@ class BulkUpdateService
   end
 
   def build_item_fields(item)
-    # Get all fields for this item - ensure we get all fields loaded
     fields = if item.association(:list_item_fields).loaded?
                item.list_item_fields.to_a
              else
                item.list_item_fields.includes(:list_item_field_configuration).to_a
              end
 
-    fields.map do |field|
+    all_fields = fields.reject { |f| f.archived_at.present? }.map do |field|
+      config = field.list_item_field_configuration
       field.attributes.symbolize_keys.merge(
-        label: field.list_item_field_configuration.label,
+        label: config.label,
+        position: config.position,
+        data_type: config.data_type,
         list_item_id: item.id
       )
     end
+    all_fields.sort_by { |f| f[:position] }
   end
 
   def item_ids_order
