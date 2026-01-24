@@ -90,7 +90,6 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
             "archived_at" => list[:archived_at],
             "completed" => list[:completed],
             "refreshed" => list[:refreshed],
-            "type" => list[:type],
             "owner_id" => list[:owner_id],
             "created_at" => list[:created_at].iso8601(3),
             "updated_at" => list[:updated_at].iso8601(3),
@@ -102,7 +101,6 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
             "name" => other_list[:name],
             "completed" => other_list[:completed],
             "refreshed" => other_list[:refreshed],
-            "type" => other_list[:type],
             "owner_id" => other_list[:owner_id],
             "created_at" => other_list[:created_at].iso8601(3),
             "has_accepted" => true,
@@ -134,7 +132,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => item[:id],
                     "created_at" => first_field[:created_at].iso8601(3),
                     "updated_at" => first_field[:updated_at].iso8601(3),
-                    "label" => "MyString"
+                    "label" => "MyString",
+                    "position" => first_list_item_field_configuration.position,
+                    "data_type" => first_list_item_field_configuration.data_type
                   },
                   {
                     "id" => second_field[:id],
@@ -145,7 +145,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => item[:id],
                     "created_at" => second_field[:created_at].iso8601(3),
                     "updated_at" => second_field[:updated_at].iso8601(3),
-                    "label" => "SecondLabel"
+                    "label" => "SecondLabel",
+                    "position" => second_list_item_field_configuration.position,
+                    "data_type" => second_list_item_field_configuration.data_type
                   }
                 ]
               },
@@ -168,7 +170,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => other_item[:id],
                     "created_at" => other_field[:created_at].iso8601(3),
                     "updated_at" => other_field[:updated_at].iso8601(3),
-                    "label" => "MyString"
+                    "label" => "MyString",
+                    "position" => first_list_item_field_configuration.position,
+                    "data_type" => first_list_item_field_configuration.data_type
                   }
                 ]
               }

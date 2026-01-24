@@ -23,7 +23,7 @@ class ListsController < ProtectedRouteController
 
   # POST /
   def create
-    new_list = ListsService.build_new_list(list_params, current_user)
+    new_list = ListsService.build_new_list(create_params, current_user)
     if new_list.save
       users_list = UsersListsService.create_users_list(current_user, new_list)
       render json: ListsService.list_response(new_list, users_list, current_user)
@@ -34,7 +34,7 @@ class ListsController < ProtectedRouteController
 
   # PUT /:id
   def update
-    update_attrs = prepare_update_attributes(list_params.to_h)
+    update_attrs = prepare_update_attributes(update_params.to_h)
 
     ListsService.update_previous_and_next_list(users_list) if update_attrs["completed"]
 
@@ -61,8 +61,12 @@ class ListsController < ProtectedRouteController
     @list ||= List.find(params[:id])
   end
 
-  def list_params
-    @list_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id type])
+  def create_params
+    @create_params ||= params.expect(list: %i[user_id name completed refreshed list_item_configuration_id])
+  end
+
+  def update_params
+    @update_params ||= params.expect(list: %i[user_id name completed refreshed])
   end
 
   def users_list

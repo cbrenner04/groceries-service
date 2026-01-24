@@ -2,61 +2,60 @@
 
 # Helper module for managing list item configurations
 module ListConfigurationHelper
-  class << self
-    def find_or_create_configuration_for_list_type(user, list_type)
-      configuration_name = configuration_name_for_list_type(list_type)
-      configuration = user.list_item_configurations.find_or_create_by!(name: configuration_name)
+  TEMPLATE_DEFINITIONS = {
+    "grocery list template" => [
+      { label: "quantity", data_type: "free_text", position: 1 },
+      { label: "product", data_type: "free_text", position: 2 },
+      { label: "category", data_type: "free_text", position: 3 }
+    ],
+    "book list template" => [
+      { label: "author", data_type: "free_text", position: 1 },
+      { label: "title", data_type: "free_text", position: 2 },
+      { label: "number_in_series", data_type: "number", position: 3 },
+      { label: "read", data_type: "boolean", position: 4 },
+      { label: "category", data_type: "free_text", position: 5 }
+    ],
+    "music list template" => [
+      { label: "title", data_type: "free_text", position: 1 },
+      { label: "artist", data_type: "free_text", position: 2 },
+      { label: "album", data_type: "free_text", position: 3 },
+      { label: "category", data_type: "free_text", position: 4 }
+    ],
+    "to do list template" => [
+      { label: "task", data_type: "free_text", position: 1 },
+      { label: "assignee", data_type: "free_text", position: 2 },
+      { label: "due_by", data_type: "date_time", position: 3 },
+      { label: "category", data_type: "free_text", position: 4 }
+    ],
+    "simple list with category template" => [
+      { label: "content", data_type: "free_text", position: 1 },
+      { label: "category", data_type: "free_text", position: 2 }
+    ]
+  }.freeze
 
-      create_field_configurations_for_list_type(configuration, list_type)
+  class << self
+    def create_all_default_configurations(user)
+      TEMPLATE_DEFINITIONS.each_key do |template_name|
+        create_configuration_by_name(user, template_name)
+      end
+    end
+
+    def create_configuration_by_name(user, template_name)
+      configuration = user.list_item_configurations.find_or_create_by!(name: template_name)
+      create_field_configurations(configuration, template_name)
       configuration
     end
 
     private
 
-    def configuration_name_for_list_type(list_type)
-      case list_type
-      when "BookList"
-        "book list template"
-      when "MusicList"
-        "music list template"
-      when "SimpleList"
-        "simple list with category template"
-      when "ToDoList"
-        "to do list template"
-      else # "GroceryList" or default
-        "grocery list template" # default fallback
-      end
-    end
+    def create_field_configurations(configuration, template_name)
+      field_definitions = TEMPLATE_DEFINITIONS[template_name]
+      return unless field_definitions
 
-    # rubocop:disable Metrics/MethodLength
-    def create_field_configurations_for_list_type(configuration, list_type)
-      case list_type
-      when "BookList"
-        create_field_config_if_missing(configuration, "author", "free_text", 1)
-        create_field_config_if_missing(configuration, "title", "free_text", 2)
-        create_field_config_if_missing(configuration, "number_in_series", "number", 3)
-        create_field_config_if_missing(configuration, "read", "boolean", 4)
-        create_field_config_if_missing(configuration, "category", "free_text", 5)
-      when "MusicList"
-        create_field_config_if_missing(configuration, "title", "free_text", 1)
-        create_field_config_if_missing(configuration, "artist", "free_text", 2)
-        create_field_config_if_missing(configuration, "album", "free_text", 3)
-        create_field_config_if_missing(configuration, "category", "free_text", 4)
-      when "SimpleList"
-        create_field_config_if_missing(configuration, "content", "free_text", 1)
-        create_field_config_if_missing(configuration, "category", "free_text", 2)
-      when "ToDoList"
-        create_field_config_if_missing(configuration, "task", "free_text", 1)
-        create_field_config_if_missing(configuration, "assignee", "free_text", 2)
-        create_field_config_if_missing(configuration, "due_by", "date_time", 3)
-        create_field_config_if_missing(configuration, "category", "free_text", 4)
-      else # Default to GroceryList field configurations
-        create_field_config_if_missing(configuration, "product", "free_text", 1)
-        create_field_config_if_missing(configuration, "quantity", "free_text", 2)
-        create_field_config_if_missing(configuration, "category", "free_text", 3)
+      field_definitions.each do |field_def|
+        create_field_config_if_missing(configuration, field_def[:label], field_def[:data_type], field_def[:position])
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def create_field_config_if_missing(configuration, label, data_type, position)
       # First, try to find an existing field config with this label
@@ -72,13 +71,11 @@ module ListConfigurationHelper
         # Create a new one if it doesn't exist
         configuration.list_item_field_configurations.create!(label: label, data_type: data_type, position: position)
       end
-    # :nocov:
     rescue ActiveRecord::RecordInvalid => e
       # If there's a validation error (like duplicate), try to find and update the existing one
       Rails.logger.warn "Failed to create field config #{label}: #{e.message}"
       existing_config = configuration.list_item_field_configurations.find_by(label: label)
       existing_config&.update!(data_type: data_type, position: position)
     end
-    # :nocov:
   end
 end

@@ -29,10 +29,9 @@ describe "/completed_lists", type: :request do
         "users_list_id" => UsersList.find_by(user_id: user.id, list_id: completed_list.id).id,
         "user_id" => user.id,
         "has_accepted" => true,
-        "type" => completed_list[:type],
         "prev_id" => nil,
         "next_id" => nil,
-        "list_item_configuration_id" => nil
+        "list_item_configuration_id" => completed_list[:list_item_configuration_id]
       )
       expect(response_body["current_list_permissions"]).to eq(
         user.lists[0].id.to_s => "write",

@@ -305,8 +305,7 @@ describe "/lists/:list_id/list_items", type: :request do
                   "name" => list[:name],
                   "owner_id" => list[:owner_id],
                   "refreshed" => false,
-                  "updated_at" => list[:updated_at].iso8601(3),
-                  "type" => list[:type] # TODO: remove when type is removed
+                  "updated_at" => list[:updated_at].iso8601(3)
                 }
               )
               expect(response_body["list_users"]).to eq([user.email])

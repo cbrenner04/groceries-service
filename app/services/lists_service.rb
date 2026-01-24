@@ -34,21 +34,15 @@ class ListsService
     end
 
     def build_new_list(params, user)
+      raise ArgumentError, "list_item_configuration_id required" unless params[:list_item_configuration_id]
+
       new_list_params = params.except(:user_id).merge!(owner: user)
-
-      # If no configuration is provided, assign one based on list type
-      unless params[:list_item_configuration_id]
-        list_type = params[:type] || "GroceryList"
-        configuration = ListConfigurationHelper.find_or_create_configuration_for_list_type(user, list_type)
-        new_list_params[:list_item_configuration_id] = configuration.id
-      end
-
       List.new(new_list_params)
     end
 
     def create_new_list_from(old_list)
       List.create!(name: old_list[:name], owner_id: old_list[:owner_id],
-                   list_item_configuration_id: old_list[:list_item_configuration_id], type: old_list[:type])
+                   list_item_configuration_id: old_list[:list_item_configuration_id])
     end
 
     def create_new_list_items(old_list, new_list, user)
