@@ -36,8 +36,8 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(3)
-      expect(fields[0]).to have_attributes(label: "product", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "quantity", data_type: "free_text", position: 2)
+      expect(fields[0]).to have_attributes(label: "quantity", data_type: "free_text", position: 1)
+      expect(fields[1]).to have_attributes(label: "product", data_type: "free_text", position: 2)
       expect(fields[2]).to have_attributes(label: "category", data_type: "free_text", position: 3)
     end
 
@@ -163,7 +163,7 @@ describe "ListConfigurationHelper", type: :request do
       # Re-run configuration creation - should update the field
       ListConfigurationHelper.create_configuration_by_name(user, "grocery list template")
 
-      expect(field.reload.position).to eq(1)
+      expect(field.reload.position).to eq(2)
     end
 
     it "handles race condition when create fails with RecordInvalid" do
