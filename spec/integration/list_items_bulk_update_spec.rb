@@ -132,7 +132,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => item[:id],
                     "created_at" => first_field[:created_at].iso8601(3),
                     "updated_at" => first_field[:updated_at].iso8601(3),
-                    "label" => "MyString"
+                    "label" => "MyString",
+                    "position" => first_list_item_field_configuration.position,
+                    "data_type" => first_list_item_field_configuration.data_type
                   },
                   {
                     "id" => second_field[:id],
@@ -143,7 +145,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => item[:id],
                     "created_at" => second_field[:created_at].iso8601(3),
                     "updated_at" => second_field[:updated_at].iso8601(3),
-                    "label" => "SecondLabel"
+                    "label" => "SecondLabel",
+                    "position" => second_list_item_field_configuration.position,
+                    "data_type" => second_list_item_field_configuration.data_type
                   }
                 ]
               },
@@ -166,7 +170,9 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                     "list_item_id" => other_item[:id],
                     "created_at" => other_field[:created_at].iso8601(3),
                     "updated_at" => other_field[:updated_at].iso8601(3),
-                    "label" => "MyString"
+                    "label" => "MyString",
+                    "position" => first_list_item_field_configuration.position,
+                    "data_type" => first_list_item_field_configuration.data_type
                   }
                 ]
               }

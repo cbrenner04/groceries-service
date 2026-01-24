@@ -188,13 +188,7 @@ class BulkUpdateService
   end
 
   def build_item_fields(item)
-    fields = if item.association(:list_item_fields).loaded?
-               item.list_item_fields.to_a
-             else
-               item.list_item_fields.includes(:list_item_field_configuration).to_a
-             end
-
-    all_fields = fields.reject { |f| f.archived_at.present? }.map do |field|
+    all_fields = item.list_item_fields.not_archived.map do |field|
       config = field.list_item_field_configuration
       field.attributes.symbolize_keys.merge(
         label: config.label,
