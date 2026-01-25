@@ -186,6 +186,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               "label" => list_item_field_configuration[:label],
               "list_item_configuration_id" => list_item_configuration[:id],
               "position" => list_item_field_configuration[:position],
+              "primary" => list_item_field_configuration[:primary],
               "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
             }
           )
@@ -216,6 +217,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               "label" => "foo",
               "list_item_configuration_id" => list_item_configuration[:id],
               "position" => new_list_item_field_configuration[:position],
+              "primary" => false,
               "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
             }
           )
@@ -247,6 +249,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               "label" => "foo",
               "list_item_configuration_id" => list_item_configuration[:id],
               "position" => list_item_field_configuration[:position],
+              "primary" => list_item_field_configuration[:primary],
               "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
             }
           )
@@ -323,6 +326,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
               "label" => list_item_field_configuration[:label],
               "list_item_configuration_id" => list_item_configuration[:id],
               "position" => list_item_field_configuration[:position],
+              "primary" => list_item_field_configuration[:primary],
               "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
             }
           )
@@ -370,6 +374,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                     "label" => "foo",
                     "list_item_configuration_id" => list_item_configuration[:id],
                     "position" => new_list_item_field_configuration[:position],
+                    "primary" => false,
                     "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
                   }
                 )
@@ -462,6 +467,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                 "label" => "foo",
                 "list_item_configuration_id" => list_item_configuration[:id],
                 "position" => new_list_item_field_configuration[:position],
+                "primary" => false,
                 "updated_at" => new_list_item_field_configuration[:updated_at].iso8601(3)
               }
             )
@@ -531,6 +537,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                 "label" => list_item_field_configuration[:label],
                 "list_item_configuration_id" => list_item_configuration[:id],
                 "position" => list_item_field_configuration[:position],
+                "primary" => list_item_field_configuration[:primary],
                 "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
               }
             )
@@ -554,6 +561,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                 "label" => list_item_field_configuration[:label],
                 "list_item_configuration_id" => list_item_configuration[:id],
                 "position" => list_item_field_configuration[:position],
+                "primary" => list_item_field_configuration[:primary],
                 "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
               }
             )
@@ -653,6 +661,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
                   "label" => "foo",
                   "list_item_configuration_id" => list_item_configuration[:id],
                   "position" => list_item_field_configuration[:position],
+                  "primary" => list_item_field_configuration[:primary],
                   "updated_at" => list_item_field_configuration[:updated_at].iso8601(3)
                 }
               )

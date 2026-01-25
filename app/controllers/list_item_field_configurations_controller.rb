@@ -61,7 +61,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
 
   def list_item_field_configuration_params
     @list_item_field_configuration_params ||=
-      params.expect(list_item_field_configuration: %i[label data_type position])
+      params.expect(list_item_field_configuration: %i[label data_type position primary])
   end
 
   def lists_using_config

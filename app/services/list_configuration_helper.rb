@@ -4,31 +4,31 @@
 module ListConfigurationHelper
   TEMPLATE_DEFINITIONS = {
     "grocery list template" => [
-      { label: "quantity", data_type: "free_text", position: 1 },
-      { label: "product", data_type: "free_text", position: 2 },
+      { label: "product", data_type: "free_text", position: 1, primary: true },
+      { label: "quantity", data_type: "free_text", position: 2 },
       { label: "category", data_type: "free_text", position: 3 }
     ],
     "book list template" => [
-      { label: "author", data_type: "free_text", position: 1 },
-      { label: "title", data_type: "free_text", position: 2 },
+      { label: "title", data_type: "free_text", position: 1, primary: true },
+      { label: "author", data_type: "free_text", position: 2 },
       { label: "number_in_series", data_type: "number", position: 3 },
       { label: "read", data_type: "boolean", position: 4 },
       { label: "category", data_type: "free_text", position: 5 }
     ],
     "music list template" => [
-      { label: "title", data_type: "free_text", position: 1 },
+      { label: "title", data_type: "free_text", position: 1, primary: true },
       { label: "artist", data_type: "free_text", position: 2 },
       { label: "album", data_type: "free_text", position: 3 },
       { label: "category", data_type: "free_text", position: 4 }
     ],
     "to do list template" => [
-      { label: "task", data_type: "free_text", position: 1 },
+      { label: "task", data_type: "free_text", position: 1, primary: true },
       { label: "assignee", data_type: "free_text", position: 2 },
       { label: "due_by", data_type: "date_time", position: 3 },
       { label: "category", data_type: "free_text", position: 4 }
     ],
     "simple list with category template" => [
-      { label: "content", data_type: "free_text", position: 1 },
+      { label: "content", data_type: "free_text", position: 1, primary: true },
       { label: "category", data_type: "free_text", position: 2 }
     ]
   }.freeze
@@ -53,29 +53,40 @@ module ListConfigurationHelper
       return unless field_definitions
 
       field_definitions.each do |field_def|
-        create_field_config_if_missing(configuration, field_def[:label], field_def[:data_type], field_def[:position])
+        create_field_config_if_missing(configuration, field_def)
       end
     end
 
-    def create_field_config_if_missing(configuration, label, data_type, position)
-      # First, try to find an existing field config with this label
-      existing_config = configuration.list_item_field_configurations.find_by(label: label)
+    def create_field_config_if_missing(configuration, field_def)
+      attrs = normalized_field_attrs(field_def)
+      existing = configuration.list_item_field_configurations.find_by(label: attrs[:label])
 
-      if existing_config
-        # Update the existing config if needed
-        if existing_config.data_type != data_type || existing_config.position != position
-          existing_config.update!(data_type: data_type,
-                                  position: position)
-        end
-      else
-        # Create a new one if it doesn't exist
-        configuration.list_item_field_configurations.create!(label: label, data_type: data_type, position: position)
-      end
+      existing ? update_if_changed(existing, attrs) : create_field_config(configuration, attrs)
     rescue ActiveRecord::RecordInvalid => e
-      # If there's a validation error (like duplicate), try to find and update the existing one
-      Rails.logger.warn "Failed to create field config #{label}: #{e.message}"
-      existing_config = configuration.list_item_field_configurations.find_by(label: label)
-      existing_config&.update!(data_type: data_type, position: position)
+      handle_race_condition(configuration, attrs, e)
+    end
+
+    def normalized_field_attrs(field_def)
+      { label: field_def[:label], data_type: field_def[:data_type],
+        position: field_def[:position], primary: field_def[:primary] || false }
+    end
+
+    def update_if_changed(existing, attrs)
+      return if existing.data_type == attrs[:data_type] &&
+                existing.position == attrs[:position] &&
+                existing.primary == attrs[:primary]
+
+      existing.update!(attrs.except(:label))
+    end
+
+    def create_field_config(configuration, attrs)
+      configuration.list_item_field_configurations.create!(attrs)
+    end
+
+    def handle_race_condition(configuration, attrs, error)
+      Rails.logger.warn "Failed to create field config #{attrs[:label]}: #{error.message}"
+      existing = configuration.list_item_field_configurations.find_by(label: attrs[:label])
+      existing&.update!(attrs.except(:label))
     end
   end
 end

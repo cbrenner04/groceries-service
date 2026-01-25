@@ -5,6 +5,7 @@ FactoryBot.define do
     label { "MyString" }
     data_type { "free_text" }
     position { 1 }
+    primary { false }
     archived_at { nil }
     list_item_configuration factory: %i[list_item_configuration]
   end
