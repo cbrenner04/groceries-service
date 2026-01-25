@@ -9,7 +9,7 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
 
   let(:list_item_configuration) { create(:list_item_configuration, user: user) }
   let!(:list_item_field_configuration) do
-    create(:list_item_field_configuration, list_item_configuration: list_item_configuration)
+    create(:list_item_field_configuration, :primary, list_item_configuration: list_item_configuration)
   end
 
   before { login user }
@@ -222,6 +222,31 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
             }
           )
         end
+
+        context "when creating field triggers RecordInvalid" do
+          it "handles RecordInvalid and returns 422" do
+            # Make save raise RecordInvalid for any new field configuration
+            invalid_record = ListItemFieldConfiguration.new
+            # rubocop:disable RSpec/AnyInstance
+            allow_any_instance_of(ListItemFieldConfiguration).to receive(:save).and_raise(
+              ActiveRecord::RecordInvalid.new(invalid_record)
+            )
+            # rubocop:enable RSpec/AnyInstance
+
+            post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
+                 headers: auth_params,
+                 params: {
+                   list_item_field_configuration: {
+                     label: "test",
+                     data_type: "free_text",
+                     position: 1
+                   }
+                 }
+
+            expect(response).to have_http_status :unprocessable_content
+            expect(JSON.parse(response.body)).to be_a(Hash)
+          end
+        end
       end
 
       describe "PUT /:id" do
@@ -254,9 +279,40 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
             }
           )
         end
+
+        context "when update triggers RecordInvalid" do
+          it "handles RecordInvalid and returns 422" do
+            # Make save raise RecordInvalid for the field configuration being updated
+            # rubocop:disable RSpec/AnyInstance
+            allow_any_instance_of(ListItemFieldConfiguration).to receive(:save).and_raise(
+              ActiveRecord::RecordInvalid.new(list_item_field_configuration)
+            )
+            # rubocop:enable RSpec/AnyInstance
+
+            put list_item_configuration_list_item_field_configuration_path(
+              list_item_configuration.id,
+              list_item_field_configuration.id
+            ), headers: auth_params,
+               params: {
+                 list_item_field_configuration: {
+                   label: "foo",
+                   data_type: "boolean"
+                 }
+               }
+
+            expect(response).to have_http_status :unprocessable_content
+            expect(JSON.parse(response.body)).to be_a(Hash)
+          end
+        end
       end
 
       describe "DELETE /:id" do
+        before do
+          # Ensure there's another primary field so we can archive this one
+          create(:list_item_field_configuration, :primary, list_item_configuration: list_item_configuration,
+                                                           label: "AnotherField", position: 2)
+        end
+
         it "archives the list item field configuration" do
           expect(list_item_field_configuration.archived_at).to be_falsy
 
@@ -670,6 +726,12 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
         end
 
         describe "DELETE /:id" do
+          before do
+            # Ensure there's another primary field so we can archive this one
+            create(:list_item_field_configuration, :primary, list_item_configuration: list_item_configuration,
+                                                             label: "AnotherField", position: 2)
+          end
+
           it "archives the list item field configuration" do
             expect(list_item_field_configuration.archived_at).to be_falsy
 

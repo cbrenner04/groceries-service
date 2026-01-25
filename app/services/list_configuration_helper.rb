@@ -11,7 +11,7 @@ module ListConfigurationHelper
     "book list template" => [
       { label: "title", data_type: "free_text", position: 1, primary: true },
       { label: "author", data_type: "free_text", position: 2 },
-      { label: "number_in_series", data_type: "number", position: 3 },
+      { label: "number in series", data_type: "number", position: 3 },
       { label: "read", data_type: "boolean", position: 4 },
       { label: "category", data_type: "free_text", position: 5 }
     ],
@@ -24,7 +24,7 @@ module ListConfigurationHelper
     "to do list template" => [
       { label: "task", data_type: "free_text", position: 1, primary: true },
       { label: "assignee", data_type: "free_text", position: 2 },
-      { label: "due_by", data_type: "date_time", position: 3 },
+      { label: "due by", data_type: "date_time", position: 3 },
       { label: "category", data_type: "free_text", position: 4 }
     ],
     "simple list with category template" => [

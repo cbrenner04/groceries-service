@@ -51,7 +51,7 @@ describe "ListConfigurationHelper", type: :request do
       expect(fields.count).to eq(5)
       expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "author", data_type: "free_text", position: 2, primary: false)
-      expect(fields[2]).to have_attributes(label: "number_in_series", data_type: "number", position: 3, primary: false)
+      expect(fields[2]).to have_attributes(label: "number in series", data_type: "number", position: 3, primary: false)
       expect(fields[3]).to have_attributes(label: "read", data_type: "boolean", position: 4, primary: false)
       expect(fields[4]).to have_attributes(label: "category", data_type: "free_text", position: 5, primary: false)
     end
@@ -80,7 +80,7 @@ describe "ListConfigurationHelper", type: :request do
       expect(fields.count).to eq(4)
       expect(fields[0]).to have_attributes(label: "task", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "assignee", data_type: "free_text", position: 2, primary: false)
-      expect(fields[2]).to have_attributes(label: "due_by", data_type: "date_time", position: 3, primary: false)
+      expect(fields[2]).to have_attributes(label: "due by", data_type: "date_time", position: 3, primary: false)
       expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4, primary: false)
     end
 
@@ -170,8 +170,10 @@ describe "ListConfigurationHelper", type: :request do
       config = ListConfigurationHelper.create_configuration_by_name(user, "grocery list template")
       field = config.list_item_field_configurations.find_by(label: "product")
 
-      # Manually change the primary to simulate a mismatch
-      field.update!(primary: false)
+      # Manually change the primary to simulate a mismatch (bypass validation)
+      # rubocop:disable Rails/SkipsModelValidations
+      field.update_column(:primary, false)
+      # rubocop:enable Rails/SkipsModelValidations
       expect(field.reload.primary).to be(false)
 
       # Re-run configuration creation - should update the field

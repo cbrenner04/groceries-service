@@ -87,9 +87,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                   "archived_at" => nil,
                   "created_at" => item_field[:created_at].iso8601(3),
                   "data" => item_field[:data],
+                  "data_type" => list_item_field_configuration[:data_type],
                   "id" => item_field[:id],
+                  "label" => list_item_field_configuration[:label],
                   "list_item_field_configuration_id" => list_item_field_configuration[:id],
                   "list_item_id" => item[:id],
+                  "position" => list_item_field_configuration[:position],
+                  "primary" => list_item_field_configuration[:primary],
                   "updated_at" => item_field[:updated_at].iso8601(3),
                   "user_id" => user[:id]
                 }
@@ -109,9 +113,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                   "archived_at" => nil,
                   "created_at" => item_field[:created_at].iso8601(3),
                   "data" => item_field[:data],
+                  "data_type" => list_item_field_configuration[:data_type],
                   "id" => item_field[:id],
+                  "label" => list_item_field_configuration[:label],
                   "list_item_field_configuration_id" => list_item_field_configuration[:id],
                   "list_item_id" => item[:id],
+                  "position" => list_item_field_configuration[:position],
+                  "primary" => list_item_field_configuration[:primary],
                   "updated_at" => item_field[:updated_at].iso8601(3),
                   "user_id" => user[:id]
                 }
@@ -179,9 +187,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                   "archived_at" => nil,
                   "created_at" => item_field[:created_at].iso8601(3),
                   "data" => item_field[:data],
+                  "data_type" => list_item_field_configuration[:data_type],
                   "id" => item_field[:id],
+                  "label" => list_item_field_configuration[:label],
                   "list_item_field_configuration_id" => list_item_field_configuration[:id],
                   "list_item_id" => item[:id],
+                  "position" => list_item_field_configuration[:position],
+                  "primary" => list_item_field_configuration[:primary],
                   "updated_at" => item_field[:updated_at].iso8601(3),
                   "user_id" => user[:id]
                 }
@@ -245,9 +257,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                     "archived_at" => nil,
                     "created_at" => new_item[:created_at].iso8601(3),
                     "data" => "foobar",
+                    "data_type" => list_item_field_configuration[:data_type],
                     "id" => new_item[:id],
+                    "label" => list_item_field_configuration[:label],
                     "list_item_field_configuration_id" => list_item_field_configuration.id,
                     "list_item_id" => item.id,
+                    "position" => list_item_field_configuration[:position],
+                    "primary" => list_item_field_configuration[:primary],
                     "updated_at" => new_item[:updated_at].iso8601(3),
                     "user_id" => user[:id]
                   }
@@ -313,9 +329,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                     "archived_at" => nil,
                     "created_at" => item_field[:created_at].iso8601(3),
                     "data" => item_field[:data],
+                    "data_type" => list_item_field_configuration[:data_type],
                     "id" => item_field[:id],
+                    "label" => list_item_field_configuration[:label],
                     "list_item_field_configuration_id" => list_item_field_configuration[:id],
                     "list_item_id" => item[:id],
+                    "position" => list_item_field_configuration[:position],
+                    "primary" => list_item_field_configuration[:primary],
                     "updated_at" => item_field[:updated_at].iso8601(3),
                     "user_id" => user[:id]
                   }
@@ -335,6 +355,10 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                     "id" => item_field[:id],
                     "list_item_field_configuration_id" => list_item_field_configuration[:id],
                     "data" => item_field[:data],
+                    "data_type" => list_item_field_configuration[:data_type],
+                    "label" => list_item_field_configuration[:label],
+                    "position" => list_item_field_configuration[:position],
+                    "primary" => list_item_field_configuration[:primary],
                     "archived_at" => nil,
                     "user_id" => user[:id],
                     "list_item_id" => item[:id],
@@ -404,9 +428,13 @@ describe "/lists/:list_id/list_items/:list_item_id/list_item_fields", type: :req
                       "archived_at" => nil,
                       "created_at" => item_field[:created_at].iso8601(3),
                       "data" => "foobar",
+                      "data_type" => other_list_item_field_configuration[:data_type],
                       "id" => item_field[:id],
+                      "label" => other_list_item_field_configuration[:label],
                       "list_item_field_configuration_id" => other_list_item_field_configuration.id,
                       "list_item_id" => item.id,
+                      "position" => other_list_item_field_configuration[:position],
+                      "primary" => other_list_item_field_configuration[:primary],
                       "updated_at" => item_field[:updated_at].iso8601(3),
                       "user_id" => user[:id]
                     }

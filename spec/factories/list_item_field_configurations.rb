@@ -8,5 +8,9 @@ FactoryBot.define do
     primary { false }
     archived_at { nil }
     list_item_configuration factory: %i[list_item_configuration]
+
+    trait :primary do
+      primary { true }
+    end
   end
 end
