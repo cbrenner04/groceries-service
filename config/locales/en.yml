@@ -1,3 +1,5 @@
 en:
   shared_list_mailer_subject: "A list has been shared with you!"
   list_item_field_configuration_data_type_error: "%<value>s is not one of [boolean, data_time, free_text, number]"
+  list_item_configuration:
+    requires_primary_field: "At least one field must be marked as primary"

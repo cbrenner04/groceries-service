@@ -36,9 +36,9 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(3)
-      expect(fields[0]).to have_attributes(label: "quantity", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "product", data_type: "free_text", position: 2)
-      expect(fields[2]).to have_attributes(label: "category", data_type: "free_text", position: 3)
+      expect(fields[0]).to have_attributes(label: "product", data_type: "free_text", position: 1, primary: true)
+      expect(fields[1]).to have_attributes(label: "quantity", data_type: "free_text", position: 2, primary: false)
+      expect(fields[2]).to have_attributes(label: "category", data_type: "free_text", position: 3, primary: false)
     end
 
     it "creates correct field configurations for book template" do
@@ -49,11 +49,11 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(5)
-      expect(fields[0]).to have_attributes(label: "author", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "title", data_type: "free_text", position: 2)
-      expect(fields[2]).to have_attributes(label: "number_in_series", data_type: "number", position: 3)
-      expect(fields[3]).to have_attributes(label: "read", data_type: "boolean", position: 4)
-      expect(fields[4]).to have_attributes(label: "category", data_type: "free_text", position: 5)
+      expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1, primary: true)
+      expect(fields[1]).to have_attributes(label: "author", data_type: "free_text", position: 2, primary: false)
+      expect(fields[2]).to have_attributes(label: "number in series", data_type: "number", position: 3, primary: false)
+      expect(fields[3]).to have_attributes(label: "read", data_type: "boolean", position: 4, primary: false)
+      expect(fields[4]).to have_attributes(label: "category", data_type: "free_text", position: 5, primary: false)
     end
 
     it "creates correct field configurations for music template" do
@@ -64,10 +64,10 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(4)
-      expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "artist", data_type: "free_text", position: 2)
-      expect(fields[2]).to have_attributes(label: "album", data_type: "free_text", position: 3)
-      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4)
+      expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1, primary: true)
+      expect(fields[1]).to have_attributes(label: "artist", data_type: "free_text", position: 2, primary: false)
+      expect(fields[2]).to have_attributes(label: "album", data_type: "free_text", position: 3, primary: false)
+      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4, primary: false)
     end
 
     it "creates correct field configurations for to do template" do
@@ -78,10 +78,10 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(4)
-      expect(fields[0]).to have_attributes(label: "task", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "assignee", data_type: "free_text", position: 2)
-      expect(fields[2]).to have_attributes(label: "due_by", data_type: "date_time", position: 3)
-      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4)
+      expect(fields[0]).to have_attributes(label: "task", data_type: "free_text", position: 1, primary: true)
+      expect(fields[1]).to have_attributes(label: "assignee", data_type: "free_text", position: 2, primary: false)
+      expect(fields[2]).to have_attributes(label: "due by", data_type: "date_time", position: 3, primary: false)
+      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4, primary: false)
     end
 
     it "creates correct field configurations for simple template" do
@@ -92,8 +92,8 @@ describe "ListConfigurationHelper", type: :request do
       fields = config.list_item_field_configurations.order(:position)
 
       expect(fields.count).to eq(2)
-      expect(fields[0]).to have_attributes(label: "content", data_type: "free_text", position: 1)
-      expect(fields[1]).to have_attributes(label: "category", data_type: "free_text", position: 2)
+      expect(fields[0]).to have_attributes(label: "content", data_type: "free_text", position: 1, primary: true)
+      expect(fields[1]).to have_attributes(label: "category", data_type: "free_text", position: 2, primary: false)
     end
 
     it "is idempotent - does not duplicate configurations" do
@@ -163,7 +163,23 @@ describe "ListConfigurationHelper", type: :request do
       # Re-run configuration creation - should update the field
       ListConfigurationHelper.create_configuration_by_name(user, "grocery list template")
 
-      expect(field.reload.position).to eq(2)
+      expect(field.reload.position).to eq(1)
+    end
+
+    it "updates existing field config when primary differs" do
+      config = ListConfigurationHelper.create_configuration_by_name(user, "grocery list template")
+      field = config.list_item_field_configurations.find_by(label: "product")
+
+      # Manually change the primary to simulate a mismatch (bypass validation)
+      # rubocop:disable Rails/SkipsModelValidations
+      field.update_column(:primary, false)
+      # rubocop:enable Rails/SkipsModelValidations
+      expect(field.reload.primary).to be(false)
+
+      # Re-run configuration creation - should update the field
+      ListConfigurationHelper.create_configuration_by_name(user, "grocery list template")
+
+      expect(field.reload.primary).to be(true)
     end
 
     it "handles race condition when create fails with RecordInvalid" do
@@ -173,6 +189,8 @@ describe "ListConfigurationHelper", type: :request do
       existing_field = config.list_item_field_configurations.create!(
         label: "new_field", data_type: "number", position: 99
       )
+
+      field_def = { label: "new_field", data_type: "free_text", position: 1, primary: false }
 
       # Stub find_by to return nil first (simulating race), then return the existing field
       call_count = 0
@@ -190,7 +208,7 @@ describe "ListConfigurationHelper", type: :request do
 
       # This should not raise, thanks to the rescue block
       expect do
-        ListConfigurationHelper.send(:create_field_config_if_missing, config, "new_field", "free_text", 1)
+        ListConfigurationHelper.send(:create_field_config_if_missing, config, field_def)
       end.not_to raise_error
 
       expect(Rails.logger).to have_received(:warn).with(/Failed to create field config/)

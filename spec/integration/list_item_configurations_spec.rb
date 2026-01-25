@@ -230,6 +230,27 @@ describe "/list_item_configurations", type: :request do
             )
             expect(list_item_configuration[:name]).to eq "foobar"
           end
+
+          context "when configuration has fields but none are primary" do
+            before do
+              list_item_configuration.list_item_field_configurations.create!(
+                label: "test", data_type: "free_text", position: 1, primary: false
+              )
+            end
+
+            it "returns 422 with validation error" do
+              put list_item_configuration_path(list_item_configuration.id),
+                  headers: auth_params,
+                  params: {
+                    list_item_configuration: {
+                      name: "foobar"
+                    }
+                  }
+
+              expect(response).to have_http_status :unprocessable_content
+              expect(JSON.parse(response.body)).to have_key("base")
+            end
+          end
         end
       end
 
@@ -237,7 +258,7 @@ describe "/list_item_configurations", type: :request do
         it "archives the list item configuration and its related list item field configurations" do
           list_item_field_configuration =
             list_item_configuration.list_item_field_configurations.create!(label: "foo", data_type: "free_text",
-                                                                           position: 1)
+                                                                           position: 1, primary: true)
 
           expect(list_item_configuration.archived_at).to be_falsy
           expect(list_item_field_configuration.archived_at).to be_falsy

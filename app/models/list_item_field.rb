@@ -13,4 +13,13 @@ class ListItemField < ApplicationRecord
   def archive
     update archived_at: Time.zone.now
   end
+
+  def as_json(options = {})
+    super.merge(
+      label: list_item_field_configuration.label,
+      position: list_item_field_configuration.position,
+      data_type: list_item_field_configuration.data_type,
+      primary: list_item_field_configuration.primary
+    )
+  end
 end
