@@ -176,6 +176,36 @@ describe "/lists", type: :request do
         expect(json["name"]).to eq("foo")
         expect(List.find_by(id: json["id"]).owner).to eq user
       end
+
+      it "handles RecordNotUnique when seeding default categories" do
+        config = user.list_item_configurations.find_by(name: "grocery list template")
+
+        # Mock the categories association to raise RecordNotUnique on the first call
+        allow_any_instance_of(List).to receive(:categories).and_wrap_original do |original_method, *args, &block|
+          categories_association = original_method.call(*args, &block)
+
+          # Mock find_or_create_by! to raise RecordNotUnique on first call, then work normally
+          call_count = 0
+          allow(categories_association).to receive(:find_or_create_by!) do |attributes|
+            call_count += 1
+            if call_count == 1
+              raise ActiveRecord::RecordNotUnique.new("duplicate key value")
+            else
+              # Fall back to the real implementation for subsequent calls
+              categories_association.find_or_create_by!(attributes)
+            end
+          end
+
+          categories_association
+        end
+
+        expect do
+          post lists_path,
+               params: { list: { user_id: user.id, name: "foo", list_item_configuration_id: config.id } },
+               headers: auth_params
+        end.to change(List, :count).by(1)
+        expect(response).to have_http_status(:success)
+      end
     end
 
     describe "with invalid params" do

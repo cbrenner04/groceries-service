@@ -34,7 +34,7 @@ class ListItemsBulkUpdateController < ProtectedRouteController
     @item_params ||= params.permit(
       :item_ids, :list_id,
       list_items: [
-        :copy, :move, :existing_list_id, :new_list_name, :update_current_items,
+        :copy, :move, :existing_list_id, :new_list_name, :update_current_items, :category,
         { fields_to_update: %i[data label item_ids] }
       ]
     )

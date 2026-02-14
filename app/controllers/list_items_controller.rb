@@ -25,8 +25,9 @@ class ListItemsController < ProtectedRouteController
       list: list,
       list_users: UsersListsService.list_users(params[:list_id]),
       list_item_configuration: list.list_item_configuration || nil,
+      categories: list.categories.order(:name).pluck(:name),
       list_item_field_configurations:
-        list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
+        list.list_item_configuration&.list_item_field_configurations&.not_archived&.order(:position) || []
     }
   end
 
@@ -63,7 +64,7 @@ class ListItemsController < ProtectedRouteController
   end
 
   def item_params
-    @item_params ||= params.key?(:list_item) ? params.expect(list_item: %i[refreshed completed]) : {}
+    @item_params ||= params.key?(:list_item) ? params.expect(list_item: %i[refreshed completed category]) : {}
   end
 
   def users_list
