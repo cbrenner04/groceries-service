@@ -106,7 +106,8 @@ class ListsService
         field.attributes.merge(
           label: field.list_item_field_configuration.label,
           position: field.list_item_field_configuration.position,
-          data_type: field.list_item_field_configuration.data_type
+          data_type: field.list_item_field_configuration.data_type,
+          primary: field.list_item_field_configuration.primary
         )
       end
       all_fields.sort_by { |field| field[:position] }

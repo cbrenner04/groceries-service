@@ -24,21 +24,26 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
   # POST /
   def create
     new_field_config =
-      list_item_configuration.list_item_field_configurations.create(list_item_field_configuration_params)
+      list_item_configuration.list_item_field_configurations.build(list_item_field_configuration_params)
     if new_field_config.save
       render json: new_field_config
     else
       render json: new_field_config.errors, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors, status: :unprocessable_content
   end
 
   # PUT /:id
   def update
-    if list_item_field_configuration.update(list_item_field_configuration_params)
+    list_item_field_configuration.assign_attributes(list_item_field_configuration_params)
+    if list_item_field_configuration.save
       render json: list_item_field_configuration
     else
       render json: list_item_field_configuration.errors, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors, status: :unprocessable_content
   end
 
   # DELETE /:id
@@ -46,7 +51,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
     list_item_field_configuration.archive
     head :no_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: e.record.errors.messages, status: :unprocessable_content
+    render json: e.record.errors, status: :unprocessable_content
   end
 
   private
@@ -61,7 +66,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
 
   def list_item_field_configuration_params
     @list_item_field_configuration_params ||=
-      params.expect(list_item_field_configuration: %i[label data_type position])
+      params.expect(list_item_field_configuration: %i[label data_type position primary])
   end
 
   def lists_using_config
