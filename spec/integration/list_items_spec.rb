@@ -301,7 +301,7 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
                   "updated_at" => item[:updated_at].iso8601(3),
-                  "user_id" => user[:id],
+                  "user_id" => user[:id]
                 }
               )
               expect(response_body["list"]).to eq(
@@ -314,7 +314,7 @@ describe "/lists/:list_id/list_items", type: :request do
                   "name" => list[:name],
                   "owner_id" => list[:owner_id],
                   "refreshed" => false,
-                  "updated_at" => list[:updated_at].iso8601(3),
+                  "updated_at" => list[:updated_at].iso8601(3)
                 }
               )
               expect(response_body["list_users"]).to eq([user.email])

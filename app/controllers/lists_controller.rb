@@ -26,7 +26,7 @@ class ListsController < ProtectedRouteController
     new_list = ListsService.build_new_list(create_params, current_user)
     if new_list.save
       users_list = UsersListsService.create_users_list(current_user, new_list)
-      seed_default_categories(new_list)
+      DefaultCategorySeeder.seed(new_list)
       render json: ListsService.list_response(new_list, users_list, current_user)
     else
       render json: new_list.errors, status: :unprocessable_content
@@ -97,15 +97,5 @@ class ListsController < ProtectedRouteController
   def prepare_update_attributes(attrs)
     attrs["completed"] = ActiveModel::Type::Boolean.new.cast(attrs["completed"]) if attrs.key?("completed")
     attrs
-  end
-
-  def seed_default_categories(new_list)
-    return unless new_list.list_item_configuration&.name == "grocery list template"
-
-    ListConfigurationHelper::GROCERY_DEFAULT_CATEGORIES.each do |name|
-      new_list.categories.find_or_create_by!(name: name)
-    rescue ActiveRecord::RecordNotUnique
-      next
-    end
   end
 end

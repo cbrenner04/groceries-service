@@ -180,23 +180,16 @@ describe "/lists", type: :request do
       it "handles RecordNotUnique when seeding default categories" do
         config = user.list_item_configurations.find_by(name: "grocery list template")
 
-        # Mock the categories association to raise RecordNotUnique on the first call
-        allow_any_instance_of(List).to receive(:categories).and_wrap_original do |original_method, *args, &block|
-          categories_association = original_method.call(*args, &block)
-
-          # Mock find_or_create_by! to raise RecordNotUnique on first call, then work normally
+        allow(DefaultCategorySeeder).to receive(:seed).and_wrap_original do |original, list|
+          categories_association = list.categories
           call_count = 0
-          allow(categories_association).to receive(:find_or_create_by!) do |attributes|
+          allow(categories_association).to receive(:find_or_create_by!).and_wrap_original do |orig, *args, **kwargs|
             call_count += 1
-            if call_count == 1
-              raise ActiveRecord::RecordNotUnique.new("duplicate key value")
-            else
-              # Fall back to the real implementation for subsequent calls
-              categories_association.find_or_create_by!(attributes)
-            end
-          end
+            raise ActiveRecord::RecordNotUnique, "duplicate key value" if call_count == 1
 
-          categories_association
+            orig.call(*args, **kwargs)
+          end
+          original.call(list)
         end
 
         expect do
