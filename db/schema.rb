@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_25_220850) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_14_200002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
+
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "list_id", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id", "name"], name: "index_categories_on_list_id_and_name", unique: true
+    t.index ["list_id"], name: "index_categories_on_list_id"
+  end
 
   create_table "list_item_configurations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "archived_at"
@@ -53,6 +62,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_25_220850) do
 
   create_table "list_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "archived_at"
+    t.string "category"
     t.boolean "completed", default: false, null: false
     t.datetime "created_at", null: false
     t.uuid "list_id", null: false
@@ -124,6 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_25_220850) do
     t.index ["user_id"], name: "index_users_lists_on_user_id"
   end
 
+  add_foreign_key "categories", "lists"
   add_foreign_key "list_item_configurations", "users"
   add_foreign_key "list_item_field_configurations", "list_item_configurations"
   add_foreign_key "list_item_fields", "list_item_field_configurations"

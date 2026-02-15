@@ -5,6 +5,8 @@ class ListItemFieldConfiguration < ApplicationRecord
   belongs_to :list_item_configuration
   has_many :list_item_fields, dependent: nil
 
+  scope :not_archived, -> { where(archived_at: nil) }
+
   validates :label, presence: true
   validates :position, presence: true, numericality: { only_integer: true }
   validates :data_type,

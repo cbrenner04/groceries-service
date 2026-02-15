@@ -35,10 +35,9 @@ describe "ListConfigurationHelper", type: :request do
       config = user.list_item_configurations.find_by(name: "grocery list template")
       fields = config.list_item_field_configurations.order(:position)
 
-      expect(fields.count).to eq(3)
+      expect(fields.count).to eq(2)
       expect(fields[0]).to have_attributes(label: "product", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "quantity", data_type: "free_text", position: 2, primary: false)
-      expect(fields[2]).to have_attributes(label: "category", data_type: "free_text", position: 3, primary: false)
     end
 
     it "creates correct field configurations for book template" do
@@ -48,12 +47,11 @@ describe "ListConfigurationHelper", type: :request do
       config = user.list_item_configurations.find_by(name: "book list template")
       fields = config.list_item_field_configurations.order(:position)
 
-      expect(fields.count).to eq(5)
+      expect(fields.count).to eq(4)
       expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "author", data_type: "free_text", position: 2, primary: false)
       expect(fields[2]).to have_attributes(label: "number in series", data_type: "number", position: 3, primary: false)
       expect(fields[3]).to have_attributes(label: "read", data_type: "boolean", position: 4, primary: false)
-      expect(fields[4]).to have_attributes(label: "category", data_type: "free_text", position: 5, primary: false)
     end
 
     it "creates correct field configurations for music template" do
@@ -63,11 +61,10 @@ describe "ListConfigurationHelper", type: :request do
       config = user.list_item_configurations.find_by(name: "music list template")
       fields = config.list_item_field_configurations.order(:position)
 
-      expect(fields.count).to eq(4)
+      expect(fields.count).to eq(3)
       expect(fields[0]).to have_attributes(label: "title", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "artist", data_type: "free_text", position: 2, primary: false)
       expect(fields[2]).to have_attributes(label: "album", data_type: "free_text", position: 3, primary: false)
-      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4, primary: false)
     end
 
     it "creates correct field configurations for to do template" do
@@ -77,11 +74,10 @@ describe "ListConfigurationHelper", type: :request do
       config = user.list_item_configurations.find_by(name: "to do list template")
       fields = config.list_item_field_configurations.order(:position)
 
-      expect(fields.count).to eq(4)
+      expect(fields.count).to eq(3)
       expect(fields[0]).to have_attributes(label: "task", data_type: "free_text", position: 1, primary: true)
       expect(fields[1]).to have_attributes(label: "assignee", data_type: "free_text", position: 2, primary: false)
       expect(fields[2]).to have_attributes(label: "due by", data_type: "date_time", position: 3, primary: false)
-      expect(fields[3]).to have_attributes(label: "category", data_type: "free_text", position: 4, primary: false)
     end
 
     it "creates correct field configurations for simple template" do
@@ -91,9 +87,8 @@ describe "ListConfigurationHelper", type: :request do
       config = user.list_item_configurations.find_by(name: "simple list with category template")
       fields = config.list_item_field_configurations.order(:position)
 
-      expect(fields.count).to eq(2)
+      expect(fields.count).to eq(1)
       expect(fields[0]).to have_attributes(label: "content", data_type: "free_text", position: 1, primary: true)
-      expect(fields[1]).to have_attributes(label: "category", data_type: "free_text", position: 2, primary: false)
     end
 
     it "is idempotent - does not duplicate configurations" do
@@ -116,7 +111,7 @@ describe "ListConfigurationHelper", type: :request do
 
       config = user.list_item_configurations.find_by(name: "book list template")
       expect(config).to be_present
-      expect(config.list_item_field_configurations.count).to eq(5)
+      expect(config.list_item_field_configurations.count).to eq(4)
     end
 
     it "returns existing configuration without creating duplicates" do

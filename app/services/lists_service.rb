@@ -23,8 +23,9 @@ class ListsService
         permissions: UsersList.find_by(list_id: list.id, user_id: user.id).permissions,
         lists_to_update: lists_to_update(list, user),
         list_item_configuration: list.list_item_configuration_id ? list.list_item_configuration : nil,
+        categories: list.categories.order(:name).pluck(:name),
         list_item_field_configurations:
-          list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
+          list.list_item_configuration&.list_item_field_configurations&.not_archived&.order(:position) || []
       }
     end
 
@@ -48,7 +49,7 @@ class ListsService
     def create_new_list_items(old_list, new_list, user)
       items = old_list.list_items.reject { |item| item.refreshed || item.archived_at.present? }
       items.each do |item|
-        new_item = new_list.list_items.create!(user: user)
+        new_item = new_list.list_items.create!(user: user, category: item.category)
         item.list_item_fields.each do |list_item_field|
           field_config = list_item_field.list_item_field_configuration
           # Only create field if data is present

@@ -73,7 +73,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
                   "updated_at" => item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 },
                 {
                   "archived_at" => nil,
@@ -83,7 +84,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => other_item[:refreshed],
                   "updated_at" => other_item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 }
               ]
             )
@@ -114,7 +116,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
                   "updated_at" => item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 }
               )
             end
@@ -171,7 +174,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
                   "updated_at" => item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 },
                 {
                   "archived_at" => nil,
@@ -181,7 +185,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => other_item[:refreshed],
                   "updated_at" => other_item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 }
               ]
             )
@@ -212,7 +217,8 @@ describe "/lists/:list_id/list_items", type: :request do
                   "list_id" => list[:id],
                   "refreshed" => item[:refreshed],
                   "updated_at" => item[:updated_at].iso8601(3),
-                  "user_id" => user[:id]
+                  "user_id" => user[:id],
+                  "category" => nil
                 }
               )
             end
@@ -237,7 +243,8 @@ describe "/lists/:list_id/list_items", type: :request do
                 "list_id" => list.id,
                 "refreshed" => false,
                 "updated_at" => new_item[:updated_at].iso8601(3),
-                "user_id" => user.id
+                "user_id" => user.id,
+                "category" => nil
               }
             )
           end
@@ -261,7 +268,8 @@ describe "/lists/:list_id/list_items", type: :request do
                 "list_id" => list.id,
                 "refreshed" => false,
                 "updated_at" => new_item[:updated_at].iso8601(3),
-                "user_id" => user.id
+                "user_id" => user.id,
+                "category" => nil
               }
             )
           end
@@ -285,6 +293,7 @@ describe "/lists/:list_id/list_items", type: :request do
               expect(response_body["item"]).to eq(
                 {
                   "archived_at" => nil,
+                  "category" => nil,
                   "completed" => item[:completed],
                   "created_at" => item[:created_at].iso8601(3),
                   "fields" => [],

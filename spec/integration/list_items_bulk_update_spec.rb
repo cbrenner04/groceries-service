@@ -115,6 +115,7 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
             [
               {
                 "id" => item[:id],
+                "category" => nil,
                 "archived_at" => nil,
                 "refreshed" => false,
                 "completed" => false,
@@ -156,6 +157,7 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                 "archived_at" => nil,
                 "refreshed" => false,
                 "completed" => false,
+                "category" => nil,
                 "user_id" => user[:id],
                 "list_id" => list[:id],
                 "created_at" => other_item[:created_at].iso8601(3),

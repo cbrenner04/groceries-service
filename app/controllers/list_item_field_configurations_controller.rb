@@ -8,7 +8,7 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
 
   # GET /
   def index
-    render json: list_item_configuration.list_item_field_configurations
+    render json: list_item_configuration.list_item_field_configurations.not_archived
   end
 
   # GET /:id
