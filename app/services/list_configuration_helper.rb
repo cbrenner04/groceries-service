@@ -28,8 +28,8 @@ module ListConfigurationHelper
     ]
   }.freeze
 
-  GROCERY_DEFAULT_CATEGORIES = ["Baking", "Bakery", "Beverages", "Canned Goods", "Condiments", "Dairy", "Deli",
-                                "Frozen", "Meat", "Produce", "Snacks"].freeze
+  GROCERY_DEFAULT_CATEGORIES = ["Baking", "Bakery", "Canned Goods", "Condiments", "Dairy", "Deli",
+                                "Frozen", "Meat & Seafood", "Produce", "Snacks"].freeze
 
   class << self
     def create_all_default_configurations(user)

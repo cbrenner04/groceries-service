@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MigrateCategoryData < ActiveRecord::Migration[8.1]
-  GROCERY_DEFAULT_CATEGORIES = %w[Baking Bakery Beverages Canned\ Goods Condiments Dairy Deli Frozen Meat Produce
+  GROCERY_DEFAULT_CATEGORIES = %w[Baking Bakery Canned\ Goods Condiments Dairy Deli Frozen Meat\ &\ Seafood Produce
                                   Snacks].freeze
 
   def up
