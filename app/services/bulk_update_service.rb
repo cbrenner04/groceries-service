@@ -52,12 +52,22 @@ class BulkUpdateService
   end
 
   def apply_field_update(field_update)
+    if field_update[:label] == "category"
+      apply_category_update(field_update)
+      return
+    end
+
     field_config = list_item_field_configuration_for(field_update[:label])
     return unless field_config
 
     ListItem.where(id: update_item_ids(field_update)).find_each do |item|
       upsert_item_field(item, field_config, field_update[:data])
     end
+  end
+
+  def apply_category_update(field_update)
+    value = field_update[:data].presence
+    ListItem.where(id: update_item_ids(field_update)).find_each { |item| item.update!(category: value) }
   end
 
   def list_item_field_configuration_for(label)
