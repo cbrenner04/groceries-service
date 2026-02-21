@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.4.8"
 
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.9", ">= 4.9.3"
+gem "devise", "~> 5.0", ">= 5.0.2"
 gem "devise_invitable", "~> 2.0", ">= 2.0.9"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.6"
 gem "lograge", "~> 0.14.0"
