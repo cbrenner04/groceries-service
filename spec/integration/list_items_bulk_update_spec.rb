@@ -115,6 +115,7 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
             [
               {
                 "id" => item[:id],
+                "category" => nil,
                 "archived_at" => nil,
                 "refreshed" => false,
                 "completed" => false,
@@ -156,6 +157,7 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
                 "archived_at" => nil,
                 "refreshed" => false,
                 "completed" => false,
+                "category" => nil,
                 "user_id" => user[:id],
                 "list_id" => list[:id],
                 "created_at" => other_item[:created_at].iso8601(3),
@@ -315,6 +317,54 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
               expect { other_field.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
               expect(response).to have_http_status :no_content
+            end
+
+            it "updates category on list items" do
+              update_params[:list_items][:update_current_items] = true
+              update_params[:list_items][:fields_to_update] = [{
+                label: "category",
+                item_ids: [item[:id], other_item[:id]],
+                data: "Produce"
+              }]
+
+              expect(item.category).to be_nil
+              expect(other_item.category).to be_nil
+
+              put list_list_items_bulk_update_path(list.id).to_s,
+                  headers: auth_params,
+                  params: update_params,
+                  as: :json
+
+              item.reload
+              other_item.reload
+
+              expect(response).to have_http_status :no_content
+              expect(item.category).to eq "Produce"
+              expect(other_item.category).to eq "Produce"
+            end
+
+            it "clears category when data is empty" do
+              item.update!(category: "Dairy")
+              other_item.update!(category: "Dairy")
+
+              update_params[:list_items][:update_current_items] = true
+              update_params[:list_items][:fields_to_update] = [{
+                label: "category",
+                item_ids: [item[:id], other_item[:id]],
+                data: ""
+              }]
+
+              put list_list_items_bulk_update_path(list.id).to_s,
+                  headers: auth_params,
+                  params: update_params,
+                  as: :json
+
+              item.reload
+              other_item.reload
+
+              expect(response).to have_http_status :no_content
+              expect(item.category).to be_nil
+              expect(other_item.category).to be_nil
             end
           end
 

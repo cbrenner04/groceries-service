@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       end
       resources :list_item_fields, only: %i[index show create edit update destroy]
     end
+    resources :categories, only: %i[create]
     resources :users_lists, only: %i[index create update destroy]
   end
   resources :completed_lists, only: :index

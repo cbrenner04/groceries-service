@@ -15,9 +15,10 @@ class BulkUpdateService
       list: list,
       lists: lists,
       list_users: UsersListsService.list_users(list.id),
-      list_item_configuration: list.list_item_configuration || nil,
+      list_item_configuration: list.list_item_configuration,
+      categories: list.categories.order(:name).pluck(:name),
       list_item_field_configurations:
-        list.list_item_configuration&.list_item_field_configurations&.order(:position) || []
+        list.list_item_configuration&.list_item_field_configurations&.not_archived&.order(:position) || []
     }
   end
 
@@ -45,10 +46,17 @@ class BulkUpdateService
   def update_current_items
     return unless update_current_items? && list.list_item_configuration_id && fields_to_update.present?
 
-    fields_to_update.each { |field_update| apply_field_update(field_update) }
+    fields_to_update.each do |field_update|
+      apply_field_update(field_update)
+    end
   end
 
   def apply_field_update(field_update)
+    if field_update[:label] == "category"
+      apply_category_update(field_update)
+      return
+    end
+
     field_config = list_item_field_configuration_for(field_update[:label])
     return unless field_config
 
@@ -57,8 +65,13 @@ class BulkUpdateService
     end
   end
 
+  def apply_category_update(field_update)
+    value = field_update[:data].presence
+    ListItem.where(id: update_item_ids(field_update)).find_each { |item| item.update!(category: value) }
+  end
+
   def list_item_field_configuration_for(label)
-    list.list_item_configuration.list_item_field_configurations.find_by(label: label)
+    list.list_item_configuration.list_item_field_configurations.not_archived.find_by(label:)
   end
 
   def update_item_ids(field_update)
@@ -72,7 +85,6 @@ class BulkUpdateService
       # Clear the field by deleting it or setting data to nil
       existing_field&.destroy
     elsif existing_field
-      # Update or create the field with the new data
       existing_field.update!(data: data)
     else
       item.list_item_fields.create!(data: data, user: @current_user,
@@ -88,7 +100,7 @@ class BulkUpdateService
   end
 
   def create_new_item_with_fields(item_data, target_list_id)
-    new_item = ListItem.create!(list_id: target_list_id, user: @current_user)
+    new_item = ListItem.create!(list_id: target_list_id, user: @current_user, category: item_data[:category])
 
     fields = item_data[:fields] || []
 
@@ -117,8 +129,7 @@ class BulkUpdateService
     field_config = ListItemFieldConfiguration.find(field_config_id)
 
     # Look for a matching update by label and check if this item is in the item_ids
-    list_item_id = field_data[:list_item_id]
-    list_item_id = list_item_id.to_s
+    list_item_id = field_data[:list_item_id].to_s
     matching_update = fields_to_update.find do |update|
       update_item_ids = Array(update[:item_ids]).map(&:to_s)
       update[:label] == field_config.label && update_item_ids.include?(list_item_id)
@@ -215,10 +226,7 @@ class BulkUpdateService
 
   def extract_fields_to_update
     # Use raw params for fields_to_update to avoid strong parameter issues
-    fields = @params.dig(:list_items, :fields_to_update)
-    return nil if fields.blank?
-
-    fields
+    @params.dig(:list_items, :fields_to_update)&.presence
   end
 
   # Helper methods for cleaner conditionals

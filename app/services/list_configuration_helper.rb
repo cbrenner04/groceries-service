@@ -5,33 +5,31 @@ module ListConfigurationHelper
   TEMPLATE_DEFINITIONS = {
     "grocery list template" => [
       { label: "product", data_type: "free_text", position: 1, primary: true },
-      { label: "quantity", data_type: "free_text", position: 2 },
-      { label: "category", data_type: "free_text", position: 3 }
+      { label: "quantity", data_type: "free_text", position: 2 }
     ],
     "book list template" => [
       { label: "title", data_type: "free_text", position: 1, primary: true },
       { label: "author", data_type: "free_text", position: 2 },
       { label: "number in series", data_type: "number", position: 3 },
-      { label: "read", data_type: "boolean", position: 4 },
-      { label: "category", data_type: "free_text", position: 5 }
+      { label: "read", data_type: "boolean", position: 4 }
     ],
     "music list template" => [
       { label: "title", data_type: "free_text", position: 1, primary: true },
       { label: "artist", data_type: "free_text", position: 2 },
-      { label: "album", data_type: "free_text", position: 3 },
-      { label: "category", data_type: "free_text", position: 4 }
+      { label: "album", data_type: "free_text", position: 3 }
     ],
     "to do list template" => [
       { label: "task", data_type: "free_text", position: 1, primary: true },
       { label: "assignee", data_type: "free_text", position: 2 },
-      { label: "due by", data_type: "date_time", position: 3 },
-      { label: "category", data_type: "free_text", position: 4 }
+      { label: "due by", data_type: "date_time", position: 3 }
     ],
     "simple list with category template" => [
-      { label: "content", data_type: "free_text", position: 1, primary: true },
-      { label: "category", data_type: "free_text", position: 2 }
+      { label: "content", data_type: "free_text", position: 1, primary: true }
     ]
   }.freeze
+
+  GROCERY_DEFAULT_CATEGORIES = ["Baking", "Bakery", "Canned Goods", "Condiments", "Dairy", "Deli",
+                                "Frozen", "Meat & Seafood", "Produce", "Snacks"].freeze
 
   class << self
     def create_all_default_configurations(user)

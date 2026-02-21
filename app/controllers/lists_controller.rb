@@ -26,6 +26,7 @@ class ListsController < ProtectedRouteController
     new_list = ListsService.build_new_list(create_params, current_user)
     if new_list.save
       users_list = UsersListsService.create_users_list(current_user, new_list)
+      DefaultCategorySeeder.seed(new_list)
       render json: ListsService.list_response(new_list, users_list, current_user)
     else
       render json: new_list.errors, status: :unprocessable_content

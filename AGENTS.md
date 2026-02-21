@@ -32,6 +32,7 @@ This document provides guidelines and commands for AI agents operating in this r
 - **Rails:** 8.1.x (as per `Gemfile`)
 - **Database:** PostgreSQL with Scenic for database views.
 - **Auth:** Devise, Devise Token Auth, and Devise Invitable.
+- **Monitoring:** Sentry (error tracking), New Relic (APM).
 
 ## Code Style Guidelines
 
@@ -102,6 +103,15 @@ class ListsService
   end
 end
 ```
+
+## Code Review Checklist
+- RuboCop compliance.
+- RSpec tests written for new functionality.
+- Strong parameters used (`params.expect`).
+- Proper HTTP status codes.
+- Database migrations are safe and backward compatible.
+- API versioning used appropriately (v2 for new work).
+- Security: Brakeman and bundle audit pass.
 
 ## Guardrails
 - **No Direct Migrations:** Do not run migrations directly unless specifically asked. Suggest the migration content instead.
