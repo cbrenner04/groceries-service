@@ -19,6 +19,18 @@ describe "/lists", type: :request do
       expect(response_body["pending_lists"].count).to eq user.pending_lists.count
       expect(response_body["current_user_id"]).to eq user.id
     end
+
+    it "excludes archived configurations from list_item_configurations" do
+      archived_config = create(:list_item_configuration, user: user)
+      archived_config.archive
+
+      get lists_path, headers: auth_params
+
+      response_body = JSON.parse(response.body)
+
+      expect(response).to have_http_status :success
+      expect(response_body["list_item_configurations"].pluck("id")).not_to include(archived_config.id)
+    end
   end
 
   describe "GET /:id" do

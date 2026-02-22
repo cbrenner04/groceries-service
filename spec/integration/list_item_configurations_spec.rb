@@ -32,6 +32,18 @@ describe "/list_item_configurations", type: :request do
         }
       )
     end
+
+    it "excludes archived configurations" do
+      archived_config = create(:list_item_configuration, user: user, name: "Archived Config")
+      archived_config.archive
+
+      get list_item_configurations_path, headers: auth_params
+
+      response_body = JSON.parse(response.body)
+
+      expect(response).to have_http_status :ok
+      expect(response_body.pluck("id")).not_to include(archived_config.id)
+    end
   end
 
   describe "POST /" do

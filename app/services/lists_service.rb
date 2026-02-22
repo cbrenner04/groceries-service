@@ -9,7 +9,7 @@ class ListsService
         pending_lists: user.pending_lists,
         current_user_id: user.id,
         current_list_permissions: user.current_list_permissions,
-        list_item_configurations: user.list_item_configurations
+        list_item_configurations: user.list_item_configurations.active
       }
     end
 
