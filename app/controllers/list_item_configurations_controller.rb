@@ -8,7 +8,7 @@ class ListItemConfigurationsController < ProtectedRouteController
 
   # GET /
   def index
-    render json: current_user.list_item_configurations
+    render json: current_user.list_item_configurations.active
   end
 
   # GET /:id

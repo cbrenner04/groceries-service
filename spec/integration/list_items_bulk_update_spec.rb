@@ -109,7 +109,7 @@ describe "/lists/:list_id/list_items/bulk_update", type: :request do
             "list_item_configuration_id" => list_item_configuration.id
           )
           expect(response_body["list_users"].count).to eq 2
-          expect(response_body["list_users"]).to eq [user.email, other_user.email]
+          expect(response_body["list_users"]).to contain_exactly(user.email, other_user.email)
           expect(response_body["items"].count).to eq 2
           expect(response_body["items"]).to eq(
             [

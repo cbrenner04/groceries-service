@@ -9,6 +9,8 @@ class ListItemConfiguration < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :user_id }
   validate :at_least_one_primary_field
 
+  scope :active, -> { where(archived_at: nil) }
+
   def archive
     update archived_at: Time.zone.now
   end
