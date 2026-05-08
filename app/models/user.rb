@@ -91,11 +91,6 @@ class User < ApplicationRecord
 
   private
 
-  def postpone_email_change_until_confirmation_and_regenerate_confirmation_token
-    unconfirmed_email_will_change!
-    super
-  end
-
   def create_default_list_item_configurations
     ListConfigurationHelper.create_all_default_configurations(self)
   end
