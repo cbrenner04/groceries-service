@@ -3,8 +3,9 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.8"
+ruby "3.4.9"
 
+gem "bcrypt", ">= 3.1.22"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
 gem "devise_invitable", "~> 2.0", ">= 2.0.9"
