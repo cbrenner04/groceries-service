@@ -1,0 +1,5 @@
+---
+ignore:
+  # Devise >= 5.0.3 is blocked by devise_token_auth's devise < 5 constraint.
+  # This app does not use Devise confirmable/reconfirmable, so the advisory path is not active here.
+  - GHSA-57hq-95w6-v4fc
