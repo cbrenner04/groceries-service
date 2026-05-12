@@ -1,79 +1,223 @@
-# Agent Instructions for groceries-service
+# AGENTS.md — groceries-service
 
-This document provides guidelines and commands for AI agents operating in this repository.
+---
+
+# 🚨 Repository Operating Rules (MANDATORY)
+
+These rules extend the root AGENTS.md and must be followed.
+
+## Priority Order
+1. Active Spec (if present)
+2. Root AGENTS.md
+3. This file
+
+## Core Rules
+- You MUST follow the active spec exactly
+- Do NOT expand or reinterpret scope
+- Do NOT read additional files unless required by the spec
+- Do NOT refactor unrelated code
+- Do NOT introduce new abstractions unless explicitly required
+
+---
+
+## Execution Modes
+
+### PLAN MODE
+- Identify exact files within this repository
+- Do NOT modify files
+- Call out:
+  - API changes
+  - Database changes
+  - Cross-repo impacts
+
+### PATCH MODE
+- Modify ONLY files listed in the spec
+- Execute steps exactly as written
+- Do NOT add, remove, or reorder steps
+- If a step is unclear: STOP and ask (do not infer)
+
+---
+
+## 📄 Spec Integration
+
+- All non-trivial work must be driven by a spec in `/specs/`
+- This repository executes ONLY its portion of the spec
+- Ignore spec steps for other repositories unless instructed
+
+### File Scope Enforcement
+- Only modify files explicitly listed in the spec
+- If additional files seem required:
+  - STOP
+  - ASK before proceeding
+
+---
+
+## 🔒 Change Boundaries
+
+- Do NOT modify:
+  - Unrelated models, controllers, or services
+  - Existing API response shapes
+  - Authentication behavior
+- Do NOT rename or move files unless specified
+- Do NOT update tests unless required by the spec
+
+---
+
+## 🧱 Database & Migration Rules (CRITICAL)
+
+- Do NOT run migrations
+- Do NOT generate migrations unless explicitly instructed
+- If schema changes are required:
+  - Propose migration in PLAN MODE only
+
+### Safety Requirements
+- Migrations must be backward compatible
+- Avoid destructive changes (drops, renames) unless explicitly approved
+- Consider existing data at all times
+
+---
+
+## 🌐 API Contract Rules (CRITICAL)
+
+- Do NOT change request/response shapes
+- Do NOT remove or rename fields
+- Do NOT change status codes
+
+If a contract change is required:
+- STOP
+- Call it out in PLAN MODE
+- Wait for approval
+
+---
+
+## 🔐 Auth & Security Rules
+
+- Do NOT bypass authentication
+- Protected routes must use `ProtectedRouteController` or equivalent
+- Do NOT expose sensitive data in JSON responses
+
+---
 
 ## Commands
 
 ### Environment Setup
-- `bundle install` - Install Ruby dependencies.
-- `bin/setup` - Initial project setup.
+```bash
+bundle install
+bin/setup
+```
 
 ### Development & Database
-- `rails server` - Start the development API server.
-- `rails db:migrate` - Run database migrations.
-- `rails db:rollback` - Rollback last migration.
-- `rails db:seed` - Seed the database.
-- `rails db:migrate:status` - Check migration status.
+
+```bash
+rails server
+rails db:migrate
+rails db:rollback
+rails db:seed
+rails db:migrate:status
+```
 
 ### Testing (RSpec)
-- `bundle exec rspec` - Run all tests.
-- `bundle exec rspec <path_to_spec>` - Run a specific spec file.
-- `bundle exec rspec <path_to_spec>:<line_number>` - Run a single test at the specified line.
-- `bundle exec rspec spec/integration` - Run integration tests.
+
+```bash
+bundle exec rspec
+bundle exec rspec <path_to_spec>
+bundle exec rspec <path_to_spec>:<line_number>
+bundle exec rspec spec/integration
+```
 
 ### Linting & Security
-- `bundle exec rubocop` - Run RuboCop linting.
-- `bundle exec rubocop -a` - Auto-fix safe linting issues.
-- `brakeman` - Run security analysis.
-- `bundle audit` - Check for vulnerable dependencies.
+
+```bash
+bundle exec rubocop
+bundle exec rubocop -a
+brakeman
+bundle audit
+```
+
+---
+
+## Required After Changes (PATCH MODE)
+
+```bash
+bundle exec rubocop && bundle exec rspec
+```
+
+* Do NOT run additional commands unless specified in the spec
+
+---
 
 ## Tech Stack
-- **Ruby:** 3.4.8 (as per `Gemfile`)
-- **Rails:** 8.1.x (as per `Gemfile`)
-- **Database:** PostgreSQL with Scenic for database views.
-- **Auth:** Devise, Devise Token Auth, and Devise Invitable.
-- **Monitoring:** Sentry (error tracking), New Relic (APM).
 
-## Code Style Guidelines
+* Ruby 3.4.8
+* Rails 8.1.x
+* PostgreSQL + Scenic (views)
+* Devise + Devise Token Auth + Devise Invitable
+* Sentry, New Relic
+
+---
+
+## Code Style
 
 ### General Ruby/Rails
-- **Indentation:** 2 spaces.
-- **Naming:** `snake_case` for methods and variables; `CamelCase` for classes and modules.
-- **Frozen String Literals:** Always include `# frozen_string_literal: true` at the top of every Ruby file.
-- **Compact Definitions:** Use compact style for nested classes/modules (e.g., `class Api::V2::ResourceController`).
-- **Line Length:** Maximum 120 characters (enforced by RuboCop).
-- **Strings:** Prefer double quotes (`"string"`).
 
-### API & Controllers
-- **Versioning:** Use `v2` for all new functionality.
-- **Parameters:** Use `params.expect(key: [:attr1, :attr2])` for strong parameters (Rails 8+ pattern).
-- **Error Handling:** Use `rescue ActiveRecord::RecordInvalid => e` and return `render json: e.record.errors, status: :unprocessable_content`.
-- **Status Codes:** Use descriptive status symbols like `:unprocessable_content`, `:created`, `:no_content`, `:not_found`, `:forbidden`.
+* 2-space indentation
+* `snake_case` (methods/vars), `CamelCase` (classes/modules)
+* `# frozen_string_literal: true` required
+* Max line length: 120
+* Prefer double quotes
+
+### Controllers
+
+* Use `v2` namespace for new functionality
+* Strong params: `params.expect(...)`
+* Error handling:
+
+  ```ruby
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.record.errors, status: :unprocessable_content
+  ```
 
 ### Models
-- **Schema Information:** Keep the `annotate` gem style comments at the top of models.
-- **Validations:** Always include necessary validations.
-- **Associations:** Use `dependent: :destroy` for owner associations.
-- **Scopes:** Use lambdas for scopes (e.g., `scope :active, -> { where(active: true) }`).
+
+* Keep schema annotations
+* Include validations
+* Use `dependent: :destroy` where appropriate
+* Use lambda scopes
 
 ### Services
-- **Pattern:** Use class methods for service logic when a stateful instance isn't needed.
-- **Location:** Place business logic in `app/services/`.
 
-### Database Views (Scenic)
-- Database views are managed via the `scenic` gem.
-- SQL definitions are in `db/views/`.
-- Use migrations to version views.
+* Located in `app/services/`
+* Prefer class methods for stateless logic
 
-## Testing Standards
-- **Framework:** RSpec.
-- **Factories:** Use `FactoryBot` (factories in `spec/factories/`).
-- **Database:** `database_cleaner` is used for isolation.
-- **Coverage:** `simplecov` reports coverage in `coverage/`.
+### Database Views
+
+* Managed via Scenic
+* SQL in `db/views/`
+* Versioned via migrations
+
+---
+
+## Testing
+
+### Rules
+
+* Only modify or add tests if required by the spec
+* Do NOT expand test scope
+* Do NOT rewrite tests to match unintended behavior
+
+### Standards
+
+* RSpec
+* FactoryBot
+* database_cleaner
+* simplecov (coverage in `coverage/`)
+
+---
 
 ## Important Patterns
 
-### Controller Example (Rails 8)
+### Controller Example
+
 ```ruby
 class Api::V2::ListsController < ProtectedRouteController
   def create
@@ -94,26 +238,35 @@ end
 ```
 
 ### Service Example
+
 ```ruby
 class ListsService
   class << self
     def build_new_list(params, user)
-      # ... logic ...
+      # ...
     end
   end
 end
 ```
 
-## Code Review Checklist
-- RuboCop compliance.
-- RSpec tests written for new functionality.
-- Strong parameters used (`params.expect`).
-- Proper HTTP status codes.
-- Database migrations are safe and backward compatible.
-- API versioning used appropriately (v2 for new work).
-- Security: Brakeman and bundle audit pass.
+---
 
-## Guardrails
-- **No Direct Migrations:** Do not run migrations directly unless specifically asked. Suggest the migration content instead.
-- **API Consistency:** Ensure JSON responses are consistent with existing patterns in `ListsService`.
-- **Auth:** Always ensure routes are protected via `ProtectedRouteController` or appropriate `before_action` if they require authentication.
+## Code Review Checklist
+
+* RuboCop passes
+* RSpec tests added where required
+* Strong params used
+* Correct HTTP status codes
+* No unintended API changes
+* No unsafe migrations
+* Auth properly enforced
+
+---
+
+## Do NOT
+
+* Run database migrations
+* Modify API contracts without approval
+* Introduce breaking changes
+* Bypass authentication
+* Commit changes unless instructed
