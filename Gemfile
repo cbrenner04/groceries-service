@@ -7,7 +7,7 @@ ruby "4.0.3"
 
 gem "bcrypt", ">= 3.1.22"
 gem "bootsnap", ">= 1.4.2", require: false
-gem "devise", "~> 4.9", ">= 4.9.3"
+gem "devise", "~> 5.0", ">= 5.0.4"
 gem "devise_invitable", "~> 2.0", ">= 2.0.9"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.6"
 gem "lograge", "~> 0.14.0"
