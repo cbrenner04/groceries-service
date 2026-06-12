@@ -199,7 +199,7 @@ GEM
     psych (5.4.0)
       date
       stringio
-    puma (8.0.1)
+    puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.6)
@@ -385,7 +385,7 @@ DEPENDENCIES
   net-smtp (~> 0.5.0)
   newrelic_rpm (~> 10.0, >= 10.0.0)
   pg (>= 0.18, < 2.0)
-  puma (~> 8.0, >= 8.0.1)
+  puma (~> 8.0, >= 8.0.2)
   rack-cors (~> 3.0, >= 3.0.0)
   rails (~> 8.1.0, >= 8.1.2)
   rails_12factor (~> 0.0.3)
