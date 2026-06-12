@@ -59,7 +59,7 @@ class ListsController < ProtectedRouteController
   private
 
   def list
-    @list ||= List.find(params[:id])
+    @list ||= List.find(params.expect(:id))
   end
 
   def create_params
