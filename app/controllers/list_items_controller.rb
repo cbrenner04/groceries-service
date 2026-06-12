@@ -56,11 +56,11 @@ class ListItemsController < ProtectedRouteController
   private
 
   def list
-    @list ||= List.find(params[:list_id])
+    @list ||= List.find(params.expect(:list_id))
   end
 
   def item
-    @item ||= ListItem.includes(list_item_fields: :list_item_field_configuration).find(params[:id])
+    @item ||= ListItem.includes(list_item_fields: :list_item_field_configuration).find(params.expect(:id))
   end
 
   def item_params

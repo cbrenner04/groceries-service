@@ -52,7 +52,7 @@ class ListItemConfigurationsController < ProtectedRouteController
   private
 
   def item_configuration
-    @item_configuration ||= ListItemConfiguration.find(params[:id])
+    @item_configuration ||= ListItemConfiguration.find(params.expect(:id))
   end
 
   def item_configuration_params

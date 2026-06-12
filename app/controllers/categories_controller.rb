@@ -18,7 +18,7 @@ class CategoriesController < ProtectedRouteController
   private
 
   def list
-    @list ||= List.find(params[:list_id])
+    @list ||= List.find(params.expect(:list_id))
   end
 
   def category_params

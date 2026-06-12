@@ -82,7 +82,7 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def current_user_has_write_access?
-    list = List.find(params[:list_id])
+    list = List.find(params.expect(:list_id))
     users_list = UsersList.find_by(list: list, user: current_user)
     users_list&.permissions == "write"
   end
