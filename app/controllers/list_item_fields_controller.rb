@@ -52,15 +52,15 @@ class ListItemFieldsController < ProtectedRouteController
   private
 
   def list
-    @list ||= List.find(params[:list_id])
+    @list ||= List.find(params.expect(:list_id))
   end
 
   def item
-    @item ||= ListItem.find(params[:list_item_id])
+    @item ||= ListItem.find(params.expect(:list_item_id))
   end
 
   def item_field
-    @item_field ||= ListItemField.find(params[:id])
+    @item_field ||= ListItemField.find(params.expect(:id))
   end
 
   def item_field_params
