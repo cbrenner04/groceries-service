@@ -68,11 +68,11 @@ class UsersListsController < ProtectedRouteController
   end
 
   def users_list
-    @users_list ||= UsersList.find(params[:id])
+    @users_list ||= UsersList.find(params.expect(:id))
   end
 
   def list
-    @list ||= List.find(params[:list_id])
+    @list ||= List.find(params.expect(:list_id))
   end
 
   def users_list_by_list_and_user
