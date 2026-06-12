@@ -57,11 +57,11 @@ class ListItemFieldConfigurationsController < ProtectedRouteController
   private
 
   def list_item_configuration
-    @list_item_configuration ||= ListItemConfiguration.find(params[:list_item_configuration_id])
+    @list_item_configuration ||= ListItemConfiguration.find(params.expect(:list_item_configuration_id))
   end
 
   def list_item_field_configuration
-    @list_item_field_configuration ||= ListItemFieldConfiguration.find(params[:id])
+    @list_item_field_configuration ||= ListItemFieldConfiguration.find(params.expect(:id))
   end
 
   def list_item_field_configuration_params
