@@ -39,6 +39,15 @@ DeviseTokenAuth.setup do |config|
   # password is updated.
   # config.check_current_password_before_update = :attributes
 
+  # Only allow redirects (e.g. from the password reset flow) to the frontend.
+  # Cross-host redirects themselves are enabled in
+  # config/initializers/devise_token_auth_redirect_fix.rb.
+  config.redirect_whitelist = [
+    "https://groceries-app.com/*",
+    "https://staging.groceries-app.com/*",
+    "http://localhost:3000/*"
+  ]
+
   # By default we will use callbacks for single omniauth.
   # It depends on fields like email, provider and uid.
   # config.default_callbacks = true
