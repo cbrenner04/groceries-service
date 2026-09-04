@@ -44,7 +44,7 @@ group :development, :test do
   gem "rubocop-rails", "~> 2.33", ">= 2.33.4"
   gem "rubocop-rspec", "~> 3.0", ">= 3.0.3"
   gem "rubocop-rspec_rails", "~> 2.30"
-  gem "simplecov", "~> 0.22.0"
+  gem "simplecov", "~> 1.2.0"
 end
 
 group :development do
