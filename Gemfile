@@ -3,14 +3,14 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "4.0.5"
+ruby "4.0.6"
 
 gem "bcrypt", ">= 3.1.22"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "devise", "~> 4.9", ">= 4.9.3"
 gem "devise_invitable", "~> 2.0", ">= 2.0.9"
 gem "devise_token_auth", "~> 1.2", ">= 1.2.6"
-gem "lograge", "~> 0.14.0"
+gem "lograge", "~> 0.15.0"
 gem "newrelic_rpm", "~> 10.0", ">= 10.0.0"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 8.0", ">= 8.0.2"
