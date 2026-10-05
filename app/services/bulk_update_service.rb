@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # service object for list item bulk updates
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable-next Metrics/ClassLength
 class BulkUpdateService
   def initialize(params, item_params, current_user)
     @params = normalize_params(params)
@@ -290,4 +290,3 @@ class BulkUpdateService
     raw_params.deep_symbolize_keys
   end
 end
-# rubocop:enable Metrics/ClassLength

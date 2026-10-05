@@ -166,9 +166,8 @@ describe "ListConfigurationHelper", type: :request do
       field = config.list_item_field_configurations.find_by(label: "product")
 
       # Manually change the primary to simulate a mismatch (bypass validation)
-      # rubocop:disable Rails/SkipsModelValidations
+      # rubocop:disable-next Rails/SkipsModelValidations
       field.update_column(:primary, false)
-      # rubocop:enable Rails/SkipsModelValidations
       expect(field.reload.primary).to be(false)
 
       # Re-run configuration creation - should update the field
