@@ -227,11 +227,10 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
           it "handles RecordInvalid and returns 422" do
             # Make save raise RecordInvalid for any new field configuration
             invalid_record = ListItemFieldConfiguration.new
-            # rubocop:disable RSpec/AnyInstance
+            # rubocop:disable-next RSpec/AnyInstance
             allow_any_instance_of(ListItemFieldConfiguration).to receive(:save).and_raise(
               ActiveRecord::RecordInvalid.new(invalid_record)
             )
-            # rubocop:enable RSpec/AnyInstance
 
             post list_item_configuration_list_item_field_configurations_path(list_item_configuration.id),
                  headers: auth_params,
@@ -283,11 +282,10 @@ describe "/list_item_configurations/:list_item_configuration_id/list_item_field_
         context "when update triggers RecordInvalid" do
           it "handles RecordInvalid and returns 422" do
             # Make save raise RecordInvalid for the field configuration being updated
-            # rubocop:disable RSpec/AnyInstance
+            # rubocop:disable-next RSpec/AnyInstance
             allow_any_instance_of(ListItemFieldConfiguration).to receive(:save).and_raise(
               ActiveRecord::RecordInvalid.new(list_item_field_configuration)
             )
-            # rubocop:enable RSpec/AnyInstance
 
             put list_item_configuration_list_item_field_configuration_path(
               list_item_configuration.id,

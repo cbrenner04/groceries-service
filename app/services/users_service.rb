@@ -47,7 +47,7 @@ module UsersService
 
   # Find users where they have been shared on the same lists as current user
   # Filter out users that are already shared on the supplied list
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable-next Metrics/MethodLength
   def related_users_query(user_id, list_id)
     <<~SQL.squish
       SELECT DISTINCT "users"."email", "users"."id"
@@ -68,7 +68,6 @@ module UsersService
       );
     SQL
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 
