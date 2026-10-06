@@ -324,10 +324,10 @@ GEM
     secure_headers (7.3.0)
       cgi (>= 0.1)
     securerandom (0.4.1)
-    sentry-rails (6.7.0)
+    sentry-rails (7.1.0)
       railties (>= 5.2.0)
-      sentry-ruby (~> 6.7.0)
-    sentry-ruby (6.7.0)
+      sentry-ruby (~> 7.1.0)
+    sentry-ruby (7.1.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
@@ -393,8 +393,8 @@ DEPENDENCIES
   rubocop-rspec_rails (~> 2.30)
   scenic (~> 1.8, >= 1.8.0)
   secure_headers (~> 7.0, >= 7.0.0)
-  sentry-rails (~> 6.0, >= 6.3.0)
-  sentry-ruby (~> 6.0)
+  sentry-rails (~> 7.0, >= 7.1.0)
+  sentry-ruby (~> 7.0)
   simplecov (~> 1.3.0)
   spring
   spring-watcher-listen (~> 2.1.0)
