@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:14.4
+    environment:
+      POSTGRES_USER: superawesome
+      POSTGRES_PASSWORD: supersecret
+  server:
+    build: .
+    depends_on:
+      - database
+    ports:
+      - "3300:3000"
+    environment:
+      # https://ieftimov.com/posts/docker-compose-stray-pids-rails-beyond/#solution-use-tmpfs
+      PIDFILE: /usr/src/tmp/pids/server.pid
+      RAILS_DB_HOST: database
+      RAILS_DB_USER: superawesome
+      RAILS_DB_PASS: supersecret
+    # I really do not like this but it works
+    command: bash -c "bundle exec rails db:setup && bundle exec rails s -b 0.0.0.0"
+    # https://ieftimov.com/posts/docker-compose-stray-pids-rails-beyond/#solution-use-tmpfs
+    tmpfs:
+      - /usr/src/tmp/pids/
+    volumes:
+      - ".:/usr/src/app/"
